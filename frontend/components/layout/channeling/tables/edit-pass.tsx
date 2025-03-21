@@ -47,12 +47,12 @@ export function EditPass({
           }
         );
         if (!res.success) {
-          toast.error("Error deleting appointment. Please try again later.");
+          toast.error("Error Editing appointment. Please try again later.");
         } else {
-          toast.success("Appointment deleted successfully.");
+          toast.success("Appointment Re-Scheduled successfully.");
         }
       } catch {
-        toast.error("Error deleting appointment. Please try again later.");
+        toast.error("Error Editing appointment. Please try again later.");
       } finally {
         refreshFn();
       }

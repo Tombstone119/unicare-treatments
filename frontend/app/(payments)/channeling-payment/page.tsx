@@ -25,12 +25,12 @@ export default function Page() {
           width={200}
           height={100}
           src="/assets/images/logo.svg"
-          className="text-black mb-2"
+          className="text-black mb-2 w-100"
         />
         <p className=" text-gray-800 text-center">
           Your next step is to pay, {amount}LKR
         </p>
-        <div className="max-w-[300px]">
+        <div className="w-[300px] h-[200px]">
           <DotLottieReact src="/assets/images/payment.lottie" loop autoplay />
         </div>
         <Elements

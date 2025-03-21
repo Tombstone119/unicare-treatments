@@ -33,6 +33,7 @@ import { useSession } from "next-auth/react";
 
 export default function ChannelAppointmentForm() {
   const { data: session } = useSession();
+
   const user = session?.user;
 
   // form initializer

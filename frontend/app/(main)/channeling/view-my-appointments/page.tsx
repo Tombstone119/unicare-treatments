@@ -8,10 +8,12 @@ import { Stethoscope } from "lucide-react";
 import { AppointmentResponse } from "@/types/users";
 import { apiService } from "@/libs/api";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function ViewAppointment() {
   const [data, setData] = useState<IAppointment[]>([]);
   const { data: session } = useSession();
+  const router = useRouter();
   const user = session?.user;
 
   const refreshPage = () => {
@@ -20,6 +22,7 @@ export default function ViewAppointment() {
 
   const getPaymentDone = async (data: IAppointment) => {
     console.log("data: =-->", data);
+    router.push("/channeling-payment");
 
     // const response = await apiService.get<AppointmentResponse>(
     //   `/appointments/payment/${data.referenceNumber}`
