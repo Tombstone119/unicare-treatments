@@ -55,7 +55,7 @@ export function SignUpForm({
     setIsSubmitting(true);
     try {
       const response = await apiService.post<UserApiResponse>(
-        `/user/sign-up`,
+        `/user/profile/sign-up`,
         data
       );
 
@@ -79,7 +79,7 @@ export function SignUpForm({
         setUsernameMessage(""); // Reset message
         try {
           const response = await apiService.get<UserApiResponse>(
-            `/user/check-username-unique/${username}`
+            `/user/profile/check-username-unique/${username}`
           );
           setUsernameMessage(response.message);
         } catch {

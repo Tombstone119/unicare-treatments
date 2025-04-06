@@ -229,14 +229,14 @@ export const signInUser = async (
   }
 };
 
-export const getUserByIdWithMinimumData = async (
+export const getPartialUser = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
 
-    const user = await userService.getUserByIdWithMinimumData(id);
+    const user = await userService.getPartialUser(id);
     if (!user) {
       res.status(HttpStatusCodes.OK).json({
         success: false,
@@ -247,6 +247,32 @@ export const getUserByIdWithMinimumData = async (
     res.status(HttpStatusCodes.OK).json({
       success: true,
       user,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+export const updatePartialUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userData = req.body;
+
+    const updatedUser = await userService.updatePartialUser(id, userData);
+    if (!updatedUser) {
+      res.status(HttpStatusCodes.OK).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      message: "User updated successfully",
+      user: updatedUser,
     });
   } catch (error) {
     handleError(res, error);

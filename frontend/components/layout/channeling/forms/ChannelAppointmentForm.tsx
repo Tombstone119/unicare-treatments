@@ -57,11 +57,31 @@ export default function ChannelAppointmentForm() {
       const response = await apiService.get<UserApiResponse>(
         `/user/${user?.id}`
       );
+
+      const test = new Date(response.user?.dateOfBirth || "");
+      const formattedDate = test.toISOString().split("T")[0];
+
+      console.log("formattedDate: =-->", formattedDate);
+
       form.reset({
         ...form.getValues(),
         email: response.user?.email,
         gender: response.user?.gender || "other",
         maritalState: response.user?.maritalState || "single",
+        firstName: response.user?.firstName || "",
+        lastName: response.user?.lastName || "",
+        ...(response.user?.dateOfBirth && {
+          dateOfBirth: formattedDate,
+        }),
+        ...(response.user?.phoneNumber && {
+          phoneNumber: response.user?.phoneNumber || "",
+        }),
+        ...(response.user?.phoneNumber && {
+          address: response.user?.address || "",
+        }),
+
+        // phoneNumber: response.user?.phoneNumber,
+        // address: response.user?.address,
       });
       console.log(response);
     };
@@ -78,7 +98,7 @@ export default function ChannelAppointmentForm() {
         );
         if (response.success) {
           toast.success(
-            `Appointment successfully created!. Ref:${response.appointment?.referenceNumber}`
+            `Appointment successfully created!. Ref:${response.appointment?._id}`
           );
         }
         if (!response.success) {

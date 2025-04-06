@@ -19,7 +19,7 @@ const authOptions: NextAuthOptions = {
       async authorize(credentials: any): Promise<any> {
         try {
           const response = await apiService.post<UserApiResponse>(
-            `/user/sign-in`,
+            `/user/profile/sign-in`,
             {
               identifier: credentials.identifier,
               password: credentials.password,

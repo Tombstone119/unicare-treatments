@@ -92,7 +92,7 @@ async function userWithIdentifier({
   return user;
 }
 
-async function getUserByIdWithMinimumData(id: string) {
+async function getPartialUser(id: string) {
   const user = await userModel.findById(id).select({
     username: 1,
     email: 1,
@@ -110,6 +110,17 @@ async function getUserByIdWithMinimumData(id: string) {
   return user;
 }
 
+async function updatePartialUser(
+  id: string,
+  data: Partial<IUser>
+): Promise<UserDocument | null> {
+  const user = await userModel.findByIdAndUpdate(id, data, {
+    new: true, // Returns the modified document rather than the original
+    runValidators: true, // Ensures the update operation runs validation defined in your schema
+  });
+  return user;
+}
+
 export default {
   createNewUser,
   findUserByUsername,
@@ -120,5 +131,6 @@ export default {
   updateUserWithNewVerification,
   userWithIdentifier,
   updateVerifiedStatus,
-  getUserByIdWithMinimumData,
+  getPartialUser,
+  updatePartialUser,
 };
