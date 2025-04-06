@@ -18,6 +18,7 @@ export default function InputElement({
   placeholder,
   label,
   icon,
+  disabled = false,
 }: {
   form: channel;
   fieldName: channelKey;
@@ -25,6 +26,7 @@ export default function InputElement({
   label: string;
   placeholder: string;
   icon?: JSX.Element;
+  disabled?: boolean;
 }) {
   return (
     <FormField
@@ -37,6 +39,7 @@ export default function InputElement({
           </FormLabel>
           <FormControl>
             <Input
+              disabled={disabled}
               type={fieldType}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring focus:ring-blue-300"
               placeholder={placeholder}

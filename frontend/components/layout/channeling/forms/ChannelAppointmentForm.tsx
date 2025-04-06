@@ -22,21 +22,20 @@ import {
   MailIcon,
   Phone,
   MapPin,
-  CreditCard,
   CircleUser,
   UsersRound,
   Stethoscope,
 } from "lucide-react";
 import { apiService } from "@/libs/api";
-import { AppointmentResponse } from "@/types/users";
+import { AppointmentResponse, UserApiResponse } from "@/types/users";
 import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function ChannelAppointmentForm() {
   const { data: session } = useSession();
 
   const user = session?.user;
 
-  // form initializer
   const form = useForm<channelSchema>({
     resolver: zodResolver(channelAppointmentSchema),
     defaultValues: {
@@ -46,13 +45,29 @@ export default function ChannelAppointmentForm() {
       gender: "other",
       maritalState: "single",
       phoneNumber: "",
-      alternativePhoneNumber: "",
       email: "",
       address: "",
       appointmentDate: undefined,
-      paymentStatus: "pay later",
     },
   });
+
+  useEffect(() => {
+    const fetchUserAppointments = async () => {
+      if (!user?.id) return;
+      const response = await apiService.get<UserApiResponse>(
+        `/user/${user?.id}`
+      );
+      form.reset({
+        ...form.getValues(),
+        email: response.user?.email,
+        gender: response.user?.gender || "other",
+        maritalState: response.user?.maritalState || "single",
+      });
+      console.log(response);
+    };
+    fetchUserAppointments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const handleSubmit = async (values: channelSchema) => {
     try {
@@ -85,6 +100,7 @@ export default function ChannelAppointmentForm() {
           onSubmit={form.handleSubmit(handleSubmit)}
           className="flex flex-col gap-5 "
         >
+          <div>Patient Details</div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <div className="flex flex-col gap-5">
               <InputElement
@@ -111,32 +127,16 @@ export default function ChannelAppointmentForm() {
                 placeholder="Phone Number"
                 icon={<Phone className="h-5 w-5 text-gray-600" />}
               />
-              <InputElement
-                form={form}
-                fieldName="address"
-                fieldType="text"
-                label="Address"
-                placeholder="Address"
-                icon={<MapPin className="h-5 w-5 text-gray-600" />}
-              />
+
               <SelectElement
                 form={form}
-                fieldName="paymentStatus"
-                label="Payment Status"
-                icon={<CreditCard className="h-5 w-5 text-gray-600" />}
+                fieldName="maritalState"
+                label="Marital State"
+                icon={<UsersRound className="h-5 w-5 text-gray-600" />}
               >
-                <SelectItem value="pay now">Pay Now</SelectItem>
-                <SelectItem value="pay later">Pay Later</SelectItem>
-              </SelectElement>
-              <SelectElement
-                form={form}
-                fieldName="gender"
-                label="Gender Status"
-                icon={<CircleUser className="h-5 w-5 text-gray-600" />}
-              >
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="other">Prefer not to state</SelectItem>
+                <SelectItem value="married">Married</SelectItem>
+                <SelectItem value="single">Single</SelectItem>
+                <SelectItem value="widowed">Widowed</SelectItem>
               </SelectElement>
             </div>
             <div className="flex flex-col gap-5">
@@ -149,6 +149,7 @@ export default function ChannelAppointmentForm() {
                 icon={<ContactRound className="h-5 w-5 text-gray-600" />}
               />
               <InputElement
+                disabled={true}
                 form={form}
                 fieldName="email"
                 fieldType="email"
@@ -158,28 +159,31 @@ export default function ChannelAppointmentForm() {
               />
               <InputElement
                 form={form}
-                fieldName="alternativePhoneNumber"
-                fieldType="tel"
-                label="Alternative Phone Number"
-                placeholder="Alternative Phone Number"
-                icon={<Phone className="h-5 w-5 text-gray-600" />}
-              />
-              <DateElement
-                form={form}
-                label="Available Dates"
-                icon={<Calendar className="h-5 w-5 text-gray-600" />}
+                fieldName="address"
+                fieldType="text"
+                label="Address"
+                placeholder="Address"
+                icon={<MapPin className="h-5 w-5 text-gray-600" />}
               />
               <SelectElement
                 form={form}
-                fieldName="maritalState"
-                label="Marital State"
-                icon={<UsersRound className="h-5 w-5 text-gray-600" />}
+                fieldName="gender"
+                label="Gender Status"
+                icon={<CircleUser className="h-5 w-5 text-gray-600" />}
               >
-                <SelectItem value="married">Married</SelectItem>
-                <SelectItem value="single">Single</SelectItem>
-                <SelectItem value="widowed">Widowed</SelectItem>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+                <SelectItem value="other">Prefer not to state</SelectItem>
               </SelectElement>
             </div>
+          </div>
+          <div>Appointment Details</div>
+          <div>
+            <DateElement
+              form={form}
+              label="Available Dates"
+              icon={<Calendar className="h-5 w-5 text-gray-600" />}
+            />
           </div>
 
           <ChannelingSubmitBtn isLoading={form.formState.isSubmitting}>

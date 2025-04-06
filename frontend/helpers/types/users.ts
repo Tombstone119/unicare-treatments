@@ -1,13 +1,21 @@
 import { IAppointment } from ".";
 
 export interface IUser {
-  id?: string;
-  name?: string;
-  username?: string;
-  email?: string;
-  profile_img?: string;
-  isVerified?: boolean;
-  role?: string;
+  username: string;
+  email: string;
+  password: string;
+  verifyCode: string;
+  verifyCodeExpiry: Date;
+  isVerified: boolean;
+  role: string;
+  reports?: string[];
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: Date;
+  phoneNumber?: string;
+  address?: string;
+  maritalState?: "single" | "married" | "divorced" | "widowed";
+  gender?: "male" | "female" | "other";
 }
 
 export type userTypes = "doctor" | "admin" | "supplier" | "patient";

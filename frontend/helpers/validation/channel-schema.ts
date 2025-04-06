@@ -9,9 +9,8 @@ export const channelAppointmentSchema = z
     lastName: z.string().min(1, "Last name is required"),
     dateOfBirth: z.string(),
     gender: z.enum(["male", "female", "other"]),
-    maritalState: z.enum(["married", "single", "widowed"]),
+    maritalState: z.enum(["single", "married", "divorced", "widowed"]),
     phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
-    alternativePhoneNumber: z.string().optional(),
     email: z.string().email("Invalid email format"),
     address: z.string().min(5, "Address must be at least 5 characters"),
     appointmentDate: z.preprocess(
@@ -19,7 +18,6 @@ export const channelAppointmentSchema = z
         typeof val === "string" && isValidDate(val) ? new Date(val) : val,
       z.date()
     ),
-    paymentStatus: z.enum(["pay now", "pay later"]),
   })
   .refine((data) => isValidDate(data.dateOfBirth), {
     message: "Invalid date format",

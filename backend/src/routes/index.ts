@@ -35,6 +35,7 @@ import {
 
 import {
   checkUniqueUserName,
+  getUserByIdWithMinimumData,
   signInUser,
   signUpUser,
   verifyUser,
@@ -83,6 +84,7 @@ router.get("/user/check-username-unique/:username", checkUniqueUserName);
 router.post("/user/sign-up", signUpUser);
 router.post("/user/verify-code", verifyUser);
 router.post("/user/sign-in", signInUser);
+router.get("/user/:id", getUserByIdWithMinimumData);
 router
   .route("/reports/:patientId")
   .post(createReport)

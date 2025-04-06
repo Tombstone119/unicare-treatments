@@ -92,6 +92,24 @@ async function userWithIdentifier({
   return user;
 }
 
+async function getUserByIdWithMinimumData(id: string) {
+  const user = await userModel.findById(id).select({
+    username: 1,
+    email: 1,
+    isVerified: 1,
+    role: 1,
+    reports: 1,
+    firstName: 1,
+    lastName: 1,
+    dateOfBirth: 1,
+    phoneNumber: 1,
+    address: 1,
+    maritalState: 1,
+    gender: 1,
+  });
+  return user;
+}
+
 export default {
   createNewUser,
   findUserByUsername,
@@ -102,4 +120,5 @@ export default {
   updateUserWithNewVerification,
   userWithIdentifier,
   updateVerifiedStatus,
+  getUserByIdWithMinimumData,
 };

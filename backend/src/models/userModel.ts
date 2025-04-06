@@ -43,6 +43,31 @@ const userSchema = new Schema<IUser>(
         },
       ],
     },
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    dateOfBirth: {
+      type: Date,
+    },
+    phoneNumber: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+    maritalState: {
+      type: String,
+      enum: ["single", "married", "divorced", "widowed"],
+      default: "single",
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"],
+      default: "other",
+    },
   },
   {
     timestamps: true,

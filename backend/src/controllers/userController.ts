@@ -228,3 +228,27 @@ export const signInUser = async (
     handleError(res, error);
   }
 };
+
+export const getUserByIdWithMinimumData = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const user = await userService.getUserByIdWithMinimumData(id);
+    if (!user) {
+      res.status(HttpStatusCodes.OK).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};

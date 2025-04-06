@@ -20,6 +20,13 @@ export interface IUser {
   isVerified: boolean;
   role: string;
   reports?: string[];
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: Date;
+  phoneNumber?: string;
+  address?: string;
+  maritalState?: "single" | "married" | "divorced" | "widowed";
+  gender?: "male" | "female" | "other";
 }
 
 export type UserDocument = Document<unknown, {}, IUser> &
