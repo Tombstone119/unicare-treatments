@@ -1,17 +1,15 @@
 "use client";
 
+import { getColumns } from "@/components/layout/channeling/tables/patient-columns";
 import { DataTable } from "@/components/layout/channeling/tables/my-appointments";
-import { IAppointment } from "@/types/index";
-import { getColumns } from "@/components/layout/channeling/tables/columns";
-import { useEffect, useState } from "react";
-import { Stethoscope } from "lucide-react";
-import { AppointmentResponse } from "@/types/users";
 import { apiService } from "@/libs/api";
+import { IAppointment } from "@/types/index";
+import { AppointmentResponse } from "@/types/users";
+import { Stethoscope } from "lucide-react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { ArrowLeft, PlusIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
-export default function ViewAppointment() {
+export default function Page() {
   const [data, setData] = useState<IAppointment[]>([]);
   const { data: session } = useSession();
   const user = session?.user;
@@ -20,21 +18,9 @@ export default function ViewAppointment() {
     getData();
   };
 
-  // const getPaymentDone = async (data: IAppointment) => {
-  //   console.log("data: =-->", data);
-  //   router.push("/channeling-payment");
-
-  //   // const response = await apiService.get<AppointmentResponse>(
-  //   //   `/appointments/payment/${data.referenceNumber}`
-  //   // );
-  //   // if (response.success) {
-  //   //   setData(response?.appointments || []);
-  //   // }
-  // };
-
   const getData = async () => {
     const response = await apiService.get<AppointmentResponse>(
-      `/appointments/patient/${user?.id}`
+      `/appointments/patient`
     );
     if (response.success) {
       setData(response?.appointments || []);
@@ -47,9 +33,7 @@ export default function ViewAppointment() {
     if (user?.id) {
       getData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
-
   return (
     <div className=" bg-white py-5 px-10 min-h-svh">
       <div className="flex flex-col gap-1 justify-center items-center">
@@ -58,24 +42,13 @@ export default function ViewAppointment() {
         </h1>
         <DataTable columns={columns} data={data}>
           <>
-            <Link
-              href="/channeling"
-              className="flex items-center gap-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8  rounded-md px-3"
-            >
-              <ArrowLeft className="h-4 w-4 text-gray-600" />
-              <div className="flex items-center gap-[4px]">
-                <span className="inline md:hidden">Back</span>
-                <span className="hidden md:inline">Appointment Center</span>
-              </div>
-            </Link>
-
-            <Link
+            {/* <Link
               href="/channeling/channel-appointment"
               className="flex items-center gap-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3"
             >
               <PlusIcon className="h-4 w-4 text-gray-600" />
               Add
-            </Link>
+            </Link> */}
           </>
         </DataTable>
       </div>

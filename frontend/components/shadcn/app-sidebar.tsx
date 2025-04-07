@@ -98,6 +98,19 @@ const data = {
       title: "Appointments",
       url: "/dashboard/appointment-management",
       icon: MdQueue,
+      isActive: true,
+      items: [
+        {
+          icon: MdAdd,
+          title: "All Appointments",
+          url: "/dashboard/all-appointments",
+        },
+        {
+          icon: IoIosList,
+          title: "All Products",
+          url: "/dashboard/product-management/product-see",
+        },
+      ],
     },
     {
       title: "Treatment History",

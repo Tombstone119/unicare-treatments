@@ -13,9 +13,6 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
-import Link from "next/link";
-import { ArrowLeft, PlusIcon } from "lucide-react";
-
 import {
   Table,
   TableBody,
@@ -34,11 +31,13 @@ import { cn } from "@/libs/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  children?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  children,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -72,25 +71,7 @@ export function DataTable<TData, TValue>({
     <>
       <div className="flex items-center pb-4 gap-2 w-full justify-between">
         <div className="flex items-center gap-3">
-          <Link
-            href="/channeling"
-            className="flex items-center gap-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8  rounded-md px-3"
-          >
-            <ArrowLeft className="h-4 w-4 text-gray-600" />
-            <div className="flex items-center gap-[4px]">
-              <span className="inline md:hidden">Back</span>
-              <span className="hidden md:inline">Appointment Center</span>
-            </div>
-          </Link>
-
-          <Link
-            href="/channeling/channel-appointment"
-            className="flex items-center gap-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3"
-          >
-            <PlusIcon className="h-4 w-4 text-gray-600" />
-            Add
-          </Link>
-          <DataTableViewOptions table={table} />
+          {children} <DataTableViewOptions table={table} />
         </div>
         <Input
           placeholder="Filter REF..."

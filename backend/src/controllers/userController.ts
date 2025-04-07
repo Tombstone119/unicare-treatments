@@ -236,7 +236,7 @@ export const getPartialUser = async (
   try {
     const { id } = req.params;
 
-    const user = await userService.getPartialUser(id);
+    const user = await userService.getPartialData(id);
     if (!user) {
       res.status(HttpStatusCodes.OK).json({
         success: false,
@@ -260,8 +260,7 @@ export const updatePartialUser = async (
   try {
     const { id } = req.params;
     const userData = req.body;
-
-    const updatedUser = await userService.updatePartialUser(id, userData);
+    const updatedUser = await userService.updatePartially(id, userData);
     if (!updatedUser) {
       res.status(HttpStatusCodes.OK).json({
         success: false,

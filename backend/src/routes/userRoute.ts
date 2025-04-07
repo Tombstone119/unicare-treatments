@@ -18,6 +18,6 @@ router.route("/profile/sign-up").post(signUpUser);
 router.route("/profile/verify-code").post(verifyUser);
 router.route("/profile/sign-in").post(signInUser);
 
-router.route("/:id").get(getPartialUser).post(updatePartialUser);
+router.route("/:id").get(getPartialUser).put(updatePartialUser);
 
 export default router;

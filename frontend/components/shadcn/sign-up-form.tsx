@@ -175,7 +175,7 @@ export function SignUpForm({
                       Please wait
                     </>
                   ) : (
-                    "Sign in"
+                    "Sign Up"
                   )}
                 </Button>
                 <div className="flex flex-col gap-2">

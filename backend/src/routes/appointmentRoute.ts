@@ -1,36 +1,15 @@
 import { Router } from "express";
 
-import { createPatientAppointment } from "../controllers/appointmentController.ts";
+import {
+  createPatientAppointment,
+  getPatientById,
+  getAllPatients,
+} from "../controllers/appointmentController.ts";
 
 const router = Router();
 
-// /api/appointments/doctorAppointments
-// /api/appointments/patientAppointments
-// /api/appointments/patient/5678
-// /api/appointments/date/2023-12-25
-// /api/appointments/refNo/1504250001
-// /api/appointments/patientIdByRefNo/1504250001
-// router.route("/reschedule/:id").post(rescheduleAppointmentById);
-// router
-//   .route("/doctorAppointments")
-//   .post(createDoctorAppointment)
-//   .get(getAllAppointments);
-
-// router.route("/patient/:patientId").get(getAllByPatientId);
-
-// router
-//   .route("/date/:date")
-//   .get(getAllByDate)
-//   .delete(deleteAllAppointmentsByDate);
-
-// router
-//   .route("/refNo/:refNo")
-//   .get(findByRefNo)
-//   .delete(deleteAppointmentByRefNo)
-//   .put(rescheduleAppointmentByRefNo);
-
-// router.route("/patientIdByRefNo/:refNo").get(getPatientIdByRefNo);
-
 router.route("/patientAppointments").post(createPatientAppointment);
+router.route("/patient").get(getAllPatients);
+router.route("/patient/:patientId").get(getPatientById);
 
 export default router;

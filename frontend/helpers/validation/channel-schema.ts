@@ -13,11 +13,11 @@ export const channelAppointmentSchema = z
     phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
     email: z.string().email("Invalid email format"),
     address: z.string().min(5, "Address must be at least 5 characters"),
-    appointmentDate: z.preprocess(
-      (val) =>
-        typeof val === "string" && isValidDate(val) ? new Date(val) : val,
-      z.date()
-    ),
+    // appointmentDate: z.preprocess(
+    //   (val) =>
+    //     typeof val === "string" && isValidDate(val) ? new Date(val) : val,
+    //   z.date()
+    // ),
   })
   .refine((data) => isValidDate(data.dateOfBirth), {
     message: "Invalid date format",

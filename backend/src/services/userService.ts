@@ -62,18 +62,6 @@ async function sendVerificationEmail({
   }
 }
 
-async function updateUserWithNewVerification({
-  user,
-  verifyCode,
-}: {
-  user: UserDocument;
-  verifyCode: string;
-}) {
-  user.verifyCode = verifyCode;
-  user.verifyCodeExpiry = new Date(Date.now() + 3600000);
-  await user.save();
-}
-
 async function updateVerifiedStatus({ user }: { user: UserDocument }) {
   user.isVerified = true;
   await user.save();
@@ -92,7 +80,7 @@ async function userWithIdentifier({
   return user;
 }
 
-async function getPartialUser(id: string) {
+async function getPartialData(id: string) {
   const user = await userModel.findById(id).select({
     username: 1,
     email: 1,
@@ -110,14 +98,29 @@ async function getPartialUser(id: string) {
   return user;
 }
 
-async function updatePartialUser(
+async function updatePartially(
   id: string,
   data: Partial<IUser>
 ): Promise<UserDocument | null> {
-  const user = await userModel.findByIdAndUpdate(id, data, {
-    new: true, // Returns the modified document rather than the original
-    runValidators: true, // Ensures the update operation runs validation defined in your schema
-  });
+  const user = await userModel
+    .findByIdAndUpdate(id, data, {
+      new: true, // Returns the modified document rather than the original
+      runValidators: true, // Ensures the update operation runs validation defined in your schema
+    })
+    .select({
+      username: 1,
+      email: 1,
+      isVerified: 1,
+      role: 1,
+      reports: 1,
+      firstName: 1,
+      lastName: 1,
+      dateOfBirth: 1,
+      phoneNumber: 1,
+      address: 1,
+      maritalState: 1,
+      gender: 1,
+    });
   return user;
 }
 
@@ -128,9 +131,8 @@ export default {
   getVerifiedCode,
   isUniqueUser,
   sendVerificationEmail,
-  updateUserWithNewVerification,
   userWithIdentifier,
   updateVerifiedStatus,
-  getPartialUser,
-  updatePartialUser,
+  getPartialData,
+  updatePartially,
 };
