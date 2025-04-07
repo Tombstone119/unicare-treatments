@@ -15,9 +15,9 @@ import {
   MapPin,
   CircleUser,
   UsersRound,
-  Stethoscope,
 } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
+import { FaUserEdit } from "react-icons/fa";
 
 export default function ChannelAppointmentForm({
   handleSubmit,
@@ -113,7 +113,7 @@ export default function ChannelAppointmentForm({
             </div>
 
             <button
-              className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
+              className="cursor-pointer px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
               onClick={async (e) => {
                 e.preventDefault();
                 const isValid = await form.trigger();
@@ -122,8 +122,8 @@ export default function ChannelAppointmentForm({
                 }
               }}
             >
-              <Stethoscope className="h-5 w-5 text-white" />
-              Save and Continue
+              <FaUserEdit />
+              Save and Continue {form.formState.isSubmitting && "..."}
             </button>
           </form>
         </Form>

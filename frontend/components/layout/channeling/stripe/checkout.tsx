@@ -7,9 +7,16 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
+import { FaCreditCard } from "react-icons/fa";
 import { toast } from "sonner";
 
-export default function CheckoutPage({ amount }: { amount: number }) {
+export default function CheckoutPage({
+  amount,
+  handleSetStep,
+}: {
+  amount: number;
+  handleSetStep: (num: -1 | 1) => void;
+}) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -19,6 +26,7 @@ export default function CheckoutPage({ amount }: { amount: number }) {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    handleSetStep(1);
     setLoading(true);
     if (!stripe || !elements) {
       return;
@@ -31,11 +39,12 @@ export default function CheckoutPage({ amount }: { amount: number }) {
       setLoading(false);
       return;
     }
+    const refId = "123456789"; // Replace with actual refId
     const { error } = await stripe.confirmPayment({
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_FE_DOMAIN_NAME}/channeling-payment-success?amount=${amount}`,
+        return_url: `${process.env.NEXT_PUBLIC_FE_DOMAIN_NAME}/channeling/channel-appointment?amount=${amount}&step=3&ref=${refId}`,
       },
     });
 
@@ -91,7 +100,8 @@ export default function CheckoutPage({ amount }: { amount: number }) {
       {errorMessage && (
         <div className="text-red-500 text-sm mt-2">{errorMessage}</div>
       )}
-      <Button className="mt-2 w-full" disabled={!stripe || loading}>
+      <Button className="mt-2 w-full text-base" disabled={!stripe || loading}>
+        <FaCreditCard />
         {!loading ? `Pay ${amount}` : "Processing..."}
       </Button>
     </form>

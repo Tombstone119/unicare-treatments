@@ -44,11 +44,7 @@ export default function InputElement({
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring focus:ring-blue-300"
               placeholder={placeholder}
               {...field}
-              value={
-                field.value instanceof Date
-                  ? field.value.toISOString()
-                  : field.value
-              }
+              value={field.value}
               {...(fieldType === "date" && {
                 min: "1900-01-01",
                 max: new Date().toISOString().split("T")[0],

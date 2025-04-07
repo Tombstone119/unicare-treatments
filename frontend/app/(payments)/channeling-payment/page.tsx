@@ -41,7 +41,12 @@ export default function Page() {
             amount: amount,
           }}
         >
-          <CheckoutPage amount={amount} />
+          <CheckoutPage
+            amount={amount}
+            handleSetStep={() => {
+              // handleSetStep(-1);
+            }}
+          />
         </Elements>
       </div>
     </div>
