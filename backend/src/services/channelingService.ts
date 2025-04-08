@@ -5,42 +5,69 @@ const getAll = async () => {
   return channeling;
 };
 
-const create = async () => {
+const getActive = async (currentDate: string) => {
+  const channeling = await ChannelingModel.find({
+    channelingDate: { $gte: currentDate },
+  }).select({
+    channelingDate: 1,
+    _id: 0,
+  });
+  return channeling;
+};
+
+const getByDate = async (channelingDate: string) => {
+  const channeling = await ChannelingModel.findOne({
+    channelingDate: channelingDate,
+  });
+  return channeling;
+};
+
+const create = async (channelingDate: string, channelingSlots: string[][]) => {
+  const existingChanneling = await ChannelingModel.findOne({
+    channelingDate: channelingDate,
+  });
+  if (existingChanneling) {
+    const updatedChanneling = await ChannelingModel.findOneAndUpdate(
+      { channelingDate: channelingDate },
+      {
+        $set: { channelingSlots: channelingSlots },
+      },
+      { new: true } // Return the updated document
+    );
+    return updatedChanneling;
+  }
   const channeling = await ChannelingModel.create({
-    appointmentDate: new Date("2025-05-01"),
-    appointmentSlots: [
-      ["10.00", "10.30", "11.00", "11.30"],
-      ["13.00", "13.30", "14.00", "14.30"],
-      ["16.00", "16.30", "17.00", "17.30"],
-    ],
+    channelingDate: channelingDate,
+    channelingSlots: channelingSlots,
   });
   return channeling;
 };
 
-const update = async (appointmentId: string) => {
-  const channeling = await ChannelingModel.findByIdAndUpdate(appointmentId, {
-    $set: {
-      appointmentSlots: [
-        ["10.00", "10.30", "11.00", "11.30"],
-        ["13.00", "13.30", "14.00", "14.30"],
-      ],
+const update = async (channelingDate: string, channelingSlots: string[][]) => {
+  const updatedChanneling = await ChannelingModel.findOneAndUpdate(
+    { channelingDate: channelingDate },
+    {
+      $set: { channelingSlots: channelingSlots },
     },
-  });
-  return channeling;
+    { new: true } // Return the updated document
+  );
+  return updatedChanneling;
 };
 
-const add = async (appointmentId: string) => {
-  const channeling = await ChannelingModel.findByIdAndUpdate(appointmentId, {
-    $push: {
-      appointmentSlots: ["18.00", "18.30", "19.00"],
-    },
-  });
-  return channeling;
-};
+// const add = async (channelingId: string) => {
+//   const channeling = await ChannelingModel.findByIdAndUpdate(channelingId, {
+//     $push: {
+//       appointmentSlots: ["18.00", "18.30", "19.00"],
+//     },
+//   });
+//   return channeling;
+// };
 
 export default {
   getAll,
+  getActive,
+  getByDate,
   create,
   update,
-  add,
+  // add,
 };

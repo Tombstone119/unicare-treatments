@@ -18,6 +18,13 @@ export interface IUser {
   gender?: "male" | "female" | "other";
 }
 
+export type TimeSlot = {
+  start: string;
+  end: string;
+  isActive: boolean;
+  patientId?: string;
+};
+
 export type userTypes = "doctor" | "admin" | "supplier" | "patient";
 
 export interface TApiResponse {
@@ -37,4 +44,16 @@ export interface AppointmentResponse extends TApiResponse {
 
 export interface ReportResponse extends TApiResponse {
   reports: string[];
+}
+
+export interface ChannelingResponse extends TApiResponse {
+  channeling: {
+    channelingDate: string;
+    channelingSlots: TimeSlot[][];
+  };
+  dates: string[];
+}
+
+export interface DatesResponse extends TApiResponse {
+  dates: string[];
 }

@@ -1,13 +1,36 @@
 import { Schema, model, Types } from "mongoose";
 
-const ChannelingSchema = new Schema(
+const SlotSchema = new Schema(
   {
-    appointmentDate: {
-      type: Date,
+    start: {
+      type: String,
       required: true,
     },
-    appointmentSlots: {
-      type: [[String]],
+    end: {
+      type: String,
+      required: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+    patientId: {
+      type: String,
+      default: "",
+    },
+  },
+  { _id: false }
+);
+
+const ChannelingSchema = new Schema(
+  {
+    channelingDate: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    channelingSlots: {
+      type: [[SlotSchema]],
       required: true,
     },
   },

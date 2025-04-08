@@ -8,10 +8,46 @@ export const getChanneling = async (
   res: Response
 ): Promise<void> => {
   try {
-    const appointments = await channelingService.getAll();
+    const channeling = await channelingService.getAll();
     res.status(HttpStatusCodes.OK).json({
       success: true,
-      appointments,
+      channeling,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+export const getActiveChanneling = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { currentDate } = req.params;
+    const channeling = await channelingService.getActive(currentDate);
+    let dates: string[] = [];
+    if (channeling) {
+      dates = channeling.map((date) => date.channelingDate);
+    }
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      dates,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+export const getChannelingByDate = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { channelingDate } = req.params;
+    const channeling = await channelingService.getByDate(channelingDate);
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      channeling,
     });
   } catch (error) {
     handleError(res, error);
@@ -19,14 +55,24 @@ export const getChanneling = async (
 };
 
 export const createChanneling = async (
-  _: Request,
+  req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const channeling = await channelingService.create();
+    const data = req.body;
+    const channeling = await channelingService.create(
+      data.channelingDate,
+      data.channelingSlots
+    );
+    const allActive = await channelingService.getActive(data.currentDate);
+    let dates: string[] = [];
+    if (allActive) {
+      dates = allActive.map((date) => date.channelingDate);
+    }
     res.status(HttpStatusCodes.OK).json({
       success: true,
       channeling,
+      dates,
     });
   } catch (error) {
     handleError(res, error);
