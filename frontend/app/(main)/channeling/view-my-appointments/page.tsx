@@ -51,7 +51,7 @@ export default function ViewAppointment() {
   }, [user?.id]);
 
   return (
-    <div className=" bg-white py-5 px-10 min-h-svh">
+    <div className=" bg-white py-5 px-10 min-h-svh border-t-2 border-black border-dashed">
       <div className="flex flex-col gap-1 justify-center items-center">
         <h1 className="text-2xl font-bold text-gray-800 text-center flex items-center gap-2 mb-4">
           My Appointments <Stethoscope className="h-8 w-8 text-black" />

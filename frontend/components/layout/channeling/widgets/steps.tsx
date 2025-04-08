@@ -17,7 +17,7 @@ const Steps = ({
         const stepNum = num + 1;
         const isActive = stepNum <= stepsComplete;
         return (
-          <Fragment key={stepNum}>
+          <Fragment key={`step-counter-${stepNum + 1}`}>
             <div className="relative">
               <div
                 className={`w-10 h-10 flex items-center justify-center shrink-0 border-2 rounded-full font-semibold text-sm relative z-10 transition-colors duration-300 ${
@@ -52,7 +52,7 @@ const Steps = ({
                       exit={{ rotate: -180, opacity: 0 }}
                       transition={{ duration: 0.125 }}
                     >
-                      {num}
+                      {num + 1}
                     </motion.span>
                   )}
                 </AnimatePresence>

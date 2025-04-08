@@ -99,7 +99,7 @@ export default function UploadLabReports() {
 
   return (
     <>
-      <div className="bg-white py-5 px-10 min-h-svh">
+      <div className="bg-white py-5 px-10 min-h-svh border-t-2 border-black border-dashed">
         <div className="w-full">
           <Link href="/channeling" className="flex items-center gap-2">
             <ArrowLeft className="h-5 w-5 text-gray-600" />

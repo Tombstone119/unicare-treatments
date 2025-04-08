@@ -62,7 +62,7 @@ export default function ChannelingPage() {
             title="My Treatments"
             description="Monitor your current queue status in real time."
             imageUrl="/assets/images/my-treatment.jpg"
-            href="/channeling/upload-lab-reports"
+            href="/channeling/my-treatment"
           />
         </div>
       </div>

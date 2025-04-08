@@ -81,7 +81,7 @@ export default function ChannelAppointment(props: {
   };
 
   return (
-    <div className=" bg-white py-5 px-10">
+    <div className=" bg-white py-5 px-10 border-t-2 border-black border-dashed">
       <div className="flex items-center justify-between mb-5">
         <Link href="/channeling" className="flex items-center gap-2">
           <ArrowLeft className="h-5 w-5 text-gray-600" />
