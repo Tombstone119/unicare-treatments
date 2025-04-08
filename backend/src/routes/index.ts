@@ -43,6 +43,7 @@ import {
   removeReport,
 } from "../controllers/reportController.ts";
 import userRoute from "./userRoute.ts";
+import channelingRoute from "./channelingRoute.ts";
 
 // Middleware to parse JSON request bodies
 router.use(express.json());
@@ -75,6 +76,7 @@ router.put("/inventory-item/:id", updateItem); // Update this line
 // --------------------------------------------------------
 router.use("/appointments", appointmentRoute);
 router.use("/user", userRoute);
+router.use("/channeling", channelingRoute);
 
 router
   .route("/reports/:patientId")

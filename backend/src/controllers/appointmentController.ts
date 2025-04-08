@@ -2,7 +2,6 @@ import appointmentService from "../services/appointmentService.ts";
 import { Response, Request } from "express";
 import HttpStatusCodes from "../util/statusCodes.ts";
 import { handleError } from "../util/errorHandler.ts";
-import userService from "../services/userService.ts";
 
 export const createPatientAppointment = async (
   req: Request,

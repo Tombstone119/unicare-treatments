@@ -1,0 +1,48 @@
+export const first = [
+  { start: "08:00", end: "08:15", isActive: false },
+  { start: "08:15", end: "08:30", isActive: false },
+  { start: "08:30", end: "08:45", isActive: false },
+  { start: "08:45", end: "09:00", isActive: false },
+  { start: "09:00", end: "09:15", isActive: false },
+  { start: "09:15", end: "09:30", isActive: false },
+  { start: "09:30", end: "09:45", isActive: false },
+  { start: "09:45", end: "10:00", isActive: false },
+  { start: "10:00", end: "10:15", isActive: false },
+  { start: "10:15", end: "10:30", isActive: false },
+  { start: "10:30", end: "10:45", isActive: false },
+  { start: "10:45", end: "11:00", isActive: false },
+  { start: "11:00", end: "11:15", isActive: false },
+  { start: "11:15", end: "11:30", isActive: false },
+  { start: "11:30", end: "11:45", isActive: false },
+  { start: "11:45", end: "12:00", isActive: false },
+];
+
+export const second = [
+  { start: "14:00", end: "14:15", isActive: false },
+  { start: "14:15", end: "14:30", isActive: false },
+  { start: "14:30", end: "14:45", isActive: false },
+  { start: "14:45", end: "15:00", isActive: false },
+  { start: "15:00", end: "15:15", isActive: false },
+  { start: "15:15", end: "15:30", isActive: false },
+  { start: "15:30", end: "15:45", isActive: false },
+  { start: "15:45", end: "16:00", isActive: false },
+  { start: "16:00", end: "16:15", isActive: false },
+  { start: "16:15", end: "16:30", isActive: false },
+  { start: "16:30", end: "16:45", isActive: false },
+  { start: "16:45", end: "17:00", isActive: false },
+  { start: "17:00", end: "17:15", isActive: false },
+  { start: "17:15", end: "17:30", isActive: false },
+  { start: "17:30", end: "17:45", isActive: false },
+  { start: "17:45", end: "18:00", isActive: false },
+];
+
+export const third = [
+  { start: "20:00", end: "20:15", isActive: false },
+  { start: "20:15", end: "20:30", isActive: false },
+  { start: "20:30", end: "20:45", isActive: false },
+  { start: "20:45", end: "21:00", isActive: false },
+  { start: "21:00", end: "21:15", isActive: false },
+  { start: "21:15", end: "21:30", isActive: false },
+  { start: "21:30", end: "21:45", isActive: false },
+  { start: "21:45", end: "22:00", isActive: false },
+];

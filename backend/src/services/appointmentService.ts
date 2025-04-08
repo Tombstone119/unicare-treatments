@@ -4,6 +4,7 @@ import {
 } from "../types/appointment.ts";
 import AppointmentModel from "../models/appointmentModel.ts";
 import mongoose from "mongoose";
+import ChannelingModel from "@src/models/channelingModel.ts";
 
 async function createAppointmentByPatient(appointment: IPatientAppointment) {
   try {

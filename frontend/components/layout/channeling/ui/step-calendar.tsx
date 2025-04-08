@@ -20,12 +20,12 @@ export default function FirstStep({
       <FlipCalendar date={date} setDate={setDate} />
       <div className="flex items-center gap-5">
         <button
-          className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center min-w-[196px]"
+          className="px-4 py-2 rounded border-2 border-black text-black flex items-center gap-2 justify-center min-w-[196px]"
           onClick={() => {
             handleSetStep(-1);
           }}
         >
-          <ArrowLeft className="h-5 w-5 text-white" />
+          <ArrowLeft className="h-5 w-5 text-black" />
           Go Back
         </button>
         <button

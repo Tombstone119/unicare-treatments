@@ -110,6 +110,11 @@ const data = {
           title: "All Products",
           url: "/dashboard/product-management/product-see",
         },
+        {
+          icon: IoIosList,
+          title: "Schedule",
+          url: "/dashboard/schedule",
+        },
       ],
     },
     {

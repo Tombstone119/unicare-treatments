@@ -1,11 +1,11 @@
 "use client";
 
-import FirstStep from "@/channeling/ui/first-step";
+import FirstStep from "@/channeling/ui/step-calendar";
 
-import SecondStep from "@/channeling/ui/second-step";
+import SecondStep from "@/channeling/ui/step-payment";
 import Steps from "@/channeling/widgets/steps";
-import ThirdStep from "@/channeling/ui/third-step";
-import ZeroStep from "@/channeling/ui/zero-step";
+import ThirdStep from "@/channeling/ui/step-final-state";
+import ZeroStep from "@/channeling/ui/step-personal-details";
 import { usePatient } from "@/hooks/use-patient";
 import { apiService } from "@/libs/api";
 import { channelSchema } from "@/schemas/channel-schema";
