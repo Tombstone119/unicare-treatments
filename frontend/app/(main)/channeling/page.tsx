@@ -1,4 +1,4 @@
-import FeatureCard from "@/components/layout/channeling/cards/FeatureCard";
+import FeatureCard from "@/channeling/widgets/feature-card";
 
 import Image from "next/image";
 

@@ -2,8 +2,8 @@
 
 import { Form } from "@/shadcn/ui/form";
 
-import InputElement from "./form-elements/input-element";
-import SelectElement from "./form-elements/select-element";
+import InputElement from "@/channeling/elements/form-elements/input-element";
+import SelectElement from "@/channeling/elements/form-elements/select-element";
 
 import { channelSchema } from "@/helpers/validation/channel-schema";
 import { SelectItem } from "@/shadcn/ui/select";
@@ -19,7 +19,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { FaUserEdit } from "react-icons/fa";
 
-export default function ChannelAppointmentForm({
+export default function ZeroStep({
   handleSubmit,
   form,
 }: {

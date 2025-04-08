@@ -1,7 +1,7 @@
 "use client";
 
-import { getColumns } from "@/components/layout/channeling/tables/patient-columns";
-import { DataTable } from "@/components/layout/channeling/tables/my-appointments";
+import { getColumns } from "@/channeling/elements/table-elements/patient-columns";
+import { DataTable } from "@/channeling/ui/my-appointments";
 import { apiService } from "@/libs/api";
 import { IAppointment } from "@/types/index";
 import { AppointmentResponse } from "@/types/users";

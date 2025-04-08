@@ -3,7 +3,7 @@
 import {
   MultiFileDropzone,
   type FileState,
-} from "@/channeling/uploads/multi-file-dropzone";
+} from "@/channeling/widgets/multi-file-dropzone";
 import { apiService } from "@/libs/api";
 import { useEdgeStore } from "@/libs/edgestore";
 import { ReportResponse } from "@/types/users";

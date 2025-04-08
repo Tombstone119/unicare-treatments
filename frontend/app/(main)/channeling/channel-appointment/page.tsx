@@ -1,8 +1,11 @@
 "use client";
-import ChannelAppointmentForm from "@/components/layout/channeling/forms/ChannelAppointmentForm";
-import StripePayment from "@/components/layout/channeling/widgets/channel-payment";
-import { FlipCalendar } from "@/components/layout/channeling/widgets/flip-calendar";
-import Steps from "@/components/layout/channeling/widgets/steps";
+
+import FirstStep from "@/channeling/ui/first-step";
+
+import SecondStep from "@/channeling/ui/second-step";
+import Steps from "@/channeling/widgets/steps";
+import ThirdStep from "@/channeling/ui/third-step";
+import ZeroStep from "@/channeling/ui/zero-step";
 import { usePatient } from "@/hooks/use-patient";
 import { apiService } from "@/libs/api";
 import { channelSchema } from "@/schemas/channel-schema";
@@ -10,7 +13,6 @@ import { AppointmentResponse } from "@/types/users";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
-import { FaCalendarAlt } from "react-icons/fa";
 import { toast } from "sonner";
 
 type Params = Promise<{ slug: string }>;
@@ -91,60 +93,30 @@ export default function ChannelAppointment(props: {
       <div className="py-8 pb-10 px-4 my-4 bg-gray-100 border-2 border-dashed border-black rounded-lg">
         <div className="flex flex-col gap-4 justify-center items-center">
           {stepsComplete === 0 && (
-            <ChannelAppointmentForm form={form} handleSubmit={handleSubmit} />
+            <ZeroStep form={form} handleSubmit={handleSubmit} />
           )}
 
           {stepsComplete === 1 && (
-            <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
-              <h1 className="text-2xl font-bold text-gray-800 text-center">
-                Select a Date
-              </h1>
-              <FlipCalendar date={date} setDate={setDate} />
-              <div className="flex items-center gap-5">
-                <button
-                  className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center min-w-[196px]"
-                  onClick={() => {
-                    handleSetStep(-1);
-                  }}
-                >
-                  <ArrowLeft className="h-5 w-5 text-white" />
-                  Go Back
-                </button>
-                <button
-                  className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
-                  onClick={() => {
-                    handleSetStep(1);
-                  }}
-                >
-                  <FaCalendarAlt />
-                  Save and Continue
-                </button>
-              </div>
-            </div>
+            <FirstStep
+              handleSetStep={handleSetStep}
+              date={date}
+              setDate={setDate}
+            />
           )}
 
           {stepsComplete === 2 && (
-            <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
-              <div className="text-2xl font-bold text-gray-800 text-center flex flex-col items-center gap-2">
-                Make your Payment
-              </div>
-              <StripePayment handleSetStep={handleSetStep} amount={amount} />
-            </div>
+            <SecondStep amount={amount} handleSetStep={handleSetStep} />
           )}
 
           {stepsComplete === 3 && (
-            <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
-              <div className="text-2xl font-bold text-gray-800 text-center flex flex-col items-center gap-2">
-                Your Payment {`LKR ${searchParams?.amount}`} is Successfully
-                Received
-              </div>
-              <Link
-                href={"/channeling/view-my-appointments"}
-                className="bg-black text-white px-5 py-2 rounded-md"
-              >
-                Go Back to Appointments
-              </Link>
-            </div>
+            <ThirdStep
+              reference={searchParams.ref as string}
+              amount={amount}
+              date={date.toDateString()}
+              time={"4:00 PM"}
+              no={"Session 2 - No 14"}
+              name={`${form.getValues("firstName")} ${form.getValues("lastName")}`}
+            />
           )}
         </div>
       </div>

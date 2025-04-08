@@ -22,8 +22,8 @@ import {
   TableRow,
 } from "@/shadcn/ui/table";
 import { useState } from "react";
-import { DataTablePagination } from "./pagination";
-import { DataTableViewOptions } from "./view-options";
+import { DataTablePagination } from "@/channeling/elements/table-elements/pagination";
+import { DataTableViewOptions } from "@/channeling/elements/table-elements/view-options";
 
 import { Input } from "@/shadcn/ui/input";
 import { cn } from "@/libs/utils";

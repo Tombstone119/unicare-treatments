@@ -2,7 +2,7 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import CheckoutPage from "@/components/layout/channeling/stripe/checkout";
+import CheckoutPage from "@/channeling/widgets/checkout";
 import Image from "next/image";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 

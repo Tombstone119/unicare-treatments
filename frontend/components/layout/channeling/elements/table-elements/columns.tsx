@@ -2,15 +2,15 @@
 
 import { Column, ColumnDef } from "@tanstack/react-table";
 
-import { DataTableColumnHeader } from "./sort-menu";
+import { DataTableColumnHeader } from "@/channeling/elements/table-elements/sort-menu";
 
 import { IAppointment } from "@/types/index";
 import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/ui/dialog";
 import { Button } from "@/shadcn/ui/button";
 import { Pencil } from "lucide-react";
-import DeleteDialog from "./delete-dialog";
-import CopyToClipboard from "./copy-to-clipboard";
-import { EditPass } from "./edit-pass";
+import DeleteDialog from "@/channeling/ui/delete-dialog";
+import CopyToClipboard from "@/channeling/widgets/copy-to-clipboard";
+import { EditPass } from "@/channeling/ui/edit-pass";
 
 export const getColumns = (
   refreshPage: () => void
