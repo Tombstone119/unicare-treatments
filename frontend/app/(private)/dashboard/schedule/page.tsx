@@ -150,7 +150,10 @@ export default function Page() {
               onSelect={(active: boolean) => {
                 if (isDisabled) return;
                 setFirstSession((prev) =>
-                  prev.map((item) => ({ ...item, isActive: active }))
+                  prev.map((item) => {
+                    if (item.patientId) return item;
+                    return { ...item, isActive: active };
+                  })
                 );
               }}
               // blockFirst={<BlockedTime start="00.00" end="08.00" />}
@@ -167,7 +170,10 @@ export default function Page() {
               onSelect={(active: boolean) => {
                 if (isDisabled) return;
                 setSecondSession((prev) =>
-                  prev.map((item) => ({ ...item, isActive: active }))
+                  prev.map((item) => {
+                    if (item.patientId) return item;
+                    return { ...item, isActive: active };
+                  })
                 );
               }}
               // blockedEnd={<BlockedTime start="18.00" end="20.00" />}
@@ -183,7 +189,10 @@ export default function Page() {
               onSelect={(active: boolean) => {
                 if (isDisabled) return;
                 setThirdSession((prev) =>
-                  prev.map((item) => ({ ...item, isActive: active }))
+                  prev.map((item) => {
+                    if (item.patientId) return item;
+                    return { ...item, isActive: active };
+                  })
                 );
               }}
               // blockedEnd={<BlockedTime start="22.00" end="24.00" />}

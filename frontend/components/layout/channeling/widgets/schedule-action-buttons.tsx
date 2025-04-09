@@ -38,6 +38,7 @@ export default function ScheduleActionButtons({
         className="border-black border-2"
         onClick={() => {
           if (isDisabled) return;
+          // TODO: handle this if a user has selected a session
           setFirstSession(first);
           setSecondSession(second);
           setThirdSession(third);

@@ -9,15 +9,23 @@ import { ChannelingResponse, DatesResponse } from "@/types/users";
 import PatientCalender from "@/channeling/widgets/patient-calendar";
 import { cn } from "@/libs/utils";
 import { Sessions } from "@/types/channeling";
+import { getDataFiltered } from "@/libs/channeling";
 
+const selectedData = {
+  first: 0,
+  second: 1,
+  third: 2,
+};
 export default function FirstStep({
   handleSetStep,
   date,
   setDate,
+  userId,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   date: Date | null;
   setDate: Dispatch<SetStateAction<Date | null>>;
+  userId: string | undefined;
 }) {
   const [loading, setLoading] = useState(false);
   const [allowedDates, setAllowedDates] = useState<Date[]>([]);
@@ -49,6 +57,28 @@ export default function FirstStep({
     }
   };
 
+  const updateChanneling = async () => {
+    try {
+      if (!date) {
+        return;
+      }
+      const formattedDate = format(date, "dd-MM-yyyy");
+
+      const sessionArr = [firstSession, secondSession, thirdSession];
+
+      await apiService.post<DatesResponse>(`/channeling/make-channeling`, {
+        session: selectedData[selectedSession as keyof typeof selectedData],
+        channelingDate: formattedDate,
+        start:
+          sessionArr[selectedData[selectedSession as keyof typeof selectedData]]
+            ?.start,
+        patientId: userId,
+      });
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    }
+  };
+
   const getData = async (selectedDate: Date) => {
     try {
       setLoading(true);
@@ -56,45 +86,16 @@ export default function FirstStep({
       const response = await apiService.get<ChannelingResponse>(
         `/channeling/${formattedDate}`
       );
-      const firstSessionArray = response.channeling.channelingSlots[0];
-      const firstEmptySlot = firstSessionArray.findIndex(
-        (slot) => slot.isActive === true && !slot.patientId
+      setFirstSession(
+        getDataFiltered(response?.channeling?.channelingSlots[0] || [])
       );
-      if (firstEmptySlot < 0) {
-        setFirstSession(undefined);
-      } else {
-        setFirstSession({
-          start: firstSessionArray[firstEmptySlot].start,
-          end: firstSessionArray[firstEmptySlot].end,
-          number: (firstEmptySlot + 1).toString(),
-        });
-      }
-      const secondSessionArray = response.channeling.channelingSlots[1];
-      const secondEmptySlot = secondSessionArray.findIndex(
-        (slot) => slot.isActive === true && !slot.patientId
+      setSecondSession(
+        getDataFiltered(response?.channeling?.channelingSlots[1] || [])
       );
-      if (secondEmptySlot < 0) {
-        setSecondSession(undefined);
-      } else {
-        setSecondSession({
-          start: secondSessionArray[secondEmptySlot].start,
-          end: secondSessionArray[secondEmptySlot].end,
-          number: (secondEmptySlot + 1).toString(),
-        });
-      }
-      const thirdSessionArray = response.channeling.channelingSlots[2];
-      const thirdEmptySlot = thirdSessionArray.findIndex(
-        (slot) => slot.isActive === true && !slot.patientId
+      setThirdSession(
+        getDataFiltered(response?.channeling?.channelingSlots[2] || [])
       );
-      if (thirdEmptySlot < 0) {
-        setThirdSession(undefined);
-      } else {
-        setThirdSession({
-          start: thirdSessionArray[thirdEmptySlot].start,
-          end: thirdSessionArray[thirdEmptySlot].end,
-          number: (thirdEmptySlot + 1).toString(),
-        });
-      }
+      toast.success("success");
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -161,7 +162,8 @@ export default function FirstStep({
         <button
           className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
           onClick={() => {
-            handleSetStep(1);
+            updateChanneling();
+            // handleSetStep(1);
           }}
         >
           <FaCalendarAlt />

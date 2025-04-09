@@ -43,31 +43,33 @@ const create = async (channelingDate: string, channelingSlots: string[][]) => {
   return channeling;
 };
 
-const update = async (channelingDate: string, channelingSlots: string[][]) => {
-  const updatedChanneling = await ChannelingModel.findOneAndUpdate(
-    { channelingDate: channelingDate },
+const makeChanneling = async (
+  session: number,
+  channelingDate: string,
+  starting: string,
+  patientId: string
+) => {
+  const result = await ChannelingModel.findOneAndUpdate(
     {
-      $set: { channelingSlots: channelingSlots },
+      channelingDate: channelingDate,
+      [`channelingSlots.${session}.start`]: starting,
     },
-    { new: true } // Return the updated document
+    {
+      $set: { [`channelingSlots.${session}.$[elem].patientId`]: patientId },
+    },
+    {
+      arrayFilters: [{ "elem.start": starting }],
+      new: true, // Return the updated document
+    }
   );
-  return updatedChanneling;
-};
 
-// const add = async (channelingId: string) => {
-//   const channeling = await ChannelingModel.findByIdAndUpdate(channelingId, {
-//     $push: {
-//       appointmentSlots: ["18.00", "18.30", "19.00"],
-//     },
-//   });
-//   return channeling;
-// };
+  return result;
+};
 
 export default {
   getAll,
   getActive,
   getByDate,
   create,
-  update,
-  // add,
+  makeChanneling,
 };

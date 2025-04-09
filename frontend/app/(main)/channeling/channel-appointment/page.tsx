@@ -96,6 +96,7 @@ export default function ChannelAppointment(props: {
               handleSetStep={handleSetStep}
               date={date}
               setDate={setDate}
+              userId={userId}
             />
           )}
 
@@ -107,11 +108,11 @@ export default function ChannelAppointment(props: {
             />
           )}
 
-          {stepsComplete === 3 && date && (
+          {stepsComplete === 3 && (
             <ThirdStep
               reference={searchParams.ref as string}
               amount={amount}
-              date={date.toDateString()}
+              date={date ? date.toDateString() : ""}
               time={"4:00 PM"}
               no={"Session 2 - No 14"}
               name={`${form.getValues("firstName")} ${form.getValues("lastName")}`}
