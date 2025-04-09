@@ -3,7 +3,6 @@
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutPage from "@/channeling/widgets/checkout";
-import Image from "next/image";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { ArrowLeft } from "lucide-react";
@@ -11,9 +10,11 @@ import { ArrowLeft } from "lucide-react";
 export default function StripePayment({
   handleSetStep,
   amount,
+  date,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   amount: number;
+  date: string;
 }) {
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ""
@@ -25,19 +26,7 @@ export default function StripePayment({
     <div className="flex justify-center items-center ">
       <div className="bg-white/90 shadow-md rounded-lg border-2 border-black flex-none  p-4 flex justify-center gap-4">
         <div className="flex flex-col  justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800 text-center flex items-center gap-2 mb-1">
-            Thank you for selecting
-          </h1>
-          <Image
-            alt="logo"
-            width={200}
-            height={100}
-            src="/assets/images/logo.svg"
-            className="text-black mb-2 w-100"
-          />
-          <p className=" text-gray-800 text-center">
-            Your next step is to pay, {amount}LKR
-          </p>
+          <div>Date Selected: {date}</div>
           <div className="w-[300px] h-[200px]">
             <DotLottieReact src="/assets/images/payment.lottie" loop autoplay />
           </div>

@@ -1,4 +1,5 @@
 import { cn } from "@/libs/utils";
+import { Button } from "@/shadcn/ui/button";
 import { TimeSlot } from "@/types/users";
 import { FaClock } from "react-icons/fa";
 
@@ -10,6 +11,8 @@ export default function SessionCol({
   count,
   blockFirst,
   blockedEnd,
+  onSelect,
+  isDisabled,
 }: {
   sessionTitle: string;
   session: TimeSlot[];
@@ -18,11 +21,29 @@ export default function SessionCol({
   count: number;
   blockFirst?: React.ReactNode;
   blockedEnd?: React.ReactNode;
+  onSelect?: (active: boolean) => void;
+  isDisabled?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="text-center">
         {sessionTitle} {count}
+      </div>
+      <div className="grid grid-cols-2 gap-2 justify-center ">
+        <Button
+          disabled={isDisabled}
+          variant="outline"
+          className="border-black border-2"
+          onClick={() => onSelect && onSelect(false)}
+        >
+          Deselect All
+        </Button>
+        <Button
+          disabled={isDisabled}
+          onClick={() => onSelect && onSelect(true)}
+        >
+          Select All
+        </Button>
       </div>
       <div className="flex flex-col gap-3">
         {blockFirst}

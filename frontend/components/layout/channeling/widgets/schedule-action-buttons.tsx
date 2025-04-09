@@ -34,39 +34,6 @@ export default function ScheduleActionButtons({
       </Button>
       <Button
         disabled={isDisabled}
-        onClick={() => {
-          if (isDisabled) return;
-          setFirstSession((prev) =>
-            prev.map((item) => ({ ...item, isActive: true }))
-          );
-        }}
-      >
-        Select All Of Session 1
-      </Button>
-      <Button
-        disabled={isDisabled}
-        onClick={() => {
-          if (isDisabled) return;
-          setSecondSession((prev) =>
-            prev.map((item) => ({ ...item, isActive: true }))
-          );
-        }}
-      >
-        Select All Of Session 2
-      </Button>
-      <Button
-        disabled={isDisabled}
-        onClick={() => {
-          if (isDisabled) return;
-          setThirdSession((prev) =>
-            prev.map((item) => ({ ...item, isActive: true }))
-          );
-        }}
-      >
-        Select All Of Session 3
-      </Button>
-      <Button
-        disabled={isDisabled}
         variant="outline"
         className="border-black border-2"
         onClick={() => {
@@ -77,45 +44,6 @@ export default function ScheduleActionButtons({
         }}
       >
         Deselect All Sessions
-      </Button>
-      <Button
-        disabled={isDisabled}
-        variant="outline"
-        className="border-black border-2"
-        onClick={() => {
-          if (isDisabled) return;
-          setFirstSession((prev) =>
-            prev.map((item) => ({ ...item, isActive: false }))
-          );
-        }}
-      >
-        Deselect All Of Session 1
-      </Button>
-      <Button
-        disabled={isDisabled}
-        variant="outline"
-        className="border-black border-2"
-        onClick={() => {
-          if (isDisabled) return;
-          setSecondSession((prev) =>
-            prev.map((item) => ({ ...item, isActive: false }))
-          );
-        }}
-      >
-        Deselect All Of Session 2
-      </Button>
-      <Button
-        disabled={isDisabled}
-        variant="outline"
-        className="border-black border-2"
-        onClick={() => {
-          if (isDisabled) return;
-          setThirdSession((prev) =>
-            prev.map((item) => ({ ...item, isActive: false }))
-          );
-        }}
-      >
-        Deselect All Of Session 3
       </Button>
     </>
   );

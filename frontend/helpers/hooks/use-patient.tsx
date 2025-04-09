@@ -58,7 +58,6 @@ export const usePatient = () => {
         // phoneNumber: response.user?.phoneNumber,
         // address: response.user?.address,
       });
-      console.log(response);
     };
     fetchUserAppointments();
     // eslint-disable-next-line react-hooks/exhaustive-deps

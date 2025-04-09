@@ -22,16 +22,11 @@ export default function ChannelAppointment(props: {
   params: Params;
   searchParams: SearchParams;
 }) {
-  // const params = use(props.params);
   const searchParams = use(props.searchParams);
-  // const slug = params.slug;
-  // const query = searchParams.query;
-
-  console.log("params: =-->", searchParams);
 
   const [stepsComplete, setStepsComplete] = useState(0);
   const { form, userId } = usePatient();
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState<Date | null>(null);
   const numSteps = 3;
   const amount = 500; // 20 => 0.20 cents
 
@@ -105,10 +100,14 @@ export default function ChannelAppointment(props: {
           )}
 
           {stepsComplete === 2 && (
-            <SecondStep amount={amount} handleSetStep={handleSetStep} />
+            <SecondStep
+              amount={amount}
+              handleSetStep={handleSetStep}
+              date={date ? date.toDateString() : ""}
+            />
           )}
 
-          {stepsComplete === 3 && (
+          {stepsComplete === 3 && date && (
             <ThirdStep
               reference={searchParams.ref as string}
               amount={amount}

@@ -146,6 +146,13 @@ export default function Page() {
                 handleSessionClick(setFirstSession, index);
               }}
               count={firstCount}
+              isDisabled={isDisabled}
+              onSelect={(active: boolean) => {
+                if (isDisabled) return;
+                setFirstSession((prev) =>
+                  prev.map((item) => ({ ...item, isActive: active }))
+                );
+              }}
               // blockFirst={<BlockedTime start="00.00" end="08.00" />}
               // blockedEnd={<BlockedTime start="12.00" end="14.00" />}
             />
@@ -156,6 +163,13 @@ export default function Page() {
                 handleSessionClick(setSecondSession, index);
               }}
               count={secondCount}
+              isDisabled={isDisabled}
+              onSelect={(active: boolean) => {
+                if (isDisabled) return;
+                setSecondSession((prev) =>
+                  prev.map((item) => ({ ...item, isActive: active }))
+                );
+              }}
               // blockedEnd={<BlockedTime start="18.00" end="20.00" />}
             />
             <SessionCol
@@ -165,6 +179,13 @@ export default function Page() {
                 handleSessionClick(setThirdSession, index);
               }}
               count={thirdCount}
+              isDisabled={isDisabled}
+              onSelect={(active: boolean) => {
+                if (isDisabled) return;
+                setThirdSession((prev) =>
+                  prev.map((item) => ({ ...item, isActive: active }))
+                );
+              }}
               // blockedEnd={<BlockedTime start="22.00" end="24.00" />}
             />
           </div>
