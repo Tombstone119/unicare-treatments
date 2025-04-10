@@ -1,6 +1,35 @@
 import AppointmentModel from "../models/appointmentModel.ts";
 import mongoose from "mongoose";
 
+async function getByAppointmentId(appointmentId: string) {
+  const appointments = await AppointmentModel.findOne({
+    _id: appointmentId,
+  });
+  return appointments;
+}
+
+async function update(
+  appointmentId: string,
+  appointmentData: {
+    paymentId: string;
+    paymentStatus: string;
+    appointmentStatus: string;
+    paymentAmount: number;
+  }
+) {
+  const appointment = await AppointmentModel.findByIdAndUpdate(
+    appointmentId,
+    {
+      ...appointmentData,
+    },
+    { new: true }
+  );
+  if (!appointment) {
+    throw new Error("Appointment not found");
+  }
+  return appointment;
+}
+
 async function getById(patientId: string) {
   const matchStage = patientId
     ? { patientId: new mongoose.Types.ObjectId(patientId) }
@@ -59,6 +88,8 @@ const getAll = async () => {
 };
 
 export default {
+  update,
   getById,
   getAll,
+  getByAppointmentId,
 };

@@ -1,21 +1,38 @@
+"use client";
 import Link from "next/link";
 import AppointmentCard from "@/components/layout/channeling/ui/appointment-card";
+import { useEffect, useState } from "react";
+import { apiService } from "@/libs/api";
+import { AppointmentResponse } from "@/types/appointment";
 
 export default function StepFinalState({
-  reference,
-  amount,
-  date,
-  time,
-  no,
-  name,
+  appointmentId,
 }: {
-  reference: string;
-  amount: number;
-  date: string;
-  time: string;
-  no: string;
-  name: string;
+  appointmentId: string;
 }) {
+  const [data, setData] = useState({
+    reference: "",
+    date: "",
+    time: "",
+    no: "",
+    name: "",
+  });
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await apiService.get<AppointmentResponse>(
+        `/appointments/all/${appointmentId}`
+      );
+      setData({
+        reference: appointmentId,
+        date: response?.appointment?.channelingDate || "",
+        time: response?.appointment?.startingTime || "",
+        no: "",
+        name: "",
+      });
+    };
+    getData();
+  }, [appointmentId]);
   return (
     <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
       <div className="flex flex-col gap-2 items-center">
@@ -25,12 +42,12 @@ export default function StepFinalState({
         <p>Your appointment details are available here.</p>
       </div>
       <AppointmentCard
-        reference={reference}
-        amount={amount}
-        date={date}
-        time={time}
-        no={no}
-        name={name}
+        reference={data.reference}
+        amount={500}
+        date={data.date}
+        time={data.time}
+        no={data.no}
+        name={data.name}
       />
       <Link
         href={"/channeling"}

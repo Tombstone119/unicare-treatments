@@ -3,7 +3,7 @@ import {
   channelAppointmentSchema,
   channelSchema,
 } from "@/schemas/channel-schema";
-import { UserApiResponse } from "@/types/users";
+import { SessionUser, UserApiResponse } from "@/types/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 
 export const usePatient = () => {
   const { data: session } = useSession();
-  const user = session?.user;
+  const user = session?.user as unknown as SessionUser;
   const form = useForm<channelSchema>({
     resolver: zodResolver(channelAppointmentSchema),
     defaultValues: {

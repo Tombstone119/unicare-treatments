@@ -23,3 +23,11 @@ export type userTypes = "doctor" | "admin" | "supplier" | "patient";
 export interface UserApiResponse extends TApiResponse {
   user?: IUser;
 }
+
+export interface SessionUser {
+  email: string;
+  id: string;
+  isVerified: boolean;
+  role: "doctor" | "admin" | "supplier" | "patient";
+  username: string;
+}

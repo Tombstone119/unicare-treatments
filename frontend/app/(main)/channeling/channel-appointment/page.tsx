@@ -6,7 +6,7 @@ import StepPayment from "@/channeling/ui/step-payment";
 import Steps from "@/channeling/widgets/steps";
 import StepFinalState from "@/channeling/ui/step-final-state";
 import StepPersonalDetails from "@/channeling/ui/step-personal-details";
-import { usePatient } from "@/hooks/use-patient";
+
 import { apiService } from "@/libs/api";
 import { channelSchema } from "@/schemas/channel-schema";
 import { ArrowLeft } from "lucide-react";
@@ -14,6 +14,8 @@ import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AppointmentResponse } from "@/types/appointment";
+import { usePatient } from "@/helpers/util/get-user";
+// import { dollarsToCents } from "@/helpers/util/common";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -25,10 +27,9 @@ export default function ChannelAppointment(props: {
   const searchParams = use(props.searchParams);
   const [appointmentId, setAppointmentId] = useState("");
   const [stepsComplete, setStepsComplete] = useState(0);
-  const { form, userId } = usePatient();
+  const { form, userId, user } = usePatient();
   const [date, setDate] = useState<Date | null>(null);
   const numSteps = 3;
-  const amount = 500; // 20 => 0.20 cents
 
   useEffect(() => {
     if (searchParams?.step) {
@@ -105,22 +106,15 @@ export default function ChannelAppointment(props: {
 
           {stepsComplete === 2 && (
             <StepPayment
-              amount={amount}
               handleSetStep={handleSetStep}
               date={date ? date.toDateString() : ""}
               appointmentId={appointmentId}
+              user={user}
             />
           )}
 
           {stepsComplete === 3 && (
-            <StepFinalState
-              reference={searchParams.ref as string}
-              amount={amount}
-              date={date ? date.toDateString() : ""}
-              time={"4:00 PM"}
-              no={"Session 2 - No 14"}
-              name={`${form.getValues("firstName")} ${form.getValues("lastName")}`}
-            />
+            <StepFinalState appointmentId={appointmentId} />
           )}
         </div>
       </div>

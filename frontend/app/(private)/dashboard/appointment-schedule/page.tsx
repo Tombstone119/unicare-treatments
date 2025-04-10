@@ -129,7 +129,7 @@ export default function Page() {
 
   return (
     <div className=" bg-white py-5 px-10 min-h-svh ">
-      <div className="relative flex items-end text-indigo-950 gap-5 w-full mb-4">
+      <div className="relative flex items-start text-indigo-950 gap-5 w-full mb-4">
         <div className="relative border-2 border-black bg-black flex-none shadow-md rounded-xl">
           <div className="flex items-center justify-center p-2 text-white gap-2">
             <FaCalendar />
@@ -220,20 +220,29 @@ export default function Page() {
             }}
             className="w-[280px] rounded-xl shadow-md p-2 border-black border-2"
           />
-          <ScheduleActionButtons
-            isDisabled={isDisabled}
-            setFirstSession={setFirstSession}
-            setSecondSession={setSecondSession}
-            setThirdSession={setThirdSession}
-          />
-          <Button
-            disabled={isDisabled}
-            onClick={createChanneling}
-            className="w-full"
-          >
-            Save
-            {loading && <Loader2 className="animate-spin" />}
-          </Button>
+          <div className="flex flex-col gap-2 max-w-[280px]">
+            <ScheduleActionButtons
+              isDisabled={isDisabled}
+              setFirstSession={setFirstSession}
+              setSecondSession={setSecondSession}
+              setThirdSession={setThirdSession}
+            />
+            <Button
+              disabled={isDisabled}
+              onClick={createChanneling}
+              className="w-full"
+            >
+              Save
+              {loading && <Loader2 className="animate-spin" />}
+            </Button>
+          </div>
+          {/* <div className="max-w-[280px]">
+            <p>
+              <span className="text-red-500 font-semibold">Note:</span> You can
+              use <b>&quot;Select All&quot;</b> or{" "}
+              <b>&quot;Deselect All&quot;</b>.
+            </p>
+          </div> */}
         </div>
       </div>
     </div>

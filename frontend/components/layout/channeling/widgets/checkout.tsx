@@ -1,6 +1,10 @@
 "use client";
 
+import { centsToLKR } from "@/helpers/util/common";
+import { apiService } from "@/libs/api";
 import { Button } from "@/shadcn/ui/button";
+import { AppointmentResponse } from "@/types/appointment";
+import { SessionUser } from "@/types/users";
 import {
   PaymentElement,
   useElements,
@@ -12,12 +16,16 @@ import { toast } from "sonner";
 
 export default function CheckoutPage({
   amount,
+  currency,
   handleSetStep,
   appointmentId,
+  user,
 }: {
   amount: number;
+  currency: string;
   handleSetStep: (num: -1 | 1) => void;
   appointmentId: string;
+  user: SessionUser;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -26,37 +34,61 @@ export default function CheckoutPage({
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const updateAppointment = async (id: string) => {
+    try {
+      await apiService.put<AppointmentResponse>(
+        `/appointments/update/${appointmentId}`,
+        {
+          paymentStatus: "completed",
+          appointmentStatus: "waiting",
+          paymentAmount: centsToLKR(amount),
+          paymentId: id,
+        }
+      );
+    } catch {
+      toast.error("An error occurred while updating the appointment.");
+    } finally {
+      handleSetStep(1);
+    }
+  };
+
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleSetStep(1);
-    setLoading(true);
-    if (!stripe || !elements) {
-      return;
-    }
+    try {
+      e.preventDefault();
 
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      toast.error(submitError.message);
-      setErrorMessage(submitError.message);
-      setLoading(false);
-      return;
-    }
-    const refId = "123456789"; // Replace with actual refId
-    const { error } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_FE_DOMAIN_NAME}/channeling/channel-appointment?amount=${amount}&step=3&ref=${refId}`,
-      },
-    });
+      setLoading(true);
+      if (!stripe || !elements) {
+        return;
+      }
 
-    if (error) {
-      toast.error(error.message);
-      setErrorMessage(error.message);
-    } else {
-      toast.success("Payment successful!");
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        toast.error(submitError.message);
+        setErrorMessage(submitError.message);
+        setLoading(false);
+        return;
+      }
+
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        clientSecret,
+        redirect: "if_required",
+        confirmParams: {
+          return_url: `${process.env.NEXT_PUBLIC_FE_DOMAIN_NAME}/channeling/channel-appointment?amount=${amount}&step=3&ref=${appointmentId}`,
+        },
+      });
+
+      if (error) {
+        toast.error(error.message);
+        setErrorMessage(error.message);
+      } else {
+        toast.success("Payment successful!");
+        setLoading(false);
+        updateAppointment(paymentIntent.id);
+      }
+    } catch {
+      toast.error("An error occurred while processing the payment.");
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -68,7 +100,7 @@ export default function CheckoutPage({
         },
         body: JSON.stringify({
           amount: amount,
-          currency: "usd",
+          currency: currency,
           appointmentId: appointmentId,
         }),
       })
@@ -81,7 +113,7 @@ export default function CheckoutPage({
     } catch {
       toast.error("Failed to fetch client secret");
     }
-  }, [amount]);
+  }, [amount, appointmentId, user, currency]);
 
   if (!clientSecret || !stripe || !elements) {
     return (
@@ -105,7 +137,7 @@ export default function CheckoutPage({
       )}
       <Button className="mt-2 w-full text-base" disabled={!stripe || loading}>
         <FaCreditCard />
-        {!loading ? `Pay ${amount}` : "Processing..."}
+        {!loading ? `Pay ${centsToLKR(amount)}` : "Processing..."}
       </Button>
     </form>
   );

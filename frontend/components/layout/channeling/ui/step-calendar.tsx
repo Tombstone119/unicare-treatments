@@ -152,7 +152,6 @@ export default function ChannelDateStep({
           selected={date || undefined}
           onSelect={(selectedDate: Date | undefined) => {
             if (selectedDate && isDateAllowed(selectedDate)) {
-              // setDate(selectedDate);
               handleSelectDate({ date: selectedDate });
             }
           }}

@@ -28,6 +28,14 @@ const AppointmentSchema = new Schema(
       enum: ["pending", "completed", "confirmed"],
       default: "pending",
     },
+    paymentAmount: {
+      type: Number,
+    },
+    appointmentStatus: {
+      type: String,
+      enum: ["waiting", "attending", "completed", "canceled", "no-show"],
+      default: "waiting",
+    },
   },
   {
     timestamps: true,

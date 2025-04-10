@@ -1,7 +1,15 @@
 import { cn } from "@/libs/utils";
 import { Button } from "@/shadcn/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shadcn/ui/tooltip";
 import { TimeSlot } from "@/types/channeling";
+import { BiSolidSelectMultiple } from "react-icons/bi";
 import { FaClock, FaUserClock } from "react-icons/fa";
+import { MdDeselect } from "react-icons/md";
 
 export default function SessionCol({
   sessionTitle,
@@ -30,20 +38,39 @@ export default function SessionCol({
         {sessionTitle} {count}
       </div>
       <div className="grid grid-cols-2 gap-2 justify-center ">
-        <Button
-          disabled={isDisabled}
-          variant="outline"
-          className="border-black border-2"
-          onClick={() => onSelect && onSelect(false)}
-        >
-          Deselect All
-        </Button>
-        <Button
-          disabled={isDisabled}
-          onClick={() => onSelect && onSelect(true)}
-        >
-          Select All
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                disabled={isDisabled}
+                variant="outline"
+                className="border-black border-2"
+                onClick={() => onSelect && onSelect(false)}
+              >
+                <MdDeselect />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-black text-white border-black">
+              <p>DeSelect All</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                disabled={isDisabled}
+                onClick={() => onSelect && onSelect(true)}
+              >
+                <BiSolidSelectMultiple />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-black text-white border-black">
+              <p>DeSelect All</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <div className="flex flex-col gap-3">
         {blockFirst}

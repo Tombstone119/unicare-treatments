@@ -19,6 +19,44 @@ export const getPatientById = async (
   }
 };
 
+export const getByAppointmentId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { appointmentId } = req.params;
+    const appointment = await appointmentService.getByAppointmentId(
+      appointmentId
+    );
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      appointment,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+export const updateAppointment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { appointmentId } = req.params;
+    const appointmentData = req.body;
+    const updatedAppointment = await appointmentService.update(
+      appointmentId,
+      appointmentData
+    );
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      updatedAppointment,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
 export const getAllPatients = async (
   _: Request,
   res: Response
