@@ -1,6 +1,6 @@
 import { first, second, third } from "@/helpers/data/time.data";
 import { Button } from "@/shadcn/ui/button";
-import { TimeSlot } from "@/types/users";
+import { TimeSlot } from "@/types/channeling";
 
 export default function ScheduleActionButtons({
   isDisabled,

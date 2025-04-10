@@ -103,12 +103,12 @@ const data = {
         {
           icon: FaClipboardList,
           title: "All Appointments",
-          url: "/dashboard/all-appointments",
+          url: "/dashboard/appointment-list",
         },
         {
           icon: FaClock,
           title: "Schedule",
-          url: "/dashboard/schedule",
+          url: "/dashboard/appointment-schedule",
         },
       ],
     },

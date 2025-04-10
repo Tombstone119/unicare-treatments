@@ -1,4 +1,4 @@
-import { TimeSlot } from "@/types/users";
+import { TimeSlot } from "@/types/channeling";
 
 export const getDataFiltered = (data: TimeSlot[]) => {
   const active = data.filter((slot) => slot.isActive === true);

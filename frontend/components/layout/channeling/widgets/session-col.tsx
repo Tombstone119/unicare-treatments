@@ -1,6 +1,6 @@
 import { cn } from "@/libs/utils";
 import { Button } from "@/shadcn/ui/button";
-import { TimeSlot } from "@/types/users";
+import { TimeSlot } from "@/types/channeling";
 import { FaClock, FaUserClock } from "react-icons/fa";
 
 export default function SessionCol({
