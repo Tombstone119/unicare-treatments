@@ -2,10 +2,10 @@
 
 import ChannelDateStep from "@/channeling/ui/step-calendar";
 
-import PaymentStep from "@/channeling/ui/step-payment";
+import StepPayment from "@/channeling/ui/step-payment";
 import Steps from "@/channeling/widgets/steps";
-import SuccessStep from "@/channeling/ui/step-final-state";
-import PersonalDataStep from "@/channeling/ui/step-personal-details";
+import StepFinalState from "@/channeling/ui/step-final-state";
+import StepPersonalDetails from "@/channeling/ui/step-personal-details";
 import { usePatient } from "@/hooks/use-patient";
 import { apiService } from "@/libs/api";
 import { channelSchema } from "@/schemas/channel-schema";
@@ -88,7 +88,7 @@ export default function ChannelAppointment(props: {
       <div className="py-8 pb-10 px-4 my-4 bg-gray-100 border-2 border-dashed border-black rounded-lg">
         <div className="flex flex-col gap-4 justify-center items-center">
           {stepsComplete === 0 && (
-            <PersonalDataStep form={form} handleSubmit={handleSubmit} />
+            <StepPersonalDetails form={form} handleSubmit={handleSubmit} />
           )}
 
           {stepsComplete === 1 && (
@@ -104,7 +104,7 @@ export default function ChannelAppointment(props: {
           )}
 
           {stepsComplete === 2 && (
-            <PaymentStep
+            <StepPayment
               amount={amount}
               handleSetStep={handleSetStep}
               date={date ? date.toDateString() : ""}
@@ -113,7 +113,7 @@ export default function ChannelAppointment(props: {
           )}
 
           {stepsComplete === 3 && (
-            <SuccessStep
+            <StepFinalState
               reference={searchParams.ref as string}
               amount={amount}
               date={date ? date.toDateString() : ""}

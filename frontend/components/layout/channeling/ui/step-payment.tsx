@@ -1,7 +1,7 @@
 import StripePayment from "@/channeling/widgets/channel-payment";
 import Image from "next/image";
 
-export default function PaymentStep({
+export default function StepPayment({
   handleSetStep,
   amount,
   date,

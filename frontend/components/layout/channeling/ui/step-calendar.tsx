@@ -9,6 +9,7 @@ import {
   ChannelingResponse,
   ChannelingWithDates,
   NewChannelingResponse,
+  SelectedSession,
 } from "@/types/channeling";
 import PatientCalender from "@/channeling/widgets/patient-calendar";
 import { cn } from "@/libs/utils";
@@ -38,9 +39,7 @@ export default function ChannelDateStep({
   const [firstSession, setFirstSession] = useState<Sessions>();
   const [secondSession, setSecondSession] = useState<Sessions>();
   const [thirdSession, setThirdSession] = useState<Sessions>();
-  const [selectedSession, setSelectedSession] = useState<
-    "first" | "second" | "third"
-  >();
+  const [selectedSession, setSelectedSession] = useState<SelectedSession>();
 
   const sessions = {
     firstSession,
@@ -85,16 +84,10 @@ export default function ChannelDateStep({
           patientId: userId,
         }
       );
-
-      console.log("newChannel: =-->", makePayment);
-
-      console.log("newChannel: =-->", newChannel.appointment._id);
-      // makePayment(newChannel.appointment._id);
-      toast.success("Channeling updated successfully");
+      makePayment(newChannel?.appointment?._id || "");
+      handleSetStep(1);
     } catch {
       toast.error("Something went wrong. Please try again.");
-    } finally {
-      // handleSetStep(1);
     }
   };
 

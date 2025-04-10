@@ -1,6 +1,8 @@
 import { IAppointment } from "./appointment";
 import { TApiResponse } from "./common";
 
+export type SelectedSession = "first" | "second" | "third";
+
 export type Sessions = {
   start: string;
   end: string;
