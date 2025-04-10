@@ -25,12 +25,12 @@ export const getColumns = (
     },
 
     {
-      accessorKey: "appointmentDate",
+      accessorKey: "channelingDate",
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
         <DataTableColumnHeader column={column} title="APPOINTMENT" />
       ),
       cell: ({ row }) => {
-        const dob = row.getValue("appointmentDate");
+        const dob = row.getValue("channelingDate");
         const date = new Date(`${dob}`);
         return (
           <div>{`${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`}</div>

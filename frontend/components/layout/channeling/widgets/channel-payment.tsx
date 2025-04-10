@@ -11,10 +11,12 @@ export default function StripePayment({
   handleSetStep,
   amount,
   date,
+  appointmentId,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   amount: number;
   date: string;
+  appointmentId: string;
 }) {
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ""
@@ -49,7 +51,11 @@ export default function StripePayment({
             amount: amount,
           }}
         >
-          <CheckoutPage amount={amount} handleSetStep={handleSetStep} />
+          <CheckoutPage
+            amount={amount}
+            handleSetStep={handleSetStep}
+            appointmentId={appointmentId}
+          />
         </Elements>
       </div>
     </div>

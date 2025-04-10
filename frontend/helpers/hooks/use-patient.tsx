@@ -23,7 +23,7 @@ export const usePatient = () => {
       phoneNumber: "",
       email: "",
       address: "",
-      //   appointmentDate: undefined,
+      //   channelingDate: undefined,
     },
   });
 

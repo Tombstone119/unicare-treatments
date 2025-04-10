@@ -15,14 +15,13 @@ import { toast } from "sonner";
 import { apiService } from "@/libs/api";
 import type {
   ChannelingResponse,
-  DatesResponse,
+  ChannelingWithDates,
   TimeSlot,
-} from "@/types/users";
+} from "@/types/channeling";
 import { Loader2 } from "lucide-react";
 import SessionCol from "@/channeling/widgets/session-col";
 import ScheduleActionButtons from "@/channeling/widgets/schedule-action-buttons";
 import { FaCalendar } from "react-icons/fa";
-// import BlockedTime from "@/channeling/widgets/blocked-time";
 
 type SetAction = Dispatch<SetStateAction<TimeSlot[]>>;
 
@@ -86,7 +85,7 @@ export default function Page() {
   const getAllActive = async () => {
     try {
       const formattedDate = format(new Date(), "dd-MM-yyyy");
-      const response = await apiService.get<DatesResponse>(
+      const response = await apiService.get<ChannelingWithDates>(
         `/channeling/active/${formattedDate}`
       );
       const convertedDates = response.dates.map((dateStr) =>
@@ -105,7 +104,7 @@ export default function Page() {
     });
   }, []);
 
-  const handleDataSubmit = async () => {
+  const createChanneling = async () => {
     try {
       if (totalCount === 0) return;
       setLoading(true);
@@ -115,6 +114,7 @@ export default function Page() {
         channelingSlots: [firstSession, secondSession, thirdSession],
         currentDate: format(new Date(), "dd-MM-yyyy"),
       });
+
       const convertedDates = newData.dates.map((dateStr) =>
         parse(dateStr, "dd-MM-yyyy", new Date())
       );
@@ -151,7 +151,7 @@ export default function Page() {
                 if (isDisabled) return;
                 setFirstSession((prev) =>
                   prev.map((item) => {
-                    if (item.patientId) return item;
+                    if (item.appointmentId) return item;
                     return { ...item, isActive: active };
                   })
                 );
@@ -171,7 +171,7 @@ export default function Page() {
                 if (isDisabled) return;
                 setSecondSession((prev) =>
                   prev.map((item) => {
-                    if (item.patientId) return item;
+                    if (item.appointmentId) return item;
                     return { ...item, isActive: active };
                   })
                 );
@@ -190,7 +190,7 @@ export default function Page() {
                 if (isDisabled) return;
                 setThirdSession((prev) =>
                   prev.map((item) => {
-                    if (item.patientId) return item;
+                    if (item.appointmentId) return item;
                     return { ...item, isActive: active };
                   })
                 );
@@ -228,7 +228,7 @@ export default function Page() {
           />
           <Button
             disabled={isDisabled}
-            onClick={handleDataSubmit}
+            onClick={createChanneling}
             className="w-full"
           >
             Save

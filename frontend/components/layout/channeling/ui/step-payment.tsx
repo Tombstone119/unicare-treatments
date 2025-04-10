@@ -1,14 +1,16 @@
 import StripePayment from "@/channeling/widgets/channel-payment";
 import Image from "next/image";
 
-export default function SecondStep({
+export default function PaymentStep({
   handleSetStep,
   amount,
   date,
+  appointmentId,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   amount: number;
   date: string;
+  appointmentId: string;
 }) {
   return (
     <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
@@ -33,6 +35,7 @@ export default function SecondStep({
         handleSetStep={handleSetStep}
         amount={amount}
         date={date}
+        appointmentId={appointmentId}
       />
     </div>
   );

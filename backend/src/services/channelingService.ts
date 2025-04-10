@@ -1,4 +1,6 @@
+import AppointmentModel from "../models/appointmentModel.ts";
 import ChannelingModel from "../models/channelingModel.ts";
+import { IChanneling } from "../types/channeling.ts";
 
 const getAll = async () => {
   const channeling = await ChannelingModel.find();
@@ -43,27 +45,37 @@ const create = async (channelingDate: string, channelingSlots: string[][]) => {
   return channeling;
 };
 
-const makeChanneling = async (
-  session: number,
-  channelingDate: string,
-  starting: string,
-  patientId: string
-) => {
-  const result = await ChannelingModel.findOneAndUpdate(
+const makeChanneling = async (channel: IChanneling) => {
+  const newAppointment = new AppointmentModel({
+    patientId: channel.patientId,
+    channelingDate: channel.channelingDate,
+    sessionNumber: channel.session,
+    startingTime: channel.starting,
+  });
+  await newAppointment.save();
+  // return newPatientAppointment;
+
+  const newChanneling = await ChannelingModel.findOneAndUpdate(
     {
-      channelingDate: channelingDate,
-      [`channelingSlots.${session}.start`]: starting,
+      channelingDate: channel.channelingDate,
+      [`channelingSlots.${channel.session - 1}.start`]: channel.starting,
     },
     {
-      $set: { [`channelingSlots.${session}.$[elem].patientId`]: patientId },
+      $set: {
+        [`channelingSlots.${channel.session - 1}.$[elem].appointmentId`]:
+          newAppointment._id,
+      },
     },
     {
-      arrayFilters: [{ "elem.start": starting }],
+      arrayFilters: [{ "elem.start": channel.starting }],
       new: true, // Return the updated document
     }
   );
 
-  return result;
+  return {
+    appointment: newAppointment,
+    channeling: newChanneling,
+  };
 };
 
 export default {

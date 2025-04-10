@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { BsFilePost, BsGrid } from "react-icons/bs";
 import { MdInventory } from "react-icons/md";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaClock, FaClipboardList } from "react-icons/fa";
 import { MdQueue } from "react-icons/md";
 import { FaHistory } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
@@ -101,17 +101,12 @@ const data = {
       isActive: true,
       items: [
         {
-          icon: MdAdd,
+          icon: FaClipboardList,
           title: "All Appointments",
           url: "/dashboard/all-appointments",
         },
         {
-          icon: IoIosList,
-          title: "All Products",
-          url: "/dashboard/product-management/product-see",
-        },
-        {
-          icon: IoIosList,
+          icon: FaClock,
           title: "Schedule",
           url: "/dashboard/schedule",
         },

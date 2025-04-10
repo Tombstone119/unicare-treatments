@@ -32,7 +32,7 @@ export function EditPass({
     defaultValues: {
       _id: (rowData._id || "").toString(),
       referenceNumber: rowData.referenceNumber,
-      appointmentDate: new Date(rowData.appointmentDate || ""),
+      channelingDate: new Date(rowData.channelingDate || ""),
     },
   });
 
@@ -43,7 +43,7 @@ export function EditPass({
         const res = await apiService.post<TApiResponse>(
           `/appointments/reschedule/${rowData._id}`,
           {
-            appointmentDate: values.appointmentDate,
+            channelingDate: values.channelingDate,
           }
         );
         if (!res.success) {

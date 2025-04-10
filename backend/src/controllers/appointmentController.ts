@@ -3,26 +3,6 @@ import { Response, Request } from "express";
 import HttpStatusCodes from "../util/statusCodes.ts";
 import { handleError } from "../util/errorHandler.ts";
 
-export const createPatientAppointment = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const data = req.body;
-  try {
-    const newAppointment = await appointmentService.createAppointmentByPatient({
-      patientId: data.patientId,
-      appointmentDate: data.appointmentDate,
-    });
-
-    res.status(HttpStatusCodes.CREATED).json({
-      success: true,
-      appointment: newAppointment,
-    });
-  } catch (error) {
-    handleError(res, error);
-  }
-};
-
 export const getPatientById = async (
   req: Request,
   res: Response

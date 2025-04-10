@@ -85,15 +85,16 @@ export const makeChanneling = async (
 ): Promise<void> => {
   try {
     const data = req.body;
-    const channeling = await channelingService.makeChanneling(
-      data.session,
-      data.channelingDate,
-      data.start,
-      data.patientId
-    );
+    const newData = await channelingService.makeChanneling({
+      session: data.session,
+      channelingDate: data.channelingDate,
+      starting: data.start,
+      patientId: data.patientId,
+    });
     res.status(HttpStatusCodes.OK).json({
       success: true,
-      channeling,
+      channeling: newData.channeling,
+      appointment: newData.appointment,
     });
   } catch (error) {
     handleError(res, error);

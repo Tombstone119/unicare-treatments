@@ -5,7 +5,11 @@ import { format, parse } from "date-fns";
 import { Calendar } from "@/shadcn/ui/calendar";
 import { toast } from "sonner";
 import { apiService } from "@/libs/api";
-import { ChannelingResponse, DatesResponse } from "@/types/users";
+import {
+  ChannelingResponse,
+  ChannelingWithDates,
+  NewChannelingResponse,
+} from "@/types/channeling";
 import PatientCalender from "@/channeling/widgets/patient-calendar";
 import { cn } from "@/libs/utils";
 import { Sessions } from "@/types/channeling";
@@ -16,16 +20,18 @@ const selectedData = {
   second: 1,
   third: 2,
 };
-export default function FirstStep({
+export default function ChannelDateStep({
   handleSetStep,
   date,
   setDate,
   userId,
+  makePayment,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   date: Date | null;
   setDate: Dispatch<SetStateAction<Date | null>>;
   userId: string | undefined;
+  makePayment: (appointmentId: string) => void;
 }) {
   const [loading, setLoading] = useState(false);
   const [allowedDates, setAllowedDates] = useState<Date[]>([]);
@@ -45,7 +51,7 @@ export default function FirstStep({
   const getAllActive = async () => {
     try {
       const formattedDate = format(new Date(), "dd-MM-yyyy");
-      const response = await apiService.get<DatesResponse>(
+      const response = await apiService.get<ChannelingWithDates>(
         `/channeling/active/${formattedDate}`
       );
       const convertedDates = response.dates.map((dateStr) =>
@@ -66,16 +72,29 @@ export default function FirstStep({
 
       const sessionArr = [firstSession, secondSession, thirdSession];
 
-      await apiService.post<DatesResponse>(`/channeling/make-channeling`, {
-        session: selectedData[selectedSession as keyof typeof selectedData],
-        channelingDate: formattedDate,
-        start:
-          sessionArr[selectedData[selectedSession as keyof typeof selectedData]]
-            ?.start,
-        patientId: userId,
-      });
+      const newChannel = await apiService.post<NewChannelingResponse>(
+        `/channeling/make-channeling`,
+        {
+          session:
+            selectedData[selectedSession as keyof typeof selectedData] + 1,
+          channelingDate: formattedDate,
+          start:
+            sessionArr[
+              selectedData[selectedSession as keyof typeof selectedData]
+            ]?.start,
+          patientId: userId,
+        }
+      );
+
+      console.log("newChannel: =-->", makePayment);
+
+      console.log("newChannel: =-->", newChannel.appointment._id);
+      // makePayment(newChannel.appointment._id);
+      toast.success("Channeling updated successfully");
     } catch {
       toast.error("Something went wrong. Please try again.");
+    } finally {
+      // handleSetStep(1);
     }
   };
 
@@ -95,7 +114,6 @@ export default function FirstStep({
       setThirdSession(
         getDataFiltered(response?.channeling?.channelingSlots[2] || [])
       );
-      toast.success("success");
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -163,7 +181,6 @@ export default function FirstStep({
           className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
           onClick={() => {
             updateChanneling();
-            // handleSetStep(1);
           }}
         >
           <FaCalendarAlt />

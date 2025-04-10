@@ -13,9 +13,11 @@ import { toast } from "sonner";
 export default function CheckoutPage({
   amount,
   handleSetStep,
+  appointmentId,
 }: {
   amount: number;
   handleSetStep: (num: -1 | 1) => void;
+  appointmentId: string;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -67,6 +69,7 @@ export default function CheckoutPage({
         body: JSON.stringify({
           amount: amount,
           currency: "usd",
+          appointmentId: appointmentId,
         }),
       })
         .then((res) => res.json())

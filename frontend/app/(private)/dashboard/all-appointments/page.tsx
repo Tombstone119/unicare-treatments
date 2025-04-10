@@ -3,8 +3,7 @@
 import { getColumns } from "@/channeling/elements/table-elements/patient-columns";
 import { DataTable } from "@/channeling/ui/my-appointments";
 import { apiService } from "@/libs/api";
-import { IAppointment } from "@/types/index";
-import { AppointmentResponse } from "@/types/users";
+import { AppointmentResponse, IAppointment } from "@/types/appointment";
 import { Stethoscope } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";

@@ -14,7 +14,7 @@ const SlotSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    patientId: {
+    appointmentId: {
       type: String,
       default: "",
     },

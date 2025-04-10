@@ -19,7 +19,7 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { FaUserEdit } from "react-icons/fa";
 
-export default function ZeroStep({
+export default function PersonalDataStep({
   handleSubmit,
   form,
 }: {

@@ -43,7 +43,7 @@ export default function OnlyDateElement({
   return (
     <FormField
       control={form.control}
-      name="appointmentDate"
+      name="channelingDate"
       render={({ field }) => (
         <FormItem>
           <FormLabel className="text-gray-700 font-medium flex items-center gap-2 min-h-[20px]">

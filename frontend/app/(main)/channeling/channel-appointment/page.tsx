@@ -1,19 +1,19 @@
 "use client";
 
-import FirstStep from "@/channeling/ui/step-calendar";
+import ChannelDateStep from "@/channeling/ui/step-calendar";
 
-import SecondStep from "@/channeling/ui/step-payment";
+import PaymentStep from "@/channeling/ui/step-payment";
 import Steps from "@/channeling/widgets/steps";
-import ThirdStep from "@/channeling/ui/step-final-state";
-import ZeroStep from "@/channeling/ui/step-personal-details";
+import SuccessStep from "@/channeling/ui/step-final-state";
+import PersonalDataStep from "@/channeling/ui/step-personal-details";
 import { usePatient } from "@/hooks/use-patient";
 import { apiService } from "@/libs/api";
 import { channelSchema } from "@/schemas/channel-schema";
-import { AppointmentResponse } from "@/types/users";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { AppointmentResponse } from "@/types/appointment";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -23,7 +23,7 @@ export default function ChannelAppointment(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = use(props.searchParams);
-
+  const [appointmentId, setAppointmentId] = useState("");
   const [stepsComplete, setStepsComplete] = useState(0);
   const { form, userId } = usePatient();
   const [date, setDate] = useState<Date | null>(null);
@@ -88,28 +88,32 @@ export default function ChannelAppointment(props: {
       <div className="py-8 pb-10 px-4 my-4 bg-gray-100 border-2 border-dashed border-black rounded-lg">
         <div className="flex flex-col gap-4 justify-center items-center">
           {stepsComplete === 0 && (
-            <ZeroStep form={form} handleSubmit={handleSubmit} />
+            <PersonalDataStep form={form} handleSubmit={handleSubmit} />
           )}
 
           {stepsComplete === 1 && (
-            <FirstStep
+            <ChannelDateStep
               handleSetStep={handleSetStep}
               date={date}
               setDate={setDate}
               userId={userId}
+              makePayment={(id) => {
+                setAppointmentId(id);
+              }}
             />
           )}
 
           {stepsComplete === 2 && (
-            <SecondStep
+            <PaymentStep
               amount={amount}
               handleSetStep={handleSetStep}
               date={date ? date.toDateString() : ""}
+              appointmentId={appointmentId}
             />
           )}
 
           {stepsComplete === 3 && (
-            <ThirdStep
+            <SuccessStep
               reference={searchParams.ref as string}
               amount={amount}
               date={date ? date.toDateString() : ""}

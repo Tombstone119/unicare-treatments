@@ -7,9 +7,26 @@ const AppointmentSchema = new Schema(
       ref: "user",
       required: true,
     },
-    appointmentDate: {
-      type: Date,
+    channelingDate: {
+      type: String,
       required: true,
+    },
+    sessionNumber: {
+      type: Number,
+      required: true,
+    },
+    startingTime: {
+      type: String,
+      required: true,
+    },
+    paymentId: {
+      type: String,
+      default: "",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "completed", "confirmed"],
+      default: "pending",
     },
   },
   {

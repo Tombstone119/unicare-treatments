@@ -1,7 +1,7 @@
 import Link from "next/link";
 import AppointmentCard from "@/components/layout/channeling/ui/appointment-card";
 
-export default function ThirdStep({
+export default function SuccessStep({
   reference,
   amount,
   date,

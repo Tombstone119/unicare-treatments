@@ -56,15 +56,15 @@ export default function SessionCol({
                 "border-black border-2 text-black": time.isActive,
                 "bg-gray-500/10 border-2 text-gray-400": !time.isActive,
                 "bg-red-500/10 text-red-600 border-red-500 cursor-not-allowed":
-                  time.patientId,
+                  time.appointmentId,
               }
             )}
             onClick={() => {
-              if (time.patientId) return;
+              if (time.appointmentId) return;
               clickHandler(index);
             }}
           >
-            {time.patientId ? (
+            {time.appointmentId ? (
               <FaUserClock className="text-red-600" />
             ) : (
               <FaClock />

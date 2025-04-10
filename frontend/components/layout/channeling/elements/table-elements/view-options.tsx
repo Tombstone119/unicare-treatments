@@ -23,7 +23,7 @@ const columnMap: Record<string, string> = {
   dateOfBirth: "DOB",
   email: "EMAIL",
   gender: "GENDER",
-  appointmentDate: "APPOINTMENT DATE",
+  channelingDate: "CHANNELING DATE",
   referenceNumber: "REF",
   maritalState: "MARITAL",
   paymentStatus: "PAYMENT",

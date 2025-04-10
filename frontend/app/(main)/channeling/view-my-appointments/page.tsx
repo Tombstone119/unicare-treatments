@@ -1,11 +1,10 @@
 "use client";
 
 import { DataTable } from "@/channeling/ui/my-appointments";
-import { IAppointment } from "@/types/index";
 import { getColumns } from "@/channeling/elements/table-elements/columns";
 import { useEffect, useState } from "react";
 import { Stethoscope } from "lucide-react";
-import { AppointmentResponse } from "@/types/users";
+import { AppointmentResponse, IAppointment } from "@/types/appointment";
 import { apiService } from "@/libs/api";
 import { useSession } from "next-auth/react";
 import Link from "next/link";

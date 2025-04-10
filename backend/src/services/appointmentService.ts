@@ -1,24 +1,5 @@
-import {
-  IPatientAppointment,
-  IDoctorAppointment,
-} from "../types/appointment.ts";
 import AppointmentModel from "../models/appointmentModel.ts";
 import mongoose from "mongoose";
-import ChannelingModel from "@src/models/channelingModel.ts";
-
-async function createAppointmentByPatient(appointment: IPatientAppointment) {
-  try {
-    const appointmentDate = new Date(appointment.appointmentDate);
-    const newPatientAppointment = new AppointmentModel({
-      patientId: appointment.patientId,
-      appointmentDate: appointmentDate,
-    });
-    await newPatientAppointment.save();
-    return newPatientAppointment;
-  } catch (error) {
-    throw error;
-  }
-}
 
 async function getById(patientId: string) {
   const matchStage = patientId
@@ -38,7 +19,7 @@ async function getById(patientId: string) {
     {
       $project: {
         _id: 1,
-        appointmentDate: 1,
+        channelingDate: 1,
         firstName: "$userDetails.firstName",
         lastName: "$userDetails.lastName",
         email: "$userDetails.email",
@@ -65,7 +46,7 @@ const getAll = async () => {
     {
       $project: {
         _id: 1,
-        appointmentDate: 1,
+        channelingDate: 1,
         firstName: "$userDetails.firstName",
         lastName: "$userDetails.lastName",
         email: "$userDetails.email",
@@ -78,7 +59,6 @@ const getAll = async () => {
 };
 
 export default {
-  createAppointmentByPatient,
   getById,
   getAll,
 };
