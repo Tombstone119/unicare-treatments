@@ -5,14 +5,14 @@ export default function AppointmentCard({
   amount,
   date,
   time,
-  no,
   name,
+  doctorName,
 }: {
   reference: string;
   amount: number;
   date: string;
   time: string;
-  no: string;
+  doctorName: string;
   name: string;
 }) {
   return (
@@ -54,7 +54,7 @@ export default function AppointmentCard({
             <span className="font-bold">Time:</span> {time}
           </div>
           <div>
-            <span className="font-bold">Queue:</span> {no}
+            <span className="font-bold">Doctor:</span> {doctorName}
           </div>
         </div>
       </div>

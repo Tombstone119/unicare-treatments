@@ -35,3 +35,11 @@ export interface NewChannelingResponse extends TApiResponse {
 export interface ChannelingWithDates extends TApiResponse {
   dates: string[];
 }
+
+export type AppointmentDetails = {
+  session: number;
+  channelingDate: string;
+  start?: string;
+  end?: string;
+  patientId?: string;
+};

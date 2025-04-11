@@ -51,10 +51,9 @@ const makeChanneling = async (channel: IChanneling) => {
     channelingDate: channel.channelingDate,
     sessionNumber: channel.session,
     startingTime: channel.starting,
+    endingTime: channel.ending,
   });
   await newAppointment.save();
-  // return newPatientAppointment;
-
   const newChanneling = await ChannelingModel.findOneAndUpdate(
     {
       channelingDate: channel.channelingDate,

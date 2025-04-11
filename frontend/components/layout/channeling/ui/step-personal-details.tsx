@@ -20,10 +20,10 @@ import { UseFormReturn } from "react-hook-form";
 import { FaUserEdit } from "react-icons/fa";
 
 export default function StepPersonalDetails({
-  handleSubmit,
+  updateUser,
   form,
 }: {
-  handleSubmit: (values: channelSchema) => void;
+  updateUser: (values: channelSchema) => void;
   form: UseFormReturn<channelSchema>;
 }) {
   return (
@@ -118,7 +118,7 @@ export default function StepPersonalDetails({
                 e.preventDefault();
                 const isValid = await form.trigger();
                 if (isValid) {
-                  handleSubmit(form.getValues());
+                  updateUser(form.getValues());
                 }
               }}
             >

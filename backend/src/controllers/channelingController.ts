@@ -89,6 +89,7 @@ export const makeChanneling = async (
       session: data.session,
       channelingDate: data.channelingDate,
       starting: data.start,
+      ending: data.end,
       patientId: data.patientId,
     });
     res.status(HttpStatusCodes.OK).json({

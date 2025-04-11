@@ -27,6 +27,9 @@ export interface IAppointment {
   paymentStatus: "pending" | "completed" | "cancelled";
   sessionNumber: number;
   startingTime: string;
+  endingTime: string;
+  doctorName: string;
+  appointmentStatus: "waiting" | "completed" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
 }

@@ -36,7 +36,11 @@ export default function SelectElement({
           <FormLabel className="text-gray-700 font-medium flex items-center gap-2 min-h-[20px]">
             {icon && icon} {label}
           </FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+            value={field.value}
+          >
             <FormControl>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select status" />

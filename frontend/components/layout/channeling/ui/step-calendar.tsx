@@ -6,6 +6,7 @@ import { Calendar } from "@/shadcn/ui/calendar";
 import { toast } from "sonner";
 import { apiService } from "@/libs/api";
 import {
+  AppointmentDetails,
   ChannelingResponse,
   ChannelingWithDates,
   NewChannelingResponse,
@@ -27,12 +28,14 @@ export default function ChannelDateStep({
   setDate,
   userId,
   makePayment,
+  setAppointmentDetails,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   date: Date | null;
   setDate: Dispatch<SetStateAction<Date | null>>;
   userId: string | undefined;
   makePayment: (appointmentId: string) => void;
+  setAppointmentDetails: Dispatch<SetStateAction<AppointmentDetails>>;
 }) {
   const [loading, setLoading] = useState(false);
   const [allowedDates, setAllowedDates] = useState<Date[]>([]);
@@ -68,24 +71,25 @@ export default function ChannelDateStep({
         return;
       }
       const formattedDate = format(date, "dd-MM-yyyy");
-
       const sessionArr = [firstSession, secondSession, thirdSession];
-
+      const req = {
+        session: selectedData[selectedSession as keyof typeof selectedData] + 1,
+        channelingDate: formattedDate,
+        start:
+          sessionArr[selectedData[selectedSession as keyof typeof selectedData]]
+            ?.start,
+        end: sessionArr[
+          selectedData[selectedSession as keyof typeof selectedData]
+        ]?.end,
+        patientId: userId,
+      };
       const newChannel = await apiService.post<NewChannelingResponse>(
         `/channeling/make-channeling`,
-        {
-          session:
-            selectedData[selectedSession as keyof typeof selectedData] + 1,
-          channelingDate: formattedDate,
-          start:
-            sessionArr[
-              selectedData[selectedSession as keyof typeof selectedData]
-            ]?.start,
-          patientId: userId,
-        }
+        req
       );
       makePayment(newChannel?.appointment?._id || "");
       handleSetStep(1);
+      setAppointmentDetails(req);
     } catch {
       toast.error("Something went wrong. Please try again.");
     }

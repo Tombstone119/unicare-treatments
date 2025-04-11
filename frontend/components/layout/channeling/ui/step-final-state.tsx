@@ -4,20 +4,23 @@ import AppointmentCard from "@/components/layout/channeling/ui/appointment-card"
 import { useEffect, useState } from "react";
 import { apiService } from "@/libs/api";
 import { AppointmentResponse } from "@/types/appointment";
+import { IUser } from "@/types/users";
 
 export default function StepFinalState({
   appointmentId,
+  userDetails,
 }: {
   appointmentId: string;
+  userDetails?: IUser;
 }) {
   const [data, setData] = useState({
     reference: "",
     date: "",
-    time: "",
-    no: "",
-    name: "",
+    startingTime: "",
+    endingTime: "",
+    doctorName: "",
+    sessionNumber: 0,
   });
-
   useEffect(() => {
     const getData = async () => {
       const response = await apiService.get<AppointmentResponse>(
@@ -26,9 +29,10 @@ export default function StepFinalState({
       setData({
         reference: appointmentId,
         date: response?.appointment?.channelingDate || "",
-        time: response?.appointment?.startingTime || "",
-        no: "",
-        name: "",
+        startingTime: response?.appointment?.startingTime || "",
+        endingTime: response?.appointment?.endingTime || "",
+        doctorName: response?.appointment?.doctorName || "",
+        sessionNumber: response?.appointment?.sessionNumber || 0,
       });
     };
     getData();
@@ -45,9 +49,9 @@ export default function StepFinalState({
         reference={data.reference}
         amount={500}
         date={data.date}
-        time={data.time}
-        no={data.no}
-        name={data.name}
+        time={`Session ${data.sessionNumber} (${data.startingTime} - ${data.endingTime})`}
+        name={`${userDetails?.firstName} ${userDetails?.lastName}`}
+        doctorName={data.doctorName}
       />
       <Link
         href={"/channeling"}

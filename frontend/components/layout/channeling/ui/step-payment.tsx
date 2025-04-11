@@ -6,19 +6,24 @@ import { Elements } from "@stripe/react-stripe-js";
 import CheckoutPage from "@/channeling/widgets/checkout";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { SessionUser } from "@/types/users";
+import { IUser } from "@/types/users";
 import { centsToLKR, lkrToCents } from "@/helpers/util/common";
+import { AppointmentDetails } from "@/types/channeling";
+
+const session = ["Session 1", "Session 2", "Session 3"];
 
 export default function StepPayment({
   handleSetStep,
   date,
   appointmentId,
-  user,
+  userDetails,
+  appointmentDetails,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   date: string;
   appointmentId: string;
-  user: SessionUser;
+  userDetails?: IUser;
+  appointmentDetails: AppointmentDetails;
 }) {
   const amount = lkrToCents(560); // 120LKR
   const currency = "lkr";
@@ -50,7 +55,28 @@ export default function StepPayment({
       <div className="flex justify-center items-center ">
         <div className="bg-white/90 shadow-md rounded-lg border-2 border-black flex-none  p-4 flex justify-center gap-4">
           <div className="flex flex-col  justify-between items-center">
-            <div>Date Selected: {date}</div>
+            <div>
+              <div>
+                <b>Patient: </b>
+                {userDetails?.firstName} {userDetails?.lastName}
+              </div>
+              <div>
+                <b>Date: </b>
+                {date}
+              </div>
+              <div>
+                <b>Time Slot: </b>
+                {appointmentDetails.session === 1
+                  ? session[0]
+                  : appointmentDetails.session === 2
+                    ? session[1]
+                    : session[2]}{" "}
+                {"("}
+                {appointmentDetails.start} {"-"} {appointmentDetails.end}
+                {")"}
+              </div>
+              <div></div>
+            </div>
             <div className="w-[300px] h-[200px]">
               <DotLottieReact
                 src="/assets/images/payment.lottie"
@@ -66,6 +92,7 @@ export default function StepPayment({
               mode: "payment",
               currency: currency,
               amount: amount,
+              // paymentMethodTypes: ["card"],
             }}
           >
             <CheckoutPage
@@ -73,7 +100,6 @@ export default function StepPayment({
               currency={currency}
               handleSetStep={handleSetStep}
               appointmentId={appointmentId}
-              user={user}
             />
           </Elements>
         </div>

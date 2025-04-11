@@ -19,6 +19,10 @@ const AppointmentSchema = new Schema(
       type: String,
       required: true,
     },
+    endingTime: {
+      type: String,
+      required: true,
+    },
     paymentId: {
       type: String,
       default: "",
@@ -30,6 +34,10 @@ const AppointmentSchema = new Schema(
     },
     paymentAmount: {
       type: Number,
+    },
+    doctorName: {
+      type: String,
+      default: "Dumitha Govindapala",
     },
     appointmentStatus: {
       type: String,

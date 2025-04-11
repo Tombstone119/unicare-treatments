@@ -4,7 +4,6 @@ import { centsToLKR } from "@/helpers/util/common";
 import { apiService } from "@/libs/api";
 import { Button } from "@/shadcn/ui/button";
 import { AppointmentResponse } from "@/types/appointment";
-import { SessionUser } from "@/types/users";
 import {
   PaymentElement,
   useElements,
@@ -19,13 +18,11 @@ export default function CheckoutPage({
   currency,
   handleSetStep,
   appointmentId,
-  user,
 }: {
   amount: number;
   currency: string;
   handleSetStep: (num: -1 | 1) => void;
   appointmentId: string;
-  user: SessionUser;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -55,12 +52,11 @@ export default function CheckoutPage({
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-
       setLoading(true);
+
       if (!stripe || !elements) {
         return;
       }
-
       const { error: submitError } = await elements.submit();
       if (submitError) {
         toast.error(submitError.message);
@@ -113,7 +109,7 @@ export default function CheckoutPage({
     } catch {
       toast.error("Failed to fetch client secret");
     }
-  }, [amount, appointmentId, user, currency]);
+  }, [amount, appointmentId, currency]);
 
   if (!clientSecret || !stripe || !elements) {
     return (
