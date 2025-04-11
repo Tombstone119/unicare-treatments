@@ -17,7 +17,6 @@ const CopyToClipboard = ({
         navigator.clipboard.writeText(value);
         toast.success(`Your Reference Number: ${value}`);
       }}
-      className="bg-green-600 hover:bg-green-800"
     >
       <ClipboardCopy className="w-4 h-4" />
       {text}

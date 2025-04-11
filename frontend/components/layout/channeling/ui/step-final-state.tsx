@@ -5,14 +5,22 @@ import { useEffect, useState } from "react";
 import { apiService } from "@/libs/api";
 import { AppointmentResponse } from "@/types/appointment";
 import { IUser } from "@/types/users";
+import { useReactToPrint } from "react-to-print";
+import { useRef } from "react";
+import { Button } from "@/shadcn/ui/button";
 
 export default function StepFinalState({
   appointmentId,
   userDetails,
+  amount,
 }: {
   appointmentId: string;
   userDetails?: IUser;
+  amount: number;
 }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
+
   const [data, setData] = useState({
     reference: "",
     date: "",
@@ -38,7 +46,7 @@ export default function StepFinalState({
     getData();
   }, [appointmentId]);
   return (
-    <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
+    <div className="flex flex-col min-h-[488px] items-center justify-center gap-10 ">
       <div className="flex flex-col gap-2 items-center">
         <div className="text-2xl font-bold text-gray-800 text-center">
           Thank you for your payment!
@@ -47,18 +55,29 @@ export default function StepFinalState({
       </div>
       <AppointmentCard
         reference={data.reference}
-        amount={500}
+        amount={amount}
         date={data.date}
         time={`Session ${data.sessionNumber} (${data.startingTime} - ${data.endingTime})`}
         name={`${userDetails?.firstName} ${userDetails?.lastName}`}
         doctorName={data.doctorName}
+        contentRef={contentRef}
       />
-      <Link
-        href={"/channeling"}
-        className="bg-black text-white px-5 py-2 rounded-md"
-      >
-        Go Back to Appointments
-      </Link>
+      <div className="flex gap-4">
+        <Link
+          href={"/channeling/upload-lab-reports"}
+          className="bg-black text-white px-5 py-2 rounded-md"
+        >
+          Upload Your Previous Reports
+        </Link>
+        <Button
+          variant="outline"
+          onClick={() => {
+            reactToPrintFn();
+          }}
+        >
+          Print or Save Receipt
+        </Button>
+      </div>
     </div>
   );
 }

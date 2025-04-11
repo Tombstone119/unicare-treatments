@@ -160,7 +160,7 @@ export default function ChannelDateStep({
             }
           }}
           disabled={(day) => !isDateAllowed(day)}
-          className="w-[280px] rounded-md shadow-md p-2 border-black border-2"
+          className="w-[280px] rounded-md shadow-md p-2 border-black border-2 bg-white"
         />
       </div>
       <div className="flex items-center gap-5">

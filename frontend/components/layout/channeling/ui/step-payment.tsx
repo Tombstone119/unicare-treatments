@@ -7,7 +7,7 @@ import CheckoutPage from "@/channeling/widgets/checkout";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { IUser } from "@/types/users";
-import { centsToLKR, lkrToCents } from "@/helpers/util/common";
+import { centsToLKR } from "@/helpers/util/common";
 import { AppointmentDetails } from "@/types/channeling";
 
 const session = ["Session 1", "Session 2", "Session 3"];
@@ -18,14 +18,15 @@ export default function StepPayment({
   appointmentId,
   userDetails,
   appointmentDetails,
+  amount,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   date: string;
   appointmentId: string;
   userDetails?: IUser;
   appointmentDetails: AppointmentDetails;
+  amount: number;
 }) {
-  const amount = lkrToCents(560); // 120LKR
   const currency = "lkr";
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ""
@@ -100,6 +101,7 @@ export default function StepPayment({
               currency={currency}
               handleSetStep={handleSetStep}
               appointmentId={appointmentId}
+              userDetails={userDetails}
             />
           </Elements>
         </div>

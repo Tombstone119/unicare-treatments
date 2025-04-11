@@ -19,18 +19,6 @@ export default function ViewAppointment() {
     getData();
   };
 
-  // const getPaymentDone = async (data: IAppointment) => {
-  //   console.log("data: =-->", data);
-  //   router.push("/channeling-payment");
-
-  //   // const response = await apiService.get<AppointmentResponse>(
-  //   //   `/appointments/payment/${data.referenceNumber}`
-  //   // );
-  //   // if (response.success) {
-  //   //   setData(response?.appointments || []);
-  //   // }
-  // };
-
   const getData = async () => {
     const response = await apiService.get<AppointmentResponse>(
       `/appointments/patient/${user?.id}`
@@ -67,7 +55,6 @@ export default function ViewAppointment() {
                 <span className="hidden md:inline">Appointment Center</span>
               </div>
             </Link>
-
             <Link
               href="/channeling/channel-appointment"
               className="flex items-center gap-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3"

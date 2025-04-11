@@ -4,6 +4,7 @@ import { centsToLKR } from "@/helpers/util/common";
 import { apiService } from "@/libs/api";
 import { Button } from "@/shadcn/ui/button";
 import { AppointmentResponse } from "@/types/appointment";
+import { IUser } from "@/types/users";
 import {
   PaymentElement,
   useElements,
@@ -18,11 +19,13 @@ export default function CheckoutPage({
   currency,
   handleSetStep,
   appointmentId,
+  userDetails,
 }: {
   amount: number;
   currency: string;
   handleSetStep: (num: -1 | 1) => void;
   appointmentId: string;
+  userDetails?: IUser;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -36,15 +39,19 @@ export default function CheckoutPage({
       await apiService.put<AppointmentResponse>(
         `/appointments/update/${appointmentId}`,
         {
+          sendEmailReceipt: true,
+          email: userDetails?.email,
+          name: `${userDetails?.firstName} ${userDetails?.lastName}`,
+          paymentId: id,
           paymentStatus: "completed",
           appointmentStatus: "waiting",
           paymentAmount: centsToLKR(amount),
-          paymentId: id,
         }
       );
     } catch {
       toast.error("An error occurred while updating the appointment.");
     } finally {
+      setLoading(false);
       handleSetStep(1);
     }
   };
@@ -79,10 +86,10 @@ export default function CheckoutPage({
         setErrorMessage(error.message);
       } else {
         toast.success("Payment successful!");
-        setLoading(false);
         updateAppointment(paymentIntent.id);
       }
     } catch {
+      setLoading(false);
       toast.error("An error occurred while processing the payment.");
     }
   };

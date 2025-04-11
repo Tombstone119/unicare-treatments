@@ -13,6 +13,7 @@ import { use, useState } from "react";
 import { usePatient } from "@/helpers/util/get-user";
 import { useStep } from "@/helpers/util/set-step";
 import { AppointmentDetails } from "@/types/channeling";
+import { lkrToCents } from "@/helpers/util/common";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -22,6 +23,7 @@ export default function ChannelAppointment(props: {
   searchParams: SearchParams;
 }) {
   const numSteps = 3;
+  const amount = lkrToCents(560); // 120LKR
   const searchParams = use(props.searchParams);
   const [appointmentId, setAppointmentId] = useState("");
   const [appointmentDetails, setAppointmentDetails] =
@@ -46,7 +48,7 @@ export default function ChannelAppointment(props: {
         </Link>
       </div>
       <Steps numSteps={numSteps} stepsComplete={stepsComplete} />
-      <div className="py-8 pb-10 px-4 my-4 bg-gray-100 border-2 border-dashed border-black rounded-lg">
+      <div className="py-8 pb-10 px-4 my-4 bg-gray-400/10 border-2 border-dashed border-black rounded-lg">
         <div className="flex flex-col gap-4 justify-center items-center">
           {stepsComplete === 0 && (
             <StepPersonalDetails form={form} updateUser={updateUser} />
@@ -70,12 +72,14 @@ export default function ChannelAppointment(props: {
               appointmentId={appointmentId}
               userDetails={userDetails}
               appointmentDetails={appointmentDetails}
+              amount={amount}
             />
           )}
           {stepsComplete === 3 && (
             <StepFinalState
               appointmentId={appointmentId}
               userDetails={userDetails}
+              amount={amount}
             />
           )}
         </div>

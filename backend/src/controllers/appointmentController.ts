@@ -43,10 +43,24 @@ export const updateAppointment = async (
 ): Promise<void> => {
   try {
     const { appointmentId } = req.params;
-    const appointmentData = req.body;
+    const {
+      sendEmailReceipt,
+      email,
+      name,
+      paymentId,
+      paymentStatus,
+      appointmentStatus,
+      paymentAmount,
+    } = req.body;
     const updatedAppointment = await appointmentService.update(
       appointmentId,
-      appointmentData
+      sendEmailReceipt,
+      email,
+      name,
+      paymentId,
+      paymentStatus,
+      appointmentStatus,
+      paymentAmount
     );
     res.status(HttpStatusCodes.OK).json({
       success: true,

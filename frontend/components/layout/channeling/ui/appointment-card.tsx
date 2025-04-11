@@ -1,5 +1,7 @@
 import QRCode from "react-qr-code";
 import Image from "next/image";
+import { RefObject } from "react";
+import { centsToLKR } from "@/helpers/util/common";
 export default function AppointmentCard({
   reference,
   amount,
@@ -7,6 +9,7 @@ export default function AppointmentCard({
   time,
   name,
   doctorName,
+  contentRef,
 }: {
   reference: string;
   amount: number;
@@ -14,9 +17,13 @@ export default function AppointmentCard({
   time: string;
   doctorName: string;
   name: string;
+  contentRef: RefObject<HTMLDivElement | null>;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2 bg-white p-4 border-dotted border-2 border-black">
+    <div
+      className="flex flex-col items-center gap-2 bg-white p-4 border-dotted border-2 border-black print:h-[420px] print:w-full"
+      ref={contentRef}
+    >
       <Image
         alt="logo"
         width={200}
@@ -45,7 +52,8 @@ export default function AppointmentCard({
             <span className="font-bold">Reference ID:</span> {reference}
           </div>
           <div>
-            <span className="font-bold">Amount Paid:</span> Rs.{amount}
+            <span className="font-bold">Amount Paid:</span> Rs.
+            {centsToLKR(amount)}
           </div>
           <div>
             <span className="font-bold">Date:</span> {date}
