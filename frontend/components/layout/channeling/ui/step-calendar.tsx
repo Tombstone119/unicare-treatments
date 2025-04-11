@@ -16,6 +16,7 @@ import PatientCalender from "@/channeling/widgets/patient-calendar";
 import { cn } from "@/libs/utils";
 import { Sessions } from "@/types/channeling";
 import { getDataFiltered } from "@/libs/channeling";
+import { centsToLKR } from "@/helpers/util/common";
 
 const selectedData = {
   first: 0,
@@ -29,6 +30,7 @@ export default function ChannelDateStep({
   userId,
   makePayment,
   setAppointmentDetails,
+  amount,
 }: {
   handleSetStep: (num: -1 | 1) => void;
   date: Date | null;
@@ -36,6 +38,7 @@ export default function ChannelDateStep({
   userId: string | undefined;
   makePayment: (appointmentId: string) => void;
   setAppointmentDetails: Dispatch<SetStateAction<AppointmentDetails>>;
+  amount: number;
 }) {
   const [loading, setLoading] = useState(false);
   const [allowedDates, setAllowedDates] = useState<Date[]>([]);
@@ -52,12 +55,12 @@ export default function ChannelDateStep({
 
   const getAllActive = async () => {
     try {
-      const formattedDate = format(new Date(), "dd-MM-yyyy");
+      const formattedDate = format(new Date(), "yyyy-MM-dd");
       const response = await apiService.get<ChannelingWithDates>(
         `/channeling/active/${formattedDate}`
       );
       const convertedDates = response.dates.map((dateStr) =>
-        parse(dateStr, "dd-MM-yyyy", new Date())
+        parse(dateStr, "yyyy-MM-dd", new Date())
       );
       setAllowedDates(convertedDates);
     } catch {
@@ -70,7 +73,7 @@ export default function ChannelDateStep({
       if (!date) {
         return;
       }
-      const formattedDate = format(date, "dd-MM-yyyy");
+      const formattedDate = format(date, "yyyy-MM-dd");
       const sessionArr = [firstSession, secondSession, thirdSession];
       const req = {
         session: selectedData[selectedSession as keyof typeof selectedData] + 1,
@@ -82,6 +85,7 @@ export default function ChannelDateStep({
           selectedData[selectedSession as keyof typeof selectedData]
         ]?.end,
         patientId: userId,
+        paymentAmount: centsToLKR(amount),
       };
       const newChannel = await apiService.post<NewChannelingResponse>(
         `/channeling/make-channeling`,
@@ -98,7 +102,7 @@ export default function ChannelDateStep({
   const getData = async (selectedDate: Date) => {
     try {
       setLoading(true);
-      const formattedDate = format(selectedDate, "dd-MM-yyyy");
+      const formattedDate = format(selectedDate, "yyyy-MM-dd");
       const response = await apiService.get<ChannelingResponse>(
         `/channeling/${formattedDate}`
       );

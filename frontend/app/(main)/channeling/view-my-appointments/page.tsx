@@ -15,6 +15,8 @@ export default function ViewAppointment() {
   const { data: session } = useSession();
   const user = session?.user;
 
+  console.log("data: =-->", data);
+
   const refreshPage = () => {
     getData();
   };

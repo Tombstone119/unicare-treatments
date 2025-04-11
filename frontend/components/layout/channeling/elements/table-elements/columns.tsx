@@ -15,15 +15,18 @@ import { FaClock } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import Image from "next/image";
+import { format, formatDistanceToNow, isToday, isTomorrow } from "date-fns";
+import { BsCash } from "react-icons/bs";
+import { SiCashapp } from "react-icons/si";
 
 const paymentStatusObj = {
   pending: {
-    text: "Pending",
+    text: "Pay Now",
     color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
-    icon: FaClock,
+    icon: SiCashapp,
   },
   completed: {
-    text: "Completed",
+    text: "Payment Done",
     color: "bg-green-500/50 text-green-900 border-green-600",
     icon: FaCircleCheck,
   },
@@ -37,12 +40,12 @@ const paymentStatusObj = {
 const appointmentStatusObj = {
   waiting: {
     text: "Waiting",
-    color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
+    color: "bg-white text-black border-black",
     icon: FaClock,
   },
   completed: {
     text: "Completed",
-    color: "bg-green-500/50 text-green-900 border-green-600",
+    color: "bg-white text-black border-black",
     icon: FaCircleCheck,
   },
   cancelled: {
@@ -84,10 +87,11 @@ export const getColumns = (
       ),
       cell: ({ row }) => {
         const dob = row.getValue("channelingDate");
-        const date = new Date(`${dob}`);
-        return (
-          <div>{`${date.getFullYear()} / ${date.getMonth()} / ${date.getDate()}`}</div>
-        );
+        if (!dob) {
+          return <div className="text-gray-400">N/A</div>;
+        }
+        const formattedDate = format(new Date(`${dob}`), "yyyy / MM / dd");
+        return <div>{`${formattedDate}`}</div>;
       },
     },
 
@@ -125,7 +129,7 @@ export const getColumns = (
         return (
           <div
             className={cn(
-              "px-2 py-1 border-2 rounded-md min-w-32 inline-flex items-center justify-center gap-2",
+              "cursor-pointer px-2 py-1 border-2 rounded-md min-w-36 inline-flex items-center justify-center gap-2",
               `${obj.color}`
             )}
           >
@@ -157,7 +161,15 @@ export const getColumns = (
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
         <DataTableColumnHeader column={column} title="PAYMENT" />
       ),
-      accessorFn: (row) => `Rs. ${row.paymentAmount ? row.paymentAmount : 0}`,
+      cell: ({ row }) => {
+        const rowData = row.original;
+        return (
+          <div className="border border-dashed py-2 px-2 border-black flex items-center gap-2">
+            <BsCash className="w-6 h-6 text-gray-500" />
+            {`Rs. ${rowData.paymentAmount ? rowData.paymentAmount : 0}`}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "appointmentStatus",
@@ -172,6 +184,21 @@ export const getColumns = (
             ) as keyof typeof appointmentStatusObj
           ];
         const Icon = obj.icon;
+        let relativeDate = "";
+        const channelingDate = new Date(
+          row.getValue("channelingDate") as string
+        );
+        if (obj.text === "Waiting") {
+          if (isToday(channelingDate)) {
+            relativeDate = "It's on Today";
+          } else if (isTomorrow(channelingDate)) {
+            relativeDate = "It's on Tomorrow";
+          } else {
+            relativeDate = `It's ${formatDistanceToNow(channelingDate, {
+              addSuffix: true,
+            })}`;
+          }
+        }
         return (
           <div
             className={cn(
@@ -180,7 +207,7 @@ export const getColumns = (
             )}
           >
             <Icon />
-            {`${obj.text}`}
+            {`${obj.text === "Waiting" ? relativeDate : obj.text}`}
           </div>
         );
       },

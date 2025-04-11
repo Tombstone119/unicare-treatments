@@ -62,6 +62,7 @@ export default function ChannelAppointment(props: {
               makePayment={(id) => {
                 setAppointmentId(id);
               }}
+              amount={amount}
               setAppointmentDetails={setAppointmentDetails}
             />
           )}

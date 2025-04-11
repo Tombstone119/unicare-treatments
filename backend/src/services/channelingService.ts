@@ -52,6 +52,7 @@ const makeChanneling = async (channel: IChanneling) => {
     sessionNumber: channel.session,
     startingTime: channel.starting,
     endingTime: channel.ending,
+    paymentAmount: channel.paymentAmount,
   });
   await newAppointment.save();
   const newChanneling = await ChannelingModel.findOneAndUpdate(

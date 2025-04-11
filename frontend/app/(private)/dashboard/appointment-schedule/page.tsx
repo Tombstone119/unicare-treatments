@@ -61,7 +61,7 @@ export default function Page() {
   const getData = async (selectedDate: Date) => {
     try {
       setLoading(true);
-      const formattedDate = format(selectedDate, "dd-MM-yyyy");
+      const formattedDate = format(selectedDate, "yyyy-MM-dd");
       const response = await apiService.get<ChannelingResponse>(
         `/channeling/${formattedDate}`
       );
@@ -84,12 +84,12 @@ export default function Page() {
 
   const getAllActive = async () => {
     try {
-      const formattedDate = format(new Date(), "dd-MM-yyyy");
+      const formattedDate = format(new Date(), "yyyy-MM-dd");
       const response = await apiService.get<ChannelingWithDates>(
         `/channeling/active/${formattedDate}`
       );
       const convertedDates = response.dates.map((dateStr) =>
-        parse(dateStr, "dd-MM-yyyy", new Date())
+        parse(dateStr, "yyyy-MM-dd", new Date())
       );
       setCompleted(convertedDates);
     } catch {
@@ -108,15 +108,15 @@ export default function Page() {
     try {
       if (totalCount === 0) return;
       setLoading(true);
-      const formattedDate = format(date, "dd-MM-yyyy");
+      const formattedDate = format(date, "yyyy-MM-dd");
       const newData = await apiService.post<ChannelingResponse>(`/channeling`, {
         channelingDate: formattedDate,
         channelingSlots: [firstSession, secondSession, thirdSession],
-        currentDate: format(new Date(), "dd-MM-yyyy"),
+        currentDate: format(new Date(), "yyyy-MM-dd"),
       });
 
       const convertedDates = newData.dates.map((dateStr) =>
-        parse(dateStr, "dd-MM-yyyy", new Date())
+        parse(dateStr, "yyyy-MM-dd", new Date())
       );
       setCompleted(convertedDates);
       toast.success("Updated successfully!");

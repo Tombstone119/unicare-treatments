@@ -4,4 +4,5 @@ export interface IChanneling {
   starting: string;
   ending: string;
   patientId: string;
+  paymentAmount: number;
 }

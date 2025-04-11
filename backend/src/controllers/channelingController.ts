@@ -91,6 +91,7 @@ export const makeChanneling = async (
       starting: data.start,
       ending: data.end,
       patientId: data.patientId,
+      paymentAmount: data.paymentAmount,
     });
     res.status(HttpStatusCodes.OK).json({
       success: true,
