@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/channeling/ui/my-appointments";
-import { getColumns } from "@/channeling/elements/table-elements/columns";
+import { getColumns } from "@/channeling/elements/table-elements/patient-column";
 import { useEffect, useState } from "react";
 import { Stethoscope } from "lucide-react";
 import { AppointmentResponse, IAppointment } from "@/types/appointment";
@@ -14,8 +14,6 @@ export default function ViewAppointment() {
   const [data, setData] = useState<IAppointment[]>([]);
   const { data: session } = useSession();
   const user = session?.user;
-
-  console.log("data: =-->", data);
 
   const refreshPage = () => {
     getData();

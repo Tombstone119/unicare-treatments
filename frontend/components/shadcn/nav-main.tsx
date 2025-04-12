@@ -16,26 +16,12 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/shadcn/ui/sidebar";
-import { IconType } from "react-icons/lib";
 import { cn } from "@/libs/utils";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import { NavMenu } from "@/types/common";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string;
-    url?: string;
-    icon?: IconType;
-    isActive?: boolean;
-    items?: {
-      icon?: IconType;
-      title: string;
-      url: string;
-    }[];
-  }[];
-}) {
+export function NavMain({ items }: { items: NavMenu[] }) {
   const router = useRouter();
   const pathname = usePathname();
   return (

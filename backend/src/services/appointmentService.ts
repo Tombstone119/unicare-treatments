@@ -107,12 +107,23 @@ const getAll = async () => {
     {
       $project: {
         _id: 1,
+        patientId: 1,
         channelingDate: 1,
+        sessionNumber: 1,
+        startingTime: 1,
+        endingTime: 1,
+        paymentId: 1,
+        paymentStatus: 1,
+        doctorName: 1,
+        appointmentStatus: 1,
+        paymentAmount: 1,
         firstName: "$userDetails.firstName",
         lastName: "$userDetails.lastName",
         email: "$userDetails.email",
         phoneNumber: "$userDetails.phoneNumber",
         referenceNumber: "$_id",
+        createdAt: 1,
+        updatedAt: 1,
       },
     },
   ]);

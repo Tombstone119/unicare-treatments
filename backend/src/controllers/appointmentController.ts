@@ -19,6 +19,21 @@ export const getPatientById = async (
   }
 };
 
+export const getAllPatients = async (
+  _: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const appointments = await appointmentService.getAll();
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      appointments,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
 export const getByAppointmentId = async (
   req: Request,
   res: Response
@@ -65,21 +80,6 @@ export const updateAppointment = async (
     res.status(HttpStatusCodes.OK).json({
       success: true,
       updatedAppointment,
-    });
-  } catch (error) {
-    handleError(res, error);
-  }
-};
-
-export const getAllPatients = async (
-  _: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const appointments = await appointmentService.getAll();
-    res.status(HttpStatusCodes.OK).json({
-      success: true,
-      appointments,
     });
   } catch (error) {
     handleError(res, error);

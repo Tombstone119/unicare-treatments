@@ -15,18 +15,18 @@ import { FaClock } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import Image from "next/image";
-import { format, formatDistanceToNow, isToday, isTomorrow } from "date-fns";
+import { format } from "date-fns";
 import { BsCash } from "react-icons/bs";
 import { SiCashapp } from "react-icons/si";
 
 const paymentStatusObj = {
   pending: {
-    text: "Pay Now",
+    text: "Pending",
     color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
     icon: SiCashapp,
   },
   completed: {
-    text: "Payment Done",
+    text: "Completed",
     color: "bg-green-500/50 text-green-900 border-green-600",
     icon: FaCircleCheck,
   },
@@ -40,12 +40,12 @@ const paymentStatusObj = {
 const appointmentStatusObj = {
   waiting: {
     text: "Waiting",
-    color: "bg-white text-black border-black",
+    color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
     icon: FaClock,
   },
   completed: {
     text: "Completed",
-    color: "bg-white text-black border-black",
+    color: "bg-green-500/50 text-green-900 border-green-600",
     icon: FaCircleCheck,
   },
   cancelled: {
@@ -57,7 +57,6 @@ const appointmentStatusObj = {
 
 export const getColumns = (
   refreshPage: () => void
-  // getPaymentDone: (data: IAppointment) => void
 ): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
     {
@@ -116,6 +115,49 @@ export const getColumns = (
       },
     },
     {
+      accessorKey: "appointmentStatus",
+      header: ({ column }: { column: Column<IAppointment, unknown> }) => (
+        <DataTableColumnHeader column={column} title="APPOINTMENT" />
+      ),
+      cell: ({ row }) => {
+        const obj =
+          appointmentStatusObj[
+            row.getValue(
+              "appointmentStatus"
+            ) as keyof typeof appointmentStatusObj
+          ];
+        const Icon = obj.icon;
+        return (
+          <div
+            className={cn(
+              "px-2 py-1 border-2 rounded-md min-w-max inline-flex items-center justify-center  gap-2 text-sm",
+              `${obj.color}`
+            )}
+          >
+            <Icon />
+            {`${obj.text}`}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "doctorName",
+      header: ({ column }: { column: Column<IAppointment, unknown> }) => (
+        <DataTableColumnHeader column={column} title="DOCTOR" />
+      ),
+      cell: ({ row }) => {
+        const rowData = row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <div className="flex-none rounded-full w-8 h-8 border border-black flex items-center justify-center relative overflow-hidden">
+              <Image src="/assets/images/doctor.jpeg" alt="Doctor" fill />
+            </div>
+            {`Dr. ${rowData.doctorName}`}
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "paymentStatus",
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
         <DataTableColumnHeader column={column} title="Payment" />
@@ -139,23 +181,7 @@ export const getColumns = (
         );
       },
     },
-    {
-      accessorKey: "doctorName",
-      header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-        <DataTableColumnHeader column={column} title="DOCTOR" />
-      ),
-      cell: ({ row }) => {
-        const rowData = row.original;
-        return (
-          <div className="flex items-center gap-2">
-            <div className="flex-none rounded-full w-8 h-8 border border-black flex items-center justify-center relative overflow-hidden">
-              <Image src="/assets/images/doctor.jpeg" alt="Doctor" fill />
-            </div>
-            {`${rowData.doctorName}`}
-          </div>
-        );
-      },
-    },
+
     {
       accessorKey: "paymentAmount",
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
@@ -172,42 +198,61 @@ export const getColumns = (
       },
     },
     {
-      accessorKey: "appointmentStatus",
+      accessorKey: "paymentId",
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-        <DataTableColumnHeader column={column} title="APPOINTMENT" />
+        <DataTableColumnHeader column={column} title="PAYMENT ID" />
       ),
       cell: ({ row }) => {
-        const obj =
-          appointmentStatusObj[
-            row.getValue(
-              "appointmentStatus"
-            ) as keyof typeof appointmentStatusObj
-          ];
-        const Icon = obj.icon;
-        let relativeDate = "";
-        const channelingDate = new Date(
-          row.getValue("channelingDate") as string
-        );
-        if (obj.text === "Waiting") {
-          if (isToday(channelingDate)) {
-            relativeDate = "It's on Today";
-          } else if (isTomorrow(channelingDate)) {
-            relativeDate = "It's on Tomorrow";
-          } else {
-            relativeDate = `It's ${formatDistanceToNow(channelingDate, {
-              addSuffix: true,
-            })}`;
-          }
-        }
+        const rowData = row.original;
         return (
-          <div
-            className={cn(
-              "px-2 py-1 border-2 rounded-md min-w-max inline-flex items-center justify-center  gap-2 text-sm",
-              `${obj.color}`
-            )}
-          >
-            <Icon />
-            {`${obj.text === "Waiting" ? relativeDate : obj.text}`}
+          <div className="border border-dashed py-2 px-2 border-black">
+            {rowData.paymentId ? rowData.paymentId : "N/A"}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "fullName",
+      header: ({ column }: { column: Column<IAppointment, unknown> }) => (
+        <DataTableColumnHeader column={column} title="NAME" />
+      ),
+      // accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+      cell: ({ row }) => {
+        const rowData = row.original;
+        return (
+          <div className="flex items-center gap-2">
+            <div className="flex-none rounded-full w-8 h-8 border border-black bg-black/20 text-black flex items-center justify-center relative overflow-hidden">
+              {/* <Image src="/assets/images/doctor.jpeg" alt="Doctor" fill /> */}
+              <span> {`${rowData.firstName} `.split("")[0]}</span>
+            </div>
+            {`${rowData.firstName} ${rowData.lastName}`}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "email",
+      header: ({ column }: { column: Column<IAppointment, unknown> }) => (
+        <DataTableColumnHeader column={column} title="EMAIL" />
+      ),
+    },
+    {
+      accessorKey: "phoneNumber",
+      header: ({ column }: { column: Column<IAppointment, unknown> }) => (
+        <DataTableColumnHeader column={column} title="CONTACT" />
+      ),
+    },
+
+    {
+      accessorKey: "patientId",
+      header: ({ column }: { column: Column<IAppointment, unknown> }) => (
+        <DataTableColumnHeader column={column} title="PATIENT ID" />
+      ),
+      cell: ({ row }) => {
+        const rowData = row.original;
+        return (
+          <div className="border border-dashed py-2 px-2 border-black">
+            {rowData.patientId ? rowData.patientId : "N/A"}
           </div>
         );
       },
@@ -236,27 +281,6 @@ export const getColumns = (
         );
       },
     },
-
-    // {
-    //   accessorKey: "email",
-    //   header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-    //     <DataTableColumnHeader column={column} title="EMAIL" />
-    //   ),
-    // },
-    // {
-    //   accessorKey: "phoneNumber",
-    //   header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-    //     <DataTableColumnHeader column={column} title="CONTACT" />
-    //   ),
-    // },
-
-    // {
-    //   accessorKey: "fullName",
-    //   header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-    //     <DataTableColumnHeader column={column} title="NAME" />
-    //   ),
-    //   accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-    // },
   ];
 
   return columns;
