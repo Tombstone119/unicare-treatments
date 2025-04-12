@@ -205,8 +205,14 @@ export const getColumns = (
       cell: ({ row }) => {
         const rowData = row.original;
         return (
-          <div className="border border-dashed py-2 px-2 border-black">
-            {rowData.paymentId ? rowData.paymentId : "N/A"}
+          <div className="flex items-center gap-2">
+            <CopyToClipboard
+              value={rowData.paymentId || "N/A"}
+              text=""
+            ></CopyToClipboard>
+            <div className="border border-dashed py-2 px-2 border-black">
+              {rowData.paymentId ? rowData.paymentId : "N/A"}
+            </div>
           </div>
         );
       },
@@ -251,8 +257,14 @@ export const getColumns = (
       cell: ({ row }) => {
         const rowData = row.original;
         return (
-          <div className="border border-dashed py-2 px-2 border-black">
-            {rowData.patientId ? rowData.patientId : "N/A"}
+          <div className="flex items-center gap-2">
+            <CopyToClipboard
+              value={rowData.patientId || "N/A"}
+              text=""
+            ></CopyToClipboard>
+            <div className="border border-dashed py-2 px-2 border-black">
+              {rowData.patientId ? rowData.patientId : "N/A"}
+            </div>
           </div>
         );
       },

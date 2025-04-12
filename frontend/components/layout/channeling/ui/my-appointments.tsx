@@ -27,6 +27,8 @@ import { DataTableViewOptions } from "@/channeling/elements/table-elements/view-
 
 import { Input } from "@/shadcn/ui/input";
 import { cn } from "@/libs/utils";
+import { FaFile, FaUser } from "react-icons/fa";
+import { BsCash } from "react-icons/bs";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,6 +49,9 @@ export function DataTable<TData, TValue>({
     id: false,
   });
   const [rowSelection, setRowSelection] = useState({});
+  const [selectedFilter, setSelectedFilter] = useState<
+    "referenceNumber" | "paymentId" | "patientId"
+  >("referenceNumber");
 
   const table = useReactTable({
     data,
@@ -67,25 +72,79 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const getFilterValue = () => {
+    const column = table.getColumn(selectedFilter);
+    return (column?.getFilterValue() as string) ?? "";
+  };
+
+  const filterStyles = {
+    referenceNumber: "border-red-500",
+    patientId: "border-green-500",
+    paymentId: "border-blue-500",
+  };
+
+  const filterOptions = [
+    {
+      id: "referenceNumber",
+      icon: <FaFile className="w-4 h-4" />,
+      activeClasses: "bg-red-200 border-red-500 text-red-500",
+    },
+    {
+      id: "patientId",
+      icon: <FaUser className="w-4 h-4" />,
+      activeClasses: "bg-green-200 border-green-500 text-green-500",
+    },
+    {
+      id: "paymentId",
+      icon: <BsCash className="w-4 h-4" />,
+      activeClasses: "bg-blue-200 border-blue-500 text-blue-500",
+    },
+  ];
+
   return (
     <>
       <div className="flex items-center pb-4 gap-2 w-full justify-between">
         <div className="flex items-center gap-3">
           {children} <DataTableViewOptions table={table} />
         </div>
-        <Input
-          placeholder="Filter REF..."
-          value={
-            (table.getColumn("referenceNumber")?.getFilterValue() as string) ??
-            ""
-          }
-          onChange={(event) =>
-            table
-              .getColumn("referenceNumber")
-              ?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            {filterOptions.map((option) => (
+              <div
+                key={option.id}
+                className={cn(
+                  "border-2 border-gray-300 text-gray-300 rounded-md p-1 cursor-pointer",
+                  {
+                    [option.activeClasses]: selectedFilter === option.id,
+                  }
+                )}
+                onClick={() =>
+                  setSelectedFilter(option.id as keyof typeof filterStyles)
+                }
+              >
+                {option.icon}
+              </div>
+            ))}
+          </div>
+          <Input
+            placeholder={
+              selectedFilter === "paymentId"
+                ? "Search by Payment ID"
+                : selectedFilter === "patientId"
+                  ? "Search by Patient ID"
+                  : "Search by Ref"
+            }
+            value={getFilterValue()}
+            onChange={(event) => {
+              const value = event.target.value;
+              table.getColumn(selectedFilter)?.setFilterValue(value);
+            }}
+            className={cn(
+              "max-w-sm border-2 !ring-0 min-w-[200px]",
+              filterStyles[selectedFilter]
+            )}
+          />
+        </div>
       </div>
       <div className="w-full rounded-md border">
         <Table
