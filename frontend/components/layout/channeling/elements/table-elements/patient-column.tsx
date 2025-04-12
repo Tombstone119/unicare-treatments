@@ -150,7 +150,7 @@ export const getColumns = (
             <div className="flex-none rounded-full w-8 h-8 border border-black flex items-center justify-center relative overflow-hidden">
               <Image src="/assets/images/doctor.jpeg" alt="Doctor" fill />
             </div>
-            {`${rowData.doctorName}`}
+            {`Dr.${rowData.doctorName}`}
           </div>
         );
       },

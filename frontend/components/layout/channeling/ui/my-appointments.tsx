@@ -34,12 +34,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   children?: React.ReactNode;
+  onlyRef?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   children,
+  onlyRef = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -78,7 +80,7 @@ export function DataTable<TData, TValue>({
   };
 
   const filterStyles = {
-    referenceNumber: "border-red-500",
+    referenceNumber: "border-black",
     patientId: "border-green-500",
     paymentId: "border-blue-500",
   };
@@ -87,7 +89,7 @@ export function DataTable<TData, TValue>({
     {
       id: "referenceNumber",
       icon: <FaFile className="w-4 h-4" />,
-      activeClasses: "bg-red-200 border-red-500 text-red-500",
+      activeClasses: "bg-black/20 border-black text-black",
     },
     {
       id: "patientId",
@@ -109,22 +111,28 @@ export function DataTable<TData, TValue>({
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
-            {filterOptions.map((option) => (
-              <div
-                key={option.id}
-                className={cn(
-                  "border-2 border-gray-300 text-gray-300 rounded-md p-1 cursor-pointer",
-                  {
-                    [option.activeClasses]: selectedFilter === option.id,
-                  }
-                )}
-                onClick={() =>
-                  setSelectedFilter(option.id as keyof typeof filterStyles)
-                }
-              >
-                {option.icon}
-              </div>
-            ))}
+            {filterOptions.map((option) => {
+              if (onlyRef) {
+                return null;
+              }
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => {
+                    setSelectedFilter(option.id as keyof typeof filterStyles);
+                    table.getColumn(selectedFilter)?.setFilterValue("");
+                  }}
+                  className={cn(
+                    "rounded-md p-2 text-gray-200 border-2",
+                    selectedFilter === option.id
+                      ? option.activeClasses
+                      : "border-gray-300"
+                  )}
+                >
+                  {option.icon}
+                </button>
+              );
+            })}
           </div>
           <Input
             placeholder={

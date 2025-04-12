@@ -43,7 +43,7 @@ export default function ViewAppointment() {
         <h1 className="text-2xl font-bold text-gray-800 text-center flex items-center gap-2 mb-4">
           My Appointments <Stethoscope className="h-8 w-8 text-black" />
         </h1>
-        <DataTable columns={columns} data={data}>
+        <DataTable columns={columns} data={data} onlyRef>
           <>
             <Link
               href="/channeling"
