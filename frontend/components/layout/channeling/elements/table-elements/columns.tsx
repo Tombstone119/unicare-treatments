@@ -91,7 +91,7 @@ export const getColumns = (
           return <div className="text-gray-400">N/A</div>;
         }
         const formattedDate = format(new Date(`${dob}`), "yyyy / MM / dd");
-        return <div>{`${formattedDate}`}</div>;
+        return <div className="min-w-max">{`${formattedDate}`}</div>;
       },
     },
 
@@ -104,13 +104,13 @@ export const getColumns = (
         const rowData = row.original;
         return (
           <div>
-            <div className="flex items-center gap-2 font-semibold text-blue-950">
+            <div className="flex items-center gap-2 font-semibold text-blue-950 min-w-max">
               {`Session : `}
               <div className="rounded-full w-4 h-4 border border-black flex items-center justify-center">
                 {rowData.sessionNumber}
               </div>
             </div>
-            {`( ${rowData.startingTime} - ${rowData.endingTime} )`}
+            <div className="min-w-max">{`( ${rowData.startingTime} - ${rowData.endingTime} )`}</div>
           </div>
         );
       },
@@ -148,7 +148,7 @@ export const getColumns = (
         const rowData = row.original;
         return (
           <div className="flex items-center gap-2">
-            <div className="rounded-full w-8 h-8 border border-black flex items-center justify-center relative overflow-hidden">
+            <div className="flex-none rounded-full w-8 h-8 border border-black flex items-center justify-center relative overflow-hidden">
               <Image src="/assets/images/doctor.jpeg" alt="Doctor" fill />
             </div>
             {`${rowData.doctorName}`}
@@ -202,7 +202,7 @@ export const getColumns = (
         return (
           <div
             className={cn(
-              "px-2 py-1 border-2 rounded-md min-w-32 inline-flex items-center justify-center  gap-2",
+              "px-2 py-1 border-2 rounded-md min-w-max inline-flex items-center justify-center  gap-2 text-sm",
               `${obj.color}`
             )}
           >

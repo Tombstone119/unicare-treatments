@@ -54,13 +54,13 @@ export default function ChannelingPage() {
           />
           <FeatureCard
             title="Locate Me"
-            description="Monitor your current queue status in real time."
+            description="Find your way around our medical facilities with interactive maps."
             imageUrl="/assets/images/location.jpg"
             href="/channeling/locate-me"
           />
           <FeatureCard
             title="My Treatments"
-            description="Monitor your current queue status in real time."
+            description="View and track your complete treatment history and progress."
             imageUrl="/assets/images/my-treatment.jpg"
             href="/channeling/my-treatment"
           />
