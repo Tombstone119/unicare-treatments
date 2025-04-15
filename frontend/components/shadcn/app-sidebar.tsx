@@ -15,13 +15,13 @@ import {
 } from "@/components/shadcn/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { adminNavMenu, doctorNavMenu } from "@/helpers/data/side.menu.data";
 import { NavMenu } from "@/types/common";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession();
-  const [navMenu, setNavMenu] = React.useState<NavMenu[]>([]);
+  const [navMenu, setNavMenu] = useState<NavMenu[]>([]);
 
   const user = session?.user;
   const role = user?.role;
