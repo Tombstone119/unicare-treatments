@@ -23,7 +23,7 @@ export default function CheckoutPage({
 }: {
   amount: number;
   currency: string;
-  handleSetStep: (num: -1 | 1) => void;
+  handleSetStep?: (num: -1 | 1) => void;
   appointmentId: string;
   userDetails?: IUser;
 }) {
@@ -52,7 +52,9 @@ export default function CheckoutPage({
       toast.error("An error occurred while updating the appointment.");
     } finally {
       setLoading(false);
-      handleSetStep(1);
+      if (handleSetStep) {
+        handleSetStep(1);
+      }
     }
   };
 
