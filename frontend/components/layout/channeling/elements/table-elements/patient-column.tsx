@@ -4,11 +4,11 @@ import { Column, ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "@/channeling/elements/table-elements/sort-menu";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/ui/dialog";
-import { Button } from "@/shadcn/ui/button";
-import { Pencil } from "lucide-react";
+// import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/ui/dialog";
+// import { Button } from "@/shadcn/ui/button";
+// import { Pencil } from "lucide-react";
 import CopyToClipboard from "@/channeling/widgets/copy-to-clipboard";
-import { EditPass } from "@/channeling/ui/edit-pass";
+// import { EditPass } from "@/channeling/ui/edit-pass";
 import { IAppointment } from "@/types/appointment";
 import { cn } from "@/libs/utils";
 import { FaClock } from "react-icons/fa";
@@ -141,7 +141,7 @@ export const getColumns = (
         if (obj.text === "Pay Now") {
           return (
             <Link
-              href={`/channeling-payment?appointmentId=${row.getValue(
+              href={`/appointment-payment?appointmentId=${row.getValue(
                 "referenceNumber"
               )}&userId=${userId}`}
             >
@@ -248,29 +248,29 @@ export const getColumns = (
       },
     },
 
-    {
-      id: "actions",
-      accessorKey: "actions",
-      header: () => <div className="text-white">ACTIONS</div>,
-      cell: ({ row }) => {
-        const rowData = row.original;
-        return (
-          <div className="flex align-items justify-center gap-2">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-800">
-                  <Pencil className="w-4 h-4" />
-                  Change/Refund
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <EditPass rowData={rowData} refreshFn={refreshPage} />
-              </DialogContent>
-            </Dialog>
-          </div>
-        );
-      },
-    },
+    // {
+    //   id: "actions",
+    //   accessorKey: "actions",
+    //   header: () => <div className="text-white">ACTIONS</div>,
+    //   cell: ({ row }) => {
+    //     const rowData = row.original;
+    //     return (
+    //       <div className="flex align-items justify-center gap-2">
+    //         <Dialog>
+    //           <DialogTrigger asChild>
+    //             <Button className="bg-blue-600 hover:bg-blue-800">
+    //               <Pencil className="w-4 h-4" />
+    //               Change/Refund
+    //             </Button>
+    //           </DialogTrigger>
+    //           <DialogContent className="sm:max-w-[425px]">
+    //             <EditPass rowData={rowData} refreshFn={refreshPage} />
+    //           </DialogContent>
+    //         </Dialog>
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 
   return columns;

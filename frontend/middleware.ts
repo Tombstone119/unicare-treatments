@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
       path.startsWith("/sign-up") ||
       path.startsWith("/verify"))
   ) {
-    if (token.role === "user") {
+    if (token.role === "patient") {
       return NextResponse.redirect(new URL("/home", request.url));
     }
     if (["admin", "doctor", "supplier"].includes(token.role as string)) {
@@ -44,6 +44,7 @@ export async function middleware(request: NextRequest) {
   if (protectedRoutes.some((route) => path.startsWith(route))) {
     // No token, redirect to login
     if (!token) {
+      console.log("came vvvvv: =-->");
       return NextResponse.redirect(new URL("/home", request.url));
     }
 

@@ -6,7 +6,7 @@ import { DataTableColumnHeader } from "@/channeling/elements/table-elements/sort
 
 import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/ui/dialog";
 import { Button } from "@/shadcn/ui/button";
-import { Pencil } from "lucide-react";
+import { Loader2, Pencil } from "lucide-react";
 import CopyToClipboard from "@/channeling/widgets/copy-to-clipboard";
 import { EditPass } from "@/channeling/ui/edit-pass";
 import { IAppointment } from "@/types/appointment";
@@ -61,7 +61,11 @@ export const getColumns = (
     appointmentId: string,
     email: string,
     userId: string
-  ) => void
+  ) => void,
+  loading: {
+    ref: string;
+    item: string;
+  }
 ): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
     {
@@ -193,6 +197,10 @@ export const getColumns = (
             >
               <Icon />
               {`${obj.text}`}
+              {loading.ref === row.getValue("referenceNumber") &&
+                loading.item === "payment" && (
+                  <Loader2 className="animate-spin w-4 h-4" />
+                )}
             </div>
           );
         }

@@ -23,12 +23,13 @@ async function sendPaymentRequest(
     subject: "Please Make Your Payment",
     html: `
     <h1>Unicare Treatments</h1>
+    <p>If you don't do this payment today, it will be cancelled</p>
     <p><strong>Reference ID:</strong> ${appointmentId}</p>
     <p><strong>Amount To Be Paid:</strong> ${appointment?.paymentAmount}</p>
     <p><strong>Date:</strong> ${appointment?.channelingDate}</p>
     <p><strong>Time:</strong> Session ${appointment?.sessionNumber} (${appointment?.startingTime} - ${appointment?.endingTime})</p>
     <p><strong>Doctor:</strong> ${appointment?.doctorName}</p>
-    <a href="${process.env.FRONTEND_URL}/channeling-payment?appointmentId=${appointmentId}&userId=${userId}">Click here to make your payment</a>
+    <a href="${process.env.FRONTEND_URL}/appointment-payment?appointmentId=${appointmentId}&userId=${userId}">Click here to make your payment</a>
     `,
   });
   return true;

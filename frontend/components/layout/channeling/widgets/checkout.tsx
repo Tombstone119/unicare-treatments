@@ -59,7 +59,7 @@ export default function CheckoutPage({
         handleSetStep(1);
       } else {
         redirect(
-          `/channeling-payment-success?appointmentId=${appointmentId}&userId=${userId}`
+          `/appointment-payment-success?appointmentId=${appointmentId}&userId=${userId}`
         );
       }
     }

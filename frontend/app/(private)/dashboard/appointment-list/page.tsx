@@ -10,6 +10,10 @@ import { toast } from "sonner";
 
 export default function Page() {
   const [data, setData] = useState<IAppointment[]>([]);
+  const [loading, setLoading] = useState({
+    ref: "",
+    item: "",
+  });
 
   const refreshPage = () => {
     getData();
@@ -21,6 +25,10 @@ export default function Page() {
     userId: string
   ) => {
     try {
+      setLoading({
+        ref: appointmentId,
+        item: "payment",
+      });
       const response = await apiService.post(`/appointments/payment/request`, {
         appointmentId: appointmentId,
         email: email,
@@ -33,6 +41,11 @@ export default function Page() {
       toast.success("Payment request sent successfully.");
     } catch {
       toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading({
+        ref: "",
+        item: "",
+      });
     }
   };
 
@@ -45,7 +58,7 @@ export default function Page() {
     }
   };
 
-  const columns = getColumns(refreshPage, sendPaymentNotification);
+  const columns = getColumns(refreshPage, sendPaymentNotification, loading);
 
   useEffect(() => {
     getData();

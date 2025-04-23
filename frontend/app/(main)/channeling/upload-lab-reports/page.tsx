@@ -6,7 +6,6 @@ import {
 } from "@/channeling/widgets/multi-file-dropzone";
 import { apiService } from "@/libs/api";
 import { useEdgeStore } from "@/libs/edgestore";
-import { ReportResponse } from "@/types/users";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -16,6 +15,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { IoMdCloseCircle } from "react-icons/io";
 import { ImImages } from "react-icons/im";
+import { ReportResponse } from "@/types/reports";
 
 export default function UploadLabReports() {
   const [fileStates, setFileStates] = useState<FileState[]>([]);
