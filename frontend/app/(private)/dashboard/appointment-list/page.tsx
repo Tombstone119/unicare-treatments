@@ -6,12 +6,34 @@ import { apiService } from "@/libs/api";
 import { AppointmentResponse, IAppointment } from "@/types/appointment";
 import { Stethoscope } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Page() {
   const [data, setData] = useState<IAppointment[]>([]);
 
   const refreshPage = () => {
     getData();
+  };
+
+  const sendPaymentNotification = async (
+    appointmentId: string,
+    email: string,
+    userId: string
+  ) => {
+    try {
+      const response = await apiService.post(`/appointments/payment/request`, {
+        appointmentId: appointmentId,
+        email: email,
+        userId: userId,
+      });
+      if (!response.success) {
+        toast.error("Something went wrong. Please try again.");
+        return;
+      }
+      toast.success("Payment request sent successfully.");
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   const getData = async () => {
@@ -23,7 +45,7 @@ export default function Page() {
     }
   };
 
-  const columns = getColumns(refreshPage);
+  const columns = getColumns(refreshPage, sendPaymentNotification);
 
   useEffect(() => {
     getData();

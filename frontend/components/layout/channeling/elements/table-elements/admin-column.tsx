@@ -56,7 +56,12 @@ const appointmentStatusObj = {
 };
 
 export const getColumns = (
-  refreshPage: () => void
+  refreshPage: () => void,
+  sendPaymentNotification: (
+    appointmentId: string,
+    email: string,
+    userId: string
+  ) => void
 ): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
     {
@@ -171,6 +176,26 @@ export const getColumns = (
             row.getValue("paymentStatus") as keyof typeof paymentStatusObj
           ];
         const Icon = obj.icon;
+        if (obj.text === "Pending") {
+          return (
+            <div
+              className={cn(
+                "cursor-pointer px-2 py-1 border-2 rounded-md min-w-36 inline-flex items-center justify-center gap-2",
+                `${obj.color}`
+              )}
+              onClick={() => {
+                sendPaymentNotification(
+                  row.getValue("referenceNumber"),
+                  row.getValue("email"),
+                  row.getValue("patientId")
+                );
+              }}
+            >
+              <Icon />
+              {`${obj.text}`}
+            </div>
+          );
+        }
         return (
           <div
             className={cn(

@@ -34,6 +34,25 @@ export const getAllPatients = async (
   }
 };
 
+export const sendPaymentRequest = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const data = req.body;
+    await appointmentService.sendPaymentRequest(
+      data.appointmentId,
+      data.email,
+      data.userId
+    );
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
 export const getByAppointmentId = async (
   req: Request,
   res: Response
