@@ -85,11 +85,14 @@ export const getColumns = (
         <DataTableColumnHeader column={column} title="DATE" />
       ),
       cell: ({ row }) => {
-        const dob = row.getValue("channelingDate");
-        if (!dob) {
+        const channelingDate = row.getValue("channelingDate");
+        if (!channelingDate) {
           return <div className="text-gray-400">N/A</div>;
         }
-        const formattedDate = format(new Date(`${dob}`), "yyyy / MM / dd");
+        const formattedDate = format(
+          new Date(`${channelingDate}`),
+          "yyyy / MM / dd"
+        );
         return <div className="min-w-max">{`${formattedDate}`}</div>;
       },
     },
