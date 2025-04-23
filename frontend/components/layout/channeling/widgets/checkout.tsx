@@ -10,17 +10,20 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaCreditCard } from "react-icons/fa";
 import { toast } from "sonner";
 
 export default function CheckoutPage({
+  userId = "",
   amount,
   currency,
   handleSetStep,
   appointmentId,
   userDetails,
 }: {
+  userId?: string;
   amount: number;
   currency: string;
   handleSetStep?: (num: -1 | 1) => void;
@@ -54,6 +57,10 @@ export default function CheckoutPage({
       setLoading(false);
       if (handleSetStep) {
         handleSetStep(1);
+      } else {
+        redirect(
+          `/channeling-payment-success?appointmentId=${appointmentId}&userId=${userId}`
+        );
       }
     }
   };

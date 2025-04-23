@@ -15,9 +15,17 @@ import { FaClock } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import Image from "next/image";
-import { format, formatDistanceToNow, isToday, isTomorrow } from "date-fns";
+import {
+  format,
+  formatDistanceToNow,
+  isBefore,
+  isToday,
+  isTomorrow,
+  startOfToday,
+} from "date-fns";
 import { BsCash } from "react-icons/bs";
 import { SiCashapp } from "react-icons/si";
+import Link from "next/link";
 
 const paymentStatusObj = {
   pending: {
@@ -55,8 +63,13 @@ const appointmentStatusObj = {
   },
 };
 
+const isBeforeToday = (date: Date): boolean => {
+  return isBefore(date, startOfToday());
+};
+
 export const getColumns = (
-  refreshPage: () => void
+  refreshPage: () => void,
+  userId: string
 ): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
     {
@@ -125,6 +138,25 @@ export const getColumns = (
             row.getValue("paymentStatus") as keyof typeof paymentStatusObj
           ];
         const Icon = obj.icon;
+        if (obj.text === "Pay Now") {
+          return (
+            <Link
+              href={`/channeling-payment?appointmentId=${row.getValue(
+                "referenceNumber"
+              )}&userId=${userId}`}
+            >
+              <div
+                className={cn(
+                  "cursor-pointer px-2 py-1 border-2 rounded-md min-w-36 inline-flex items-center justify-center gap-2",
+                  `${obj.color}`
+                )}
+              >
+                <Icon />
+                {`${obj.text}`}
+              </div>
+            </Link>
+          );
+        }
         return (
           <div
             className={cn(
@@ -192,6 +224,8 @@ export const getColumns = (
             relativeDate = "It's on Today";
           } else if (isTomorrow(channelingDate)) {
             relativeDate = "It's on Tomorrow";
+          } else if (isBeforeToday(channelingDate)) {
+            relativeDate = `No Show`;
           } else {
             relativeDate = `It's ${formatDistanceToNow(channelingDate, {
               addSuffix: true,
@@ -202,7 +236,9 @@ export const getColumns = (
           <div
             className={cn(
               "px-2 py-1 border-2 rounded-md min-w-max inline-flex items-center justify-center  gap-2 text-sm",
-              `${obj.color}`
+              relativeDate === `No Show`
+                ? "bg-red-500/30 text-red-900 border-red-600"
+                : `${obj.color}`
             )}
           >
             <Icon />
@@ -235,27 +271,6 @@ export const getColumns = (
         );
       },
     },
-
-    // {
-    //   accessorKey: "email",
-    //   header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-    //     <DataTableColumnHeader column={column} title="EMAIL" />
-    //   ),
-    // },
-    // {
-    //   accessorKey: "phoneNumber",
-    //   header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-    //     <DataTableColumnHeader column={column} title="CONTACT" />
-    //   ),
-    // },
-
-    // {
-    //   accessorKey: "fullName",
-    //   header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-    //     <DataTableColumnHeader column={column} title="NAME" />
-    //   ),
-    //   accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-    // },
   ];
 
   return columns;

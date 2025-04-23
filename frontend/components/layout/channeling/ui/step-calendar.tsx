@@ -17,6 +17,7 @@ import { cn } from "@/libs/utils";
 import { Sessions } from "@/types/channeling";
 import { getDataFiltered } from "@/libs/channeling";
 import { centsToLKR } from "@/helpers/util/common";
+import { Button } from "@/shadcn/ui/button";
 
 const selectedData = {
   first: 0,
@@ -68,9 +69,19 @@ export default function ChannelDateStep({
     }
   };
 
+  const disableSubmission =
+    selectedSession === undefined ||
+    (selectedSession === "first" && !firstSession) ||
+    (selectedSession === "second" && !secondSession) ||
+    (selectedSession === "third" && !thirdSession);
+
   const updateChanneling = async () => {
     try {
       if (!date) {
+        return;
+      }
+      if (disableSubmission) {
+        toast.error("Please select a session.");
         return;
       }
       const formattedDate = format(date, "yyyy-MM-dd");
@@ -177,15 +188,16 @@ export default function ChannelDateStep({
           <ArrowLeft className="h-5 w-5 text-black" />
           Go Back
         </button>
-        <button
+        <Button
           className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
+          disabled={disableSubmission}
           onClick={() => {
             updateChanneling();
           }}
         >
           <FaCalendarAlt />
           Save and Continue
-        </button>
+        </Button>
       </div>
     </div>
   );

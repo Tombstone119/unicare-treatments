@@ -126,6 +126,9 @@ const getAll = async () => {
         updatedAt: 1,
       },
     },
+    // {
+    //   $sort: { channelingDate: -1 }, // 1 for ascending, -1 for descending
+    // },
   ]);
   return allAppointments;
 };

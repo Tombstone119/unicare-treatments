@@ -6,11 +6,13 @@ import { Elements } from "@stripe/react-stripe-js";
 import CheckoutPage from "@/channeling/widgets/checkout";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { IUser } from "@/types/users";
-import { centsToLKR } from "@/helpers/util/common";
-import { use } from "react";
+import { IUser, UserApiResponse } from "@/types/users";
+import { use, useEffect, useState } from "react";
+import { apiService } from "@/libs/api";
+import { AppointmentResponse, IAppointment } from "@/types/appointment";
+import { lkrToCents } from "@/helpers/util/common";
 
-const session = ["Session 1", "Session 2", "Session 3"];
+const sessionArr = ["Session 1", "Session 2", "Session 3"];
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -20,22 +22,40 @@ export default function Page(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = use(props.searchParams);
-  const amount = +(searchParams?.amount || 560);
   const appointmentId = searchParams?.appointmentId as string;
-  const date = searchParams?.date as string;
+  const userId = searchParams?.userId as string;
+  const [appointmentDetails, setAppointmentDetails] = useState<IAppointment>();
+  const amount = +(appointmentDetails?.paymentAmount || 560);
+  const paymentInCent = lkrToCents(amount);
+  const [userDetails, setUserDetails] = useState<IUser>();
   const currency = "lkr";
-  const appointmentDetails = {
-    session: +(searchParams?.session || 1),
-    start: searchParams?.start as string,
-    end: searchParams?.end as string,
-  };
-  const userDetails = {} as IUser;
+
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ""
   );
   if (stripePromise === null) {
     throw new Error("Stripe promise is null");
   }
+  useEffect(() => {
+    const fetchUserAppointments = async () => {
+      if (!userId) return;
+      const response = await apiService.get<UserApiResponse>(`/user/${userId}`);
+      setUserDetails(response.user);
+    };
+    fetchUserAppointments();
+  }, [userId]);
+
+  useEffect(() => {
+    const fetchUserAppointments = async () => {
+      if (!appointmentId) return;
+      const response = await apiService.get<AppointmentResponse>(
+        `/appointments/all/${appointmentId}`
+      );
+      setAppointmentDetails(response.appointment);
+    };
+    fetchUserAppointments();
+  }, [appointmentId]);
+
   return (
     <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
       <div>
@@ -51,7 +71,7 @@ export default function Page(props: {
             className="text-black mb-2 w-100"
           />
           <p className=" text-gray-800 text-center">
-            Your next step is to pay, {centsToLKR(amount)}LKR
+            Please pay <b>Rs.{amount}</b> to confirm your appointment.
           </p>
         </div>
       </div>
@@ -65,18 +85,23 @@ export default function Page(props: {
               </div>
               <div>
                 <b>Date: </b>
-                {date}
+                {appointmentDetails?.channelingDate}
               </div>
               <div>
                 <b>Time Slot: </b>
-                {appointmentDetails.session === 1
-                  ? session[0]
-                  : appointmentDetails.session === 2
-                    ? session[1]
-                    : session[2]}{" "}
-                {"("}
-                {appointmentDetails.start} {"-"} {appointmentDetails.end}
-                {")"}
+                {appointmentDetails && (
+                  <>
+                    {appointmentDetails.sessionNumber === 1
+                      ? sessionArr[0]
+                      : appointmentDetails.sessionNumber === 2
+                        ? sessionArr[1]
+                        : sessionArr[2]}{" "}
+                    {"("}
+                    {appointmentDetails.startingTime} {"-"}{" "}
+                    {appointmentDetails.endingTime}
+                    {")"}
+                  </>
+                )}
               </div>
               <div></div>
             </div>
@@ -94,15 +119,16 @@ export default function Page(props: {
             options={{
               mode: "payment",
               currency: currency,
-              amount: amount,
+              amount: paymentInCent,
               // paymentMethodTypes: ["card"],
             }}
           >
             <CheckoutPage
-              amount={amount}
+              amount={paymentInCent}
               currency={currency}
               appointmentId={appointmentId}
               userDetails={userDetails}
+              userId={userId}
             />
           </Elements>
         </div>

@@ -28,7 +28,7 @@ export default function ViewAppointment() {
     }
   };
 
-  const columns = getColumns(refreshPage);
+  const columns = getColumns(refreshPage, user?.id || "");
 
   useEffect(() => {
     if (user?.id) {
