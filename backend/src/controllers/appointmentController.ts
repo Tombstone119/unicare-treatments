@@ -53,6 +53,22 @@ export const sendPaymentRequest = async (
   }
 };
 
+export const deleteAppointment = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { appointmentId } = req.params;
+    await appointmentService.deleteAppointment(appointmentId);
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      message: "Appointment deleted successfully",
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
 export const getByAppointmentId = async (
   req: Request,
   res: Response

@@ -44,7 +44,6 @@ export async function middleware(request: NextRequest) {
   if (protectedRoutes.some((route) => path.startsWith(route))) {
     // No token, redirect to login
     if (!token) {
-      console.log("came vvvvv: =-->");
       return NextResponse.redirect(new URL("/home", request.url));
     }
 

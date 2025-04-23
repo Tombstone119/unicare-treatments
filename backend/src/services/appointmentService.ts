@@ -1,6 +1,7 @@
 import AppointmentModel from "../models/appointmentModel.ts";
 import mongoose from "mongoose";
 import { resend } from "../util/resend.ts";
+import ChannelingModel from "../models/channelingModel.ts";
 
 async function getByAppointmentId(appointmentId: string) {
   const appointments = await AppointmentModel.findOne({
@@ -159,7 +160,46 @@ const getAll = async () => {
   return allAppointments;
 };
 
+async function deleteAppointment(appointmentId: string) {
+  const appointment = await AppointmentModel.findByIdAndDelete({
+    _id: appointmentId,
+  });
+
+  if (!appointment) {
+    throw new Error("Appointment not found");
+  }
+  const existingChanneling = await ChannelingModel.findOne({
+    channelingDate: appointment.channelingDate,
+  });
+  if (
+    existingChanneling &&
+    appointment.sessionNumber &&
+    appointment.sessionNumber < 3
+  ) {
+    const sessionIndex = appointment.sessionNumber - 1;
+    const session = existingChanneling.channelingSlots[sessionIndex];
+    if (Array.isArray(session)) {
+      const slotIndex = session.findIndex(
+        (slot) => slot.appointmentId === appointment._id.toString()
+      );
+      if (slotIndex !== -1) {
+        await ChannelingModel.findOneAndUpdate(
+          { channelingDate: appointment.channelingDate },
+          {
+            $set: {
+              [`channelingSlots.${sessionIndex}.${slotIndex}.appointmentId`]:
+                "",
+            },
+          }
+        );
+      }
+    }
+  }
+  return appointment;
+}
+
 export default {
+  deleteAppointment,
   update,
   getById,
   getAll,

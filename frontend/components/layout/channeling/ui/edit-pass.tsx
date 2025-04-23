@@ -12,13 +12,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/shadcn/ui/form";
 import { Calendar } from "lucide-react";
-import { IAppointment } from "@/types/index";
 import FormFieldWrapper from "@/channeling/elements/table-elements/form-field";
 import OnlyDateElement from "@/channeling/elements/form-elements/date-element";
 import { dateSchema, onlyDateSchema } from "@/schemas/channel-schema";
 import { apiService } from "@/libs/api";
-import { TApiResponse } from "@/types/users";
 import { toast } from "sonner";
+import { IAppointment } from "@/types/appointment";
+import { TApiResponse } from "@/types/common";
 
 export function EditPass({
   rowData,

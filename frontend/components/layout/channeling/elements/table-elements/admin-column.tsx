@@ -18,6 +18,7 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { BsCash } from "react-icons/bs";
 import { SiCashapp } from "react-icons/si";
+import DeleteDialog from "@/channeling/ui/delete-dialog";
 
 const paymentStatusObj = {
   pending: {
@@ -43,6 +44,11 @@ const appointmentStatusObj = {
     color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
     icon: FaClock,
   },
+  attending: {
+    text: "Attending",
+    color: "bg-blue-500/50 text-blue-900 border-blue-600",
+    icon: FaCircleCheck,
+  },
   completed: {
     text: "Completed",
     color: "bg-green-500/50 text-green-900 border-green-600",
@@ -50,6 +56,11 @@ const appointmentStatusObj = {
   },
   cancelled: {
     text: "Cancelled",
+    color: "bg-red-500/50 text-red-900 border-red-600",
+    icon: IoIosCloseCircle,
+  },
+  "no-show": {
+    text: "No Show",
     color: "bg-red-500/50 text-red-900 border-red-600",
     icon: IoIosCloseCircle,
   },
@@ -68,6 +79,30 @@ export const getColumns = (
   }
 ): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
+    {
+      id: "actions",
+      accessorKey: "actions",
+      header: () => <div className="text-white">ACTIONS</div>,
+      cell: ({ row }) => {
+        const rowData = row.original;
+        return (
+          <div className="flex align-items justify-center gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-blue-600 hover:bg-blue-800">
+                  <Pencil className="w-4 h-4" />
+                  Change
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <EditPass rowData={rowData} refreshFn={refreshPage} />
+              </DialogContent>
+            </Dialog>
+            <DeleteDialog rowData={rowData} refreshFn={refreshPage} />
+          </div>
+        );
+      },
+    },
     {
       accessorKey: "referenceNumber",
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
@@ -301,30 +336,6 @@ export const getColumns = (
             <div className="border border-dashed py-2 px-2 border-black">
               {rowData.patientId ? rowData.patientId : "N/A"}
             </div>
-          </div>
-        );
-      },
-    },
-
-    {
-      id: "actions",
-      accessorKey: "actions",
-      header: () => <div className="text-white">ACTIONS</div>,
-      cell: ({ row }) => {
-        const rowData = row.original;
-        return (
-          <div className="flex align-items justify-center gap-2">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-800">
-                  <Pencil className="w-4 h-4" />
-                  Change/Refund
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <EditPass rowData={rowData} refreshFn={refreshPage} />
-              </DialogContent>
-            </Dialog>
           </div>
         );
       },

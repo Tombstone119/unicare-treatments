@@ -12,10 +12,10 @@ import {
 import { Button } from "@/shadcn/ui/button";
 import { Trash } from "lucide-react";
 import { useState } from "react";
-import { IAppointment } from "@/types/index";
 import { toast } from "sonner";
 import { apiService } from "@/libs/api";
-import { TApiResponse } from "@/types/users";
+import { IAppointment } from "@/types/appointment";
+import { TApiResponse } from "@/types/common";
 
 const DeleteDialog = ({
   rowData,
@@ -29,7 +29,7 @@ const DeleteDialog = ({
   const submitHandler = async () => {
     try {
       const res = await apiService.delete<TApiResponse>(
-        `/appointments/refNo/${rowData.referenceNumber}`
+        `/appointments/delete/${rowData.referenceNumber}`
       );
       if (!res.success) {
         toast.error("Error deleting appointment. Please try again later.");
@@ -52,13 +52,36 @@ const DeleteDialog = ({
           Delete
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="max-w-[300px]">
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Do you want to delete this?</AlertDialogTitle>
           <AlertDialogDescription>
-            Your&nbsp;<b>({rowData.referenceNumber})</b>&nbsp;appointment will
-            be deleted. This action cannot be undone. Please contact&nbsp;
-            <b>07711111111</b>&nbsp;if you need to reschedule your appointment.
+            <span className="flex flex-col gap-2">
+              <span>
+                <span className="font-semibold">Ref: </span>{" "}
+                <span>{rowData.referenceNumber}</span>
+              </span>
+              <span>
+                <span className="font-semibold">Patient: </span>{" "}
+                <span>
+                  {rowData.firstName} {rowData.lastName}
+                </span>
+              </span>
+              <span>
+                <span className="font-semibold">Date: </span>{" "}
+                <span>{rowData.channelingDate}</span>
+              </span>
+              <span>
+                <span className="font-semibold">Session: </span>{" "}
+                <span>{rowData.sessionNumber}</span>
+              </span>
+              <span>
+                <span className="font-semibold">Time: </span>{" "}
+                <span>
+                  {rowData.startingTime} - {rowData.endingTime}
+                </span>
+              </span>
+            </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

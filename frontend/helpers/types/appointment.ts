@@ -10,7 +10,12 @@ export interface IAppointment {
   paymentId: string;
   paymentStatus: "pending" | "completed" | "cancelled";
   doctorName: string;
-  appointmentStatus: "waiting" | "completed" | "cancelled";
+  appointmentStatus:
+    | "waiting"
+    | "attending"
+    | "completed"
+    | "canceled"
+    | "no-show";
   paymentAmount: number;
   firstName: string;
   lastName: string;
