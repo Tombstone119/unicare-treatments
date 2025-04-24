@@ -198,6 +198,33 @@ async function deleteAppointment(appointmentId: string) {
   return appointment;
 }
 
+const updateAppointmentStatus = async (
+  appointmentId: string,
+  appointmentStatus: string,
+  paymentStatus: string,
+  paymentId: string
+) => {
+  const channeling = await AppointmentModel.findOneAndUpdate(
+    {
+      _id: appointmentId,
+    },
+    {
+      $set: {
+        appointmentStatus: appointmentStatus,
+        paymentStatus: paymentStatus,
+        paymentId: paymentId,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+  if (!channeling) {
+    throw new Error("Channeling not found");
+  }
+  return channeling;
+};
+
 export default {
   deleteAppointment,
   update,
@@ -205,4 +232,5 @@ export default {
   getAll,
   getByAppointmentId,
   sendPaymentRequest,
+  updateAppointmentStatus,
 };

@@ -4,16 +4,9 @@ import { Column, ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "@/channeling/elements/table-elements/sort-menu";
 
-// import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/ui/dialog";
-// import { Button } from "@/shadcn/ui/button";
-// import { Pencil } from "lucide-react";
 import CopyToClipboard from "@/channeling/widgets/copy-to-clipboard";
-// import { EditPass } from "@/channeling/ui/edit-pass";
 import { IAppointment } from "@/types/appointment";
 import { cn } from "@/libs/utils";
-import { FaClock } from "react-icons/fa";
-import { FaCircleCheck } from "react-icons/fa6";
-import { IoIosCloseCircle } from "react-icons/io";
 import Image from "next/image";
 import {
   format,
@@ -24,53 +17,19 @@ import {
   startOfToday,
 } from "date-fns";
 import { BsCash } from "react-icons/bs";
-import { SiCashapp } from "react-icons/si";
 import Link from "next/link";
-
-const paymentStatusObj = {
-  pending: {
-    text: "Pay Now",
-    color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
-    icon: SiCashapp,
-  },
-  completed: {
-    text: "Payment Done",
-    color: "bg-green-500/50 text-green-900 border-green-600",
-    icon: FaCircleCheck,
-  },
-  cancelled: {
-    text: "Cancelled",
-    color: "bg-red-500/50 text-red-900 border-red-600",
-    icon: IoIosCloseCircle,
-  },
-};
-
-const appointmentStatusObj = {
-  waiting: {
-    text: "Waiting",
-    color: "bg-white text-black border-black",
-    icon: FaClock,
-  },
-  completed: {
-    text: "Completed",
-    color: "bg-white text-black border-black",
-    icon: FaCircleCheck,
-  },
-  cancelled: {
-    text: "Cancelled",
-    color: "bg-red-500/50 text-red-900 border-red-600",
-    icon: IoIosCloseCircle,
-  },
-};
+import {
+  appointmentStatusObj,
+  paymentStatusObj,
+  TAppointmentStatus,
+  TPaymentStatus,
+} from "@/helpers/data/status.button.data";
 
 const isBeforeToday = (date: Date): boolean => {
   return isBefore(date, startOfToday());
 };
 
-export const getColumns = (
-  refreshPage: () => void,
-  userId: string
-): ColumnDef<IAppointment>[] => {
+export const getColumns = (userId: string): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
     {
       accessorKey: "referenceNumber",
@@ -134,11 +93,9 @@ export const getColumns = (
       ),
       cell: ({ row }) => {
         const obj =
-          paymentStatusObj[
-            row.getValue("paymentStatus") as keyof typeof paymentStatusObj
-          ];
+          paymentStatusObj[row.getValue("paymentStatus") as TPaymentStatus];
         const Icon = obj.icon;
-        if (obj.text === "Pay Now") {
+        if (obj.key === "pending") {
           return (
             <Link
               href={`/appointment-payment?appointmentId=${row.getValue(
@@ -151,8 +108,8 @@ export const getColumns = (
                   `${obj.color}`
                 )}
               >
-                <Icon />
-                {`${obj.text}`}
+                <Icon className={cn(obj.iconCss)} />
+                {`${obj.secondaryText}`}
               </div>
             </Link>
           );
@@ -164,8 +121,8 @@ export const getColumns = (
               `${obj.color}`
             )}
           >
-            <Icon />
-            {`${obj.text}`}
+            <Icon className={cn(obj.iconCss)} />
+            {`${obj.secondaryText}`}
           </div>
         );
       },
@@ -210,16 +167,14 @@ export const getColumns = (
       cell: ({ row }) => {
         const obj =
           appointmentStatusObj[
-            row.getValue(
-              "appointmentStatus"
-            ) as keyof typeof appointmentStatusObj
+            row.getValue("appointmentStatus") as TAppointmentStatus
           ];
         const Icon = obj.icon;
         let relativeDate = "";
         const channelingDate = new Date(
           row.getValue("channelingDate") as string
         );
-        if (obj.text === "Waiting") {
+        if (obj.key === "waiting") {
           if (isToday(channelingDate)) {
             relativeDate = "It's on Today";
           } else if (isTomorrow(channelingDate)) {
@@ -241,36 +196,12 @@ export const getColumns = (
                 : `${obj.color}`
             )}
           >
-            <Icon />
+            <Icon className={cn(obj.iconCss)} />
             {`${obj.text === "Waiting" ? relativeDate : obj.text}`}
           </div>
         );
       },
     },
-
-    // {
-    //   id: "actions",
-    //   accessorKey: "actions",
-    //   header: () => <div className="text-white">ACTIONS</div>,
-    //   cell: ({ row }) => {
-    //     const rowData = row.original;
-    //     return (
-    //       <div className="flex align-items justify-center gap-2">
-    //         <Dialog>
-    //           <DialogTrigger asChild>
-    //             <Button className="bg-blue-600 hover:bg-blue-800">
-    //               <Pencil className="w-4 h-4" />
-    //               Change/Refund
-    //             </Button>
-    //           </DialogTrigger>
-    //           <DialogContent className="sm:max-w-[425px]">
-    //             <EditPass rowData={rowData} refreshFn={refreshPage} />
-    //           </DialogContent>
-    //         </Dialog>
-    //       </div>
-    //     );
-    //   },
-    // },
   ];
 
   return columns;

@@ -120,3 +120,25 @@ export const updateAppointment = async (
     handleError(res, error);
   }
 };
+
+export const updateAppointmentStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { appointmentId } = req.params;
+    const data = req.body;
+    const channeling = await appointmentService.updateAppointmentStatus(
+      appointmentId,
+      data.appointmentStatus,
+      data.paymentStatus,
+      data.paymentId
+    );
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      channeling,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};

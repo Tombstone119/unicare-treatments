@@ -15,10 +15,6 @@ export default function ViewAppointment() {
   const { data: session } = useSession();
   const user = session?.user;
 
-  const refreshPage = () => {
-    getData();
-  };
-
   const getData = async () => {
     const response = await apiService.get<AppointmentResponse>(
       `/appointments/patient/${user?.id}`
@@ -28,7 +24,7 @@ export default function ViewAppointment() {
     }
   };
 
-  const columns = getColumns(refreshPage, user?.id || "");
+  const columns = getColumns(user?.id || "");
 
   useEffect(() => {
     if (user?.id) {

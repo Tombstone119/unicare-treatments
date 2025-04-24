@@ -11,60 +11,18 @@ import CopyToClipboard from "@/channeling/widgets/copy-to-clipboard";
 import { EditPass } from "@/channeling/ui/edit-pass";
 import { IAppointment } from "@/types/appointment";
 import { cn } from "@/libs/utils";
-import { FaClock } from "react-icons/fa";
-import { FaCircleCheck } from "react-icons/fa6";
-import { IoIosCloseCircle } from "react-icons/io";
 import Image from "next/image";
 import { format } from "date-fns";
 import { BsCash } from "react-icons/bs";
-import { SiCashapp } from "react-icons/si";
 import DeleteDialog from "@/channeling/ui/delete-dialog";
-
-const paymentStatusObj = {
-  pending: {
-    text: "Pending",
-    color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
-    icon: SiCashapp,
-  },
-  completed: {
-    text: "Completed",
-    color: "bg-green-500/50 text-green-900 border-green-600",
-    icon: FaCircleCheck,
-  },
-  cancelled: {
-    text: "Cancelled",
-    color: "bg-red-500/50 text-red-900 border-red-600",
-    icon: IoIosCloseCircle,
-  },
-};
-
-const appointmentStatusObj = {
-  waiting: {
-    text: "Waiting",
-    color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
-    icon: FaClock,
-  },
-  attending: {
-    text: "Attending",
-    color: "bg-blue-500/50 text-blue-900 border-blue-600",
-    icon: FaCircleCheck,
-  },
-  completed: {
-    text: "Completed",
-    color: "bg-green-500/50 text-green-900 border-green-600",
-    icon: FaCircleCheck,
-  },
-  cancelled: {
-    text: "Cancelled",
-    color: "bg-red-500/50 text-red-900 border-red-600",
-    icon: IoIosCloseCircle,
-  },
-  "no-show": {
-    text: "No Show",
-    color: "bg-red-500/50 text-red-900 border-red-600",
-    icon: IoIosCloseCircle,
-  },
-};
+import StatusDialog from "@/channeling/ui/status-dialog";
+import {
+  appointmentStatusObj,
+  paymentStatusObj,
+  TAppointmentStatus,
+  TPaymentStatus,
+} from "@/helpers/data/status.button.data";
+import PaymentDialog from "@/channeling/ui/payment-dialog";
 
 export const getColumns = (
   refreshPage: () => void,
@@ -91,7 +49,7 @@ export const getColumns = (
               <DialogTrigger asChild>
                 <Button className="bg-blue-600 hover:bg-blue-800">
                   <Pencil className="w-4 h-4" />
-                  Change
+                  Session
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[800px]">
@@ -99,6 +57,8 @@ export const getColumns = (
               </DialogContent>
             </Dialog>
             <DeleteDialog rowData={rowData} refreshFn={refreshPage} />
+            <StatusDialog rowData={rowData} refreshFn={refreshPage} />
+            <PaymentDialog rowData={rowData} refreshFn={refreshPage} />
           </div>
         );
       },
@@ -169,9 +129,7 @@ export const getColumns = (
       cell: ({ row }) => {
         const obj =
           appointmentStatusObj[
-            row.getValue(
-              "appointmentStatus"
-            ) as keyof typeof appointmentStatusObj
+            row.getValue("appointmentStatus") as TAppointmentStatus
           ];
         const Icon = obj.icon;
         return (
@@ -211,11 +169,9 @@ export const getColumns = (
       ),
       cell: ({ row }) => {
         const obj =
-          paymentStatusObj[
-            row.getValue("paymentStatus") as keyof typeof paymentStatusObj
-          ];
+          paymentStatusObj[row.getValue("paymentStatus") as TPaymentStatus];
         const Icon = obj.icon;
-        if (obj.text === "Pending") {
+        if (obj.key === "pending") {
           return (
             <div
               className={cn(
@@ -330,11 +286,21 @@ export const getColumns = (
         return (
           <div className="flex items-center gap-2">
             <CopyToClipboard
-              value={rowData.patientId || "N/A"}
+              value={
+                rowData.patientId
+                  ? rowData.patientId
+                  : rowData.paymentStatus === "completed"
+                    ? "Cash"
+                    : "N/A"
+              }
               text=""
             ></CopyToClipboard>
             <div className="border border-dashed py-2 px-2 border-black">
-              {rowData.patientId ? rowData.patientId : "N/A"}
+              {rowData.patientId
+                ? rowData.patientId
+                : rowData.paymentStatus === "completed"
+                  ? "Cash"
+                  : "N/A"}
             </div>
           </div>
         );
