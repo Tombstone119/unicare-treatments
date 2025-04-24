@@ -117,6 +117,15 @@ export default function UploadLabReports() {
             If your image size is bigger, please compress it <br />
           </p>
           <MultiFileDropzone
+            dropzoneOptions={{
+              accept: {
+                "image/jpeg": [],
+                "image/png": [],
+                "image/webp": [],
+                "image/heic": [],
+                "image/jfif": [],
+              },
+            }}
             value={fileStates}
             onChange={(files) => {
               setFileStates(files);

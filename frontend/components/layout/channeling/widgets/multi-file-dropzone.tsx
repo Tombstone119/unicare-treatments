@@ -38,6 +38,20 @@ type InputProps = {
   dropzoneOptions?: Omit<DropzoneOptions, "disabled">;
 };
 
+const formatAcceptedFileTypes = (
+  accept?: DropzoneOptions["accept"]
+): string => {
+  if (!accept) return "";
+  // Extract and format all extensions from the accept object
+  const extensions = Object.entries(accept)
+    .flatMap(([exts]) => {
+      if (Array.isArray(exts)) return exts;
+      return [];
+    })
+    .join(", ");
+  return extensions || Object.keys(accept).join(", ");
+};
+
 const ERROR_MESSAGES = {
   fileTooLarge(maxSize: number) {
     return `The file is too large. Max size is ${formatFileSize(maxSize)}.`;
@@ -50,6 +64,9 @@ const ERROR_MESSAGES = {
   },
   fileNotSupported() {
     return "The file is not supported.";
+  },
+  acceptedFileTypes(types: string) {
+    return `Accepted file types: ${types}`;
   },
 };
 
@@ -175,6 +192,14 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
             <div className="mt-1 text-xs text-red-500">
               {customError ?? errorMessage}
             </div>
+            {/* Accepted File Types */}
+            {dropzoneOptions?.accept && (
+              <div className="mt-1 text-xs text-gray-500 text-center">
+                {ERROR_MESSAGES.acceptedFileTypes(
+                  formatAcceptedFileTypes(dropzoneOptions.accept)
+                )}
+              </div>
+            )}
           </div>
 
           {/* Selected Files */}
