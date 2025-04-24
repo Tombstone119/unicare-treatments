@@ -7,7 +7,14 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { format, isAfter, isSameDay, parse, startOfDay } from "date-fns";
+import {
+  format,
+  isAfter,
+  isSameDay,
+  parse,
+  startOfDay,
+  startOfMonth,
+} from "date-fns";
 import { Calendar } from "@/shadcn/ui/calendar";
 import { first, second, third } from "@/helpers/data/time.data";
 import { Button } from "@/shadcn/ui/button";
@@ -84,7 +91,9 @@ export default function Page() {
 
   const getAllActive = async () => {
     try {
-      const formattedDate = format(new Date(), "yyyy-MM-dd");
+      // const formattedDate = format(new Date(), "yyyy-MM-dd");
+      const firstDayOfMonth = startOfMonth(new Date());
+      const formattedDate = format(firstDayOfMonth, "yyyy-MM-dd");
       const response = await apiService.get<ChannelingWithDates>(
         `/channeling/active/${formattedDate}`
       );

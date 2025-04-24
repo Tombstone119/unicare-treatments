@@ -29,7 +29,7 @@ import { Input } from "@/shadcn/ui/input";
 import { cn } from "@/libs/utils";
 import { FaFile, FaUser } from "react-icons/fa";
 import { BsCash } from "react-icons/bs";
-import OnlyDateElement from "../elements/form-elements/date-element";
+import OnlyDateElement from "@/channeling/elements/form-elements/date-element";
 import { format } from "date-fns";
 
 interface DataTableProps<TData, TValue> {
@@ -82,9 +82,11 @@ export function DataTable<TData, TValue>({
   });
 
   const resetFilters = () => {
+    if (!onlyRef) {
+      table.getColumn("patientId")?.setFilterValue("");
+      table.getColumn("paymentId")?.setFilterValue("");
+    }
     table.getColumn("referenceNumber")?.setFilterValue("");
-    table.getColumn("patientId")?.setFilterValue("");
-    table.getColumn("paymentId")?.setFilterValue("");
     table.getColumn("channelingDate")?.setFilterValue("");
   };
 
