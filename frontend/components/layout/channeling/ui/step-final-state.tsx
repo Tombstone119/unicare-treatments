@@ -67,7 +67,7 @@ export default function StepFinalState({
           href={"/channeling/upload-lab-reports"}
           className="bg-black text-white px-5 py-2 rounded-md"
         >
-          Upload Your Previous Reports
+          Upload Your Lab Reports
         </Link>
         <Button
           variant="outline"

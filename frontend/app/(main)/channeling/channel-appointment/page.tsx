@@ -23,7 +23,7 @@ export default function ChannelAppointment(props: {
   searchParams: SearchParams;
 }) {
   const numSteps = 3;
-  const amount = lkrToCents(560); // 120LKR
+  const amount = lkrToCents(560);
   const searchParams = use(props.searchParams);
   const [appointmentId, setAppointmentId] = useState("");
   const [appointmentDetails, setAppointmentDetails] =

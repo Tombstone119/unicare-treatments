@@ -94,7 +94,7 @@ export const getColumns = (
                   Change
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="sm:max-w-[800px]">
                 <EditPass rowData={rowData} refreshFn={refreshPage} />
               </DialogContent>
             </Dialog>

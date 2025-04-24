@@ -1,24 +1,31 @@
 "use client";
 import { Button } from "@/shadcn/ui/button";
-import {
-  DialogClose,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/shadcn/ui/dialog";
+import { DialogHeader, DialogTitle } from "@/shadcn/ui/dialog";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form } from "@/shadcn/ui/form";
-import { Calendar } from "lucide-react";
-import FormFieldWrapper from "@/channeling/elements/table-elements/form-field";
-import OnlyDateElement from "@/channeling/elements/form-elements/date-element";
-import { dateSchema, onlyDateSchema } from "@/schemas/channel-schema";
 import { apiService } from "@/libs/api";
 import { toast } from "sonner";
 import { IAppointment } from "@/types/appointment";
-import { TApiResponse } from "@/types/common";
+
+import { FaCalendarAlt } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { format, parse } from "date-fns";
+import { Calendar } from "@/shadcn/ui/calendar";
+import {
+  ChannelingResponse,
+  ChannelingWithDates,
+  NewChannelingResponse,
+  SelectedSession,
+} from "@/types/channeling";
+import PatientCalender from "@/channeling/widgets/patient-calendar";
+import { cn } from "@/libs/utils";
+import { Sessions } from "@/types/channeling";
+import { getDataFiltered } from "@/libs/channeling";
+
+const selectedData = {
+  first: 0,
+  second: 1,
+  third: 2,
+};
 
 export function EditPass({
   rowData,
@@ -27,81 +34,162 @@ export function EditPass({
   rowData: IAppointment;
   refreshFn: () => void;
 }) {
-  const form = useForm<dateSchema>({
-    resolver: zodResolver(onlyDateSchema),
-    defaultValues: {
-      _id: (rowData._id || "").toString(),
-      referenceNumber: rowData.referenceNumber,
-      channelingDate: new Date(rowData.channelingDate || ""),
-    },
-  });
+  const [date, setDate] = useState<Date | null>(null);
 
-  const onSubmit = async (values: dateSchema) => {
-    const validatedData = onlyDateSchema.safeParse(values);
-    if (validatedData.success) {
-      try {
-        const res = await apiService.post<TApiResponse>(
-          `/appointments/reschedule/${rowData._id}`,
-          {
-            channelingDate: values.channelingDate,
-          }
-        );
-        if (!res.success) {
-          toast.error("Error Editing appointment. Please try again later.");
-        } else {
-          toast.success("Appointment Re-Scheduled successfully.");
-        }
-      } catch {
-        toast.error("Error Editing appointment. Please try again later.");
-      } finally {
-        refreshFn();
-      }
+  const [loading, setLoading] = useState(false);
+  const [allowedDates, setAllowedDates] = useState<Date[]>([]);
+  const [firstSession, setFirstSession] = useState<Sessions>();
+  const [secondSession, setSecondSession] = useState<Sessions>();
+  const [thirdSession, setThirdSession] = useState<Sessions>();
+  const [selectedSession, setSelectedSession] = useState<SelectedSession>();
+
+  const sessions = {
+    firstSession,
+    secondSession,
+    thirdSession,
+  };
+
+  const getAllActive = async () => {
+    try {
+      const formattedDate = format(new Date(), "yyyy-MM-dd");
+      const response = await apiService.get<ChannelingWithDates>(
+        `/channeling/active/${formattedDate}`
+      );
+      const convertedDates = response.dates.map((dateStr) =>
+        parse(dateStr, "yyyy-MM-dd", new Date())
+      );
+      setAllowedDates(convertedDates);
+    } catch {
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
-  const isValid = form.formState.isValid;
-  const isDirty = form.formState.isDirty;
-  const isDisabled = !isValid || !isDirty;
+  const disableSubmission =
+    selectedSession === undefined ||
+    (selectedSession === "first" && !firstSession) ||
+    (selectedSession === "second" && !secondSession) ||
+    (selectedSession === "third" && !thirdSession);
+
+  const updateChanneling = async () => {
+    try {
+      if (!date) {
+        return;
+      }
+      if (disableSubmission) {
+        toast.error("Please select a session.");
+        return;
+      }
+      const formattedDate = format(date, "yyyy-MM-dd");
+      const sessionArr = [firstSession, secondSession, thirdSession];
+      const req = {
+        channelingDate: formattedDate,
+        session: selectedData[selectedSession as keyof typeof selectedData] + 1,
+        start:
+          sessionArr[selectedData[selectedSession as keyof typeof selectedData]]
+            ?.start,
+        end: sessionArr[
+          selectedData[selectedSession as keyof typeof selectedData]
+        ]?.end,
+        appointmentId: rowData._id || "",
+        email: rowData.email || "",
+      };
+      await apiService.post<NewChannelingResponse>(
+        `/channeling/update-channeling`,
+        req
+      );
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      refreshFn();
+    }
+  };
+
+  const getData = async (selectedDate: Date) => {
+    try {
+      setLoading(true);
+      const formattedDate = format(selectedDate, "yyyy-MM-dd");
+      const response = await apiService.get<ChannelingResponse>(
+        `/channeling/${formattedDate}`
+      );
+      setFirstSession(
+        getDataFiltered(response?.channeling?.channelingSlots[0] || [])
+      );
+      setSecondSession(
+        getDataFiltered(response?.channeling?.channelingSlots[1] || [])
+      );
+      setThirdSession(
+        getDataFiltered(response?.channeling?.channelingSlots[2] || [])
+      );
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllActive();
+  }, []);
+
+  const isDateAllowed = (date: Date) => {
+    return allowedDates.some(
+      (allowedDate) => allowedDate.toDateString() === date.toDateString()
+    );
+  };
+
+  const handleSelectDate = (selectedDate: { date: Date }) => {
+    setDate(selectedDate.date);
+    getData(selectedDate.date);
+  };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4"
-      >
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-3">
-            Re-schedule you appointment
-          </DialogTitle>
-          <DialogDescription>
-            Click save when you&apos;re done.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <DialogHeader>
+        <DialogTitle className="text-2xl font-bold text-gray-800 text-center">
+          Re-schedule The Appointment
+        </DialogTitle>
+        {/* <DialogDescription>Click save when you&apos;re done.</DialogDescription> */}
+      </DialogHeader>
 
-        <FormFieldWrapper form={form} name="_id" label="_id" isHidden />
-        <FormFieldWrapper
-          form={form}
-          name="referenceNumber"
-          label="referenceNumber"
-          isHidden
-        />
-        <OnlyDateElement
-          form={form}
-          label="Available Dates"
-          icon={<Calendar className="h-5 w-5 text-gray-600" />}
-        />
-
-        <DialogFooter className="gap-2">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
-          <Button type="submit" aria-disabled={false} disabled={isDisabled}>
+      <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
+        <div
+          className={cn(
+            "relative flex items-center text-indigo-950 gap-5",
+            loading && "opacity-50"
+          )}
+        >
+          <PatientCalender
+            date={date}
+            sessions={sessions}
+            selectedSession={selectedSession}
+            setSelectedSession={setSelectedSession}
+          />
+          <Calendar
+            holidays={allowedDates}
+            mode="single"
+            selected={date || undefined}
+            onSelect={(selectedDate: Date | undefined) => {
+              if (selectedDate && isDateAllowed(selectedDate)) {
+                handleSelectDate({ date: selectedDate });
+              }
+            }}
+            disabled={(day) => !isDateAllowed(day)}
+            className="w-[280px] rounded-md shadow-md p-2 border-black border-2 bg-white"
+          />
+        </div>
+        <div className="flex items-center gap-5">
+          <Button
+            className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
+            disabled={disableSubmission}
+            onClick={() => {
+              updateChanneling();
+            }}
+          >
+            <FaCalendarAlt />
             Save
           </Button>
-        </DialogFooter>
-      </form>
-    </Form>
+        </div>
+      </div>
+    </>
   );
 }

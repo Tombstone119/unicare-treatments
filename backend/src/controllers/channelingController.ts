@@ -102,3 +102,26 @@ export const makeChanneling = async (
     handleError(res, error);
   }
 };
+
+export const updateChanneling = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const data = req.body;
+    const channeling = await channelingService.updateChanneling(
+      data.channelingDate,
+      data.session,
+      data.start,
+      data.end,
+      data.appointmentId,
+      data.email
+    );
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      channeling,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
