@@ -18,7 +18,7 @@ export interface IUser {
   gender?: "male" | "female" | "other";
 }
 
-export type userTypes = "doctor" | "admin" | "supplier" | "patient";
+export type userTypes = "doctor" | "admin" | "supplier" | "user";
 
 export interface UserApiResponse extends TApiResponse {
   user?: IUser;
@@ -28,6 +28,6 @@ export interface SessionUser {
   email: string;
   id: string;
   isVerified: boolean;
-  role: "doctor" | "admin" | "supplier" | "patient";
+  role: "doctor" | "admin" | "supplier" | "user";
   username: string;
 }

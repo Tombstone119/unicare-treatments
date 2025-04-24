@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request });
 
   const roleBaseAccess = {
-    patient: ["/channeling"],
+    user: ["/channeling"],
     admin: ["/channeling", "/dashboard"],
     doctor: ["/channeling", "/dashboard"],
     supplier: ["/channeling", "/dashboard"],
@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
       path.startsWith("/sign-up") ||
       path.startsWith("/verify"))
   ) {
-    if (token.role === "patient") {
+    if (token.role === "user") {
       return NextResponse.redirect(new URL("/home", request.url));
     }
     if (["admin", "doctor", "supplier"].includes(token.role as string)) {

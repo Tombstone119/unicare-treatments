@@ -6,7 +6,7 @@ export const accessLevels: Record<levels, userTypes[]> = {
   first: ["admin"],
   second: ["admin", "doctor"],
   third: ["admin", "doctor", "supplier"],
-  forth: ["admin", "doctor", "supplier", "patient"], // logged any user
+  forth: ["admin", "doctor", "supplier", "user"], // logged any user
 };
 
 export const isAuthorized = (
