@@ -34,7 +34,7 @@ export default function StepPersonalDetails({
       <div className="relative w-full max-w-2xl shadow-lg rounded-lg p-6 bg-white">
         <div className="absolute bg-cover bg-scope w-[150px] h-[150px] right-0 top-0 z-50 translate-x-1/4 -translate-y-2/4"></div>
         <Form {...form}>
-          <form className="flex flex-col gap-5 ">
+          <div className="flex flex-col gap-5 ">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="flex flex-col gap-5">
                 <InputElement
@@ -125,7 +125,7 @@ export default function StepPersonalDetails({
               <FaUserEdit />
               Save and Continue {form.formState.isSubmitting && "..."}
             </button>
-          </form>
+          </div>
         </Form>
       </div>
     </>

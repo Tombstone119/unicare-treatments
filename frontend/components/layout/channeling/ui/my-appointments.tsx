@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/shadcn/ui/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTablePagination } from "@/channeling/elements/table-elements/pagination";
 import { DataTableViewOptions } from "@/channeling/elements/table-elements/view-options";
 
@@ -29,6 +29,8 @@ import { Input } from "@/shadcn/ui/input";
 import { cn } from "@/libs/utils";
 import { FaFile, FaUser } from "react-icons/fa";
 import { BsCash } from "react-icons/bs";
+import OnlyDateElement from "../elements/form-elements/date-element";
+import { format } from "date-fns";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -57,7 +59,7 @@ export function DataTable<TData, TValue>({
   });
   const [rowSelection, setRowSelection] = useState({});
   const [selectedFilter, setSelectedFilter] = useState<
-    "referenceNumber" | "paymentId" | "patientId"
+    "referenceNumber" | "paymentId" | "patientId" | "channelingDate"
   >("referenceNumber");
 
   const table = useReactTable({
@@ -79,6 +81,13 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const resetFilters = () => {
+    table.getColumn("referenceNumber")?.setFilterValue("");
+    table.getColumn("patientId")?.setFilterValue("");
+    table.getColumn("paymentId")?.setFilterValue("");
+    table.getColumn("channelingDate")?.setFilterValue("");
+  };
+
   const getFilterValue = () => {
     const column = table.getColumn(selectedFilter);
     return (column?.getFilterValue() as string) ?? "";
@@ -88,6 +97,7 @@ export function DataTable<TData, TValue>({
     referenceNumber: "border-black",
     patientId: "border-green-500",
     paymentId: "border-blue-500",
+    channelingDate: "border-gray-300",
   };
 
   const filterOptions = [
@@ -107,12 +117,40 @@ export function DataTable<TData, TValue>({
       activeClasses: "bg-blue-200 border-blue-500 text-blue-500",
     },
   ];
+  const [date, setDate] = useState<Date>();
+
+  useEffect(() => {
+    if (date) {
+      resetFilters();
+      table
+        .getColumn("channelingDate")
+        ?.setFilterValue(format(new Date(`${date}`), "yyyy-MM-dd"));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
 
   return (
     <>
       <div className="flex items-center pb-4 gap-2 w-full justify-between">
         <div className="flex items-center gap-3">
           {children} <DataTableViewOptions table={table} />
+          <OnlyDateElement
+            onDateChange={(newDate) => {
+              resetFilters();
+              table.getColumn("channelingDate")?.setFilterValue(newDate);
+              setDate(newDate);
+            }}
+            date={date}
+          />
+          <div
+            className="underline underline-offset-2 cursor-pointer text-sm text-gray-600"
+            onClick={() => {
+              resetFilters();
+              setDate(undefined);
+            }}
+          >
+            Reset Filters
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
@@ -150,6 +188,8 @@ export function DataTable<TData, TValue>({
             value={getFilterValue()}
             onChange={(event) => {
               const value = event.target.value;
+              setDate(undefined);
+              resetFilters();
               table.getColumn(selectedFilter)?.setFilterValue(value);
             }}
             className={cn(

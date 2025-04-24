@@ -13,11 +13,39 @@ import { apiService } from "@/libs/api";
 import { IAppointment } from "@/types/appointment";
 import { TApiResponse } from "@/types/common";
 import { cn } from "@/libs/utils";
-import {
-  paymentStatusObj,
-  TPaymentStatus,
-} from "@/helpers/data/status.button.data";
 import { BsCashCoin } from "react-icons/bs";
+import { FaCircleCheck } from "react-icons/fa6";
+import { IoIosCloseCircle } from "react-icons/io";
+import { SiCashapp } from "react-icons/si";
+
+const paymentStatusObj = {
+  pending: {
+    text: "Pending",
+    secondaryText: "Pay Now",
+    color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
+    icon: SiCashapp,
+    key: "pending",
+    iconCss: "w-3 h-3",
+  },
+  completed: {
+    text: "Completed",
+    secondaryText: "Payment Done",
+    color: "bg-green-500/50 text-green-900 border-green-600",
+    icon: FaCircleCheck,
+    key: "completed",
+    iconCss: "w-4 h-4",
+  },
+  cancelled: {
+    text: "Cancelled",
+    secondaryText: "Cancelled",
+    color: "bg-red-500/50 text-red-900 border-red-600",
+    icon: IoIosCloseCircle,
+    key: "cancelled",
+    iconCss: "w-4 h-4",
+  },
+};
+
+type TPaymentStatus = keyof typeof paymentStatusObj;
 
 const PaymentDialog = ({
   rowData,

@@ -18,16 +18,84 @@ import {
 } from "date-fns";
 import { BsCash } from "react-icons/bs";
 import Link from "next/link";
-import {
-  appointmentStatusObj,
-  paymentStatusObj,
-  TAppointmentStatus,
-  TPaymentStatus,
-} from "@/helpers/data/status.button.data";
+
+import { FaClock } from "react-icons/fa";
+import { FaCircleCheck } from "react-icons/fa6";
+import { IoIosCloseCircle } from "react-icons/io";
+import { SiCashapp } from "react-icons/si";
 
 const isBeforeToday = (date: Date): boolean => {
   return isBefore(date, startOfToday());
 };
+
+const paymentStatusObj = {
+  pending: {
+    text: "Pending",
+    secondaryText: "Pay Now",
+    color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
+    icon: SiCashapp,
+    key: "pending",
+    iconCss: "w-3 h-3",
+  },
+  completed: {
+    text: "Completed",
+    secondaryText: "Payment Done",
+    color: "bg-green-500/50 text-green-900 border-green-600",
+    icon: FaCircleCheck,
+    key: "completed",
+    iconCss: "w-4 h-4",
+  },
+  cancelled: {
+    text: "Cancelled",
+    secondaryText: "Cancelled",
+    color: "bg-red-500/50 text-red-900 border-red-600",
+    icon: IoIosCloseCircle,
+    key: "cancelled",
+    iconCss: "w-4 h-4",
+  },
+};
+
+type TPaymentStatus = keyof typeof paymentStatusObj;
+
+const appointmentStatusObj = {
+  waiting: {
+    iconCss: "w-4 h-4",
+    text: "Waiting",
+    color: "bg-yellow-500/50 text-yellow-900 border-yellow-600",
+    icon: FaClock,
+    key: "waiting",
+  },
+  attending: {
+    iconCss: "w-4 h-4",
+    text: "Attending",
+    color: "bg-blue-500/50 text-blue-900 border-blue-600",
+    icon: FaCircleCheck,
+    key: "attending",
+  },
+  completed: {
+    iconCss: "w-4 h-4",
+    text: "Completed",
+    color: "bg-green-500/50 text-green-900 border-green-600",
+    icon: FaCircleCheck,
+    key: "completed",
+  },
+  cancelled: {
+    iconCss: "w-5 h-5",
+    text: "Cancelled",
+    color: "bg-red-500/50 text-red-900 border-red-600",
+    icon: IoIosCloseCircle,
+    key: "cancelled",
+  },
+  "no-show": {
+    iconCss: "w-5 h-5",
+    text: "No Show",
+    color: "bg-red-500/50 text-red-900 border-red-600",
+    icon: IoIosCloseCircle,
+    key: "no-show",
+  },
+};
+
+type TAppointmentStatus = keyof typeof appointmentStatusObj;
 
 export const getColumns = (userId: string): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
@@ -69,7 +137,7 @@ export const getColumns = (userId: string): ColumnDef<IAppointment>[] => {
     {
       accessorKey: "TimeSlot",
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-        <DataTableColumnHeader column={column} title="TimeSlot" />
+        <DataTableColumnHeader column={column} title="TIME" />
       ),
       cell: ({ row }) => {
         const rowData = row.original;
@@ -85,11 +153,46 @@ export const getColumns = (userId: string): ColumnDef<IAppointment>[] => {
           </div>
         );
       },
+      sortingFn: (rowA, rowB) => {
+        // First compare by session number
+        const sessionA = Number(rowA.original.sessionNumber) || 0;
+        const sessionB = Number(rowB.original.sessionNumber) || 0;
+
+        if (sessionA !== sessionB) {
+          return sessionA - sessionB; // Simple numeric comparison for sessions
+        }
+
+        // If sessions are equal, compare by starting time
+        const startTimeA = rowA.original.startingTime || "";
+        const startTimeB = rowB.original.startingTime || "";
+        // Parse time strings to compare them properly
+        const parseTimeString = (timeStr: string) => {
+          // Handle formats like "12:30 PM", "9:45 AM"
+          const [timePart, period] = timeStr.trim().split(" ");
+          const [hours, minutes] = timePart.split(":").map(Number);
+
+          let hour24 = hours;
+          if (period) {
+            // 12-hour format with AM/PM
+            if (period.toUpperCase() === "PM" && hours < 12) {
+              hour24 = hours + 12;
+            } else if (period.toUpperCase() === "AM" && hours === 12) {
+              hour24 = 0;
+            }
+          }
+
+          return hour24 * 60 + minutes; // Convert to minutes for easy comparison
+        };
+
+        const timeValueA = parseTimeString(startTimeA);
+        const timeValueB = parseTimeString(startTimeB);
+        return timeValueA - timeValueB;
+      },
     },
     {
       accessorKey: "paymentStatus",
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
-        <DataTableColumnHeader column={column} title="Payment" />
+        <DataTableColumnHeader column={column} title="PAYMENT" />
       ),
       cell: ({ row }) => {
         const obj =
@@ -105,7 +208,7 @@ export const getColumns = (userId: string): ColumnDef<IAppointment>[] => {
               <div
                 className={cn(
                   "cursor-pointer px-2 py-1 border-2 rounded-md min-w-36 inline-flex items-center justify-center gap-2",
-                  `${obj.color}`
+                  obj.color
                 )}
               >
                 <Icon className={cn(obj.iconCss)} />
@@ -118,7 +221,7 @@ export const getColumns = (userId: string): ColumnDef<IAppointment>[] => {
           <div
             className={cn(
               "cursor-pointer px-2 py-1 border-2 rounded-md min-w-36 inline-flex items-center justify-center gap-2",
-              `${obj.color}`
+              obj.color
             )}
           >
             <Icon className={cn(obj.iconCss)} />
