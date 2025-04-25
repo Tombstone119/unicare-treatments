@@ -17,7 +17,11 @@ export default function Users() {
     }
   };
 
-  const columns = getColumns();
+  const refreshPage = () => {
+    getData();
+  };
+
+  const columns = getColumns(refreshPage);
 
   useEffect(() => {
     getData();

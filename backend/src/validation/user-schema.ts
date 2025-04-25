@@ -12,6 +12,7 @@ export const UsernameQuerySchema = z.object({
 });
 
 export interface IUser {
+  _id?: string;
   username: string;
   email: string;
   password: string;
