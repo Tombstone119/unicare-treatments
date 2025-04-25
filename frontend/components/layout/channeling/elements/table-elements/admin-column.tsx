@@ -6,7 +6,7 @@ import { DataTableColumnHeader } from "@/channeling/elements/table-elements/sort
 
 import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/ui/dialog";
 import { Button } from "@/shadcn/ui/button";
-import { Loader2, Pencil } from "lucide-react";
+import { Loader2, Pencil, UserIcon } from "lucide-react";
 import CopyToClipboard from "@/channeling/widgets/copy-to-clipboard";
 import { EditPass } from "@/channeling/ui/edit-pass";
 import { IAppointment } from "@/types/appointment";
@@ -21,6 +21,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import { SiCashapp } from "react-icons/si";
 import PaymentDialog from "@/channeling/ui/payment-dialog";
+import Link from "next/link";
 
 const paymentStatusObj = {
   pending: {
@@ -126,6 +127,15 @@ export const getColumns = (
             <DeleteDialog rowData={rowData} refreshFn={refreshPage} />
             <StatusDialog rowData={rowData} refreshFn={refreshPage} />
             <PaymentDialog rowData={rowData} refreshFn={refreshPage} />
+            <Link
+              href={`/dashboard/appointment-user?patientId=${rowData.patientId}`}
+              className=" rounded-md overflow-hidden"
+            >
+              <Button className="bg-orange-600 hover:bg-orange-800 ">
+                <UserIcon className="w-4 h-4" />
+                Patient
+              </Button>
+            </Link>
           </div>
         );
       },

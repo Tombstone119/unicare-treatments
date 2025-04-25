@@ -1,43 +1,27 @@
 import { google } from "@ai-sdk/google";
-import { openai } from "@ai-sdk/openai";
-import { generateText, streamText } from "ai";
+import { streamText } from "ai";
+
+type TReq = {
+  prompt: string;
+};
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const reqObj: TReq = await req.json();
 
-  console.log("messages: =-->", messages);
-
-  const { text } = await generateText({
-    system: "You are a image analysis assistant.",
+  const result = streamText({
     model: google("gemini-1.5-pro-latest"),
+    system: "You are a image analysis assistant.",
     messages: [
       {
         role: "user",
         content: [
           {
             type: "text",
-            text: "What's in this image? Provide a detailed summary.",
+            text: "What's in this lab report image? Analyze the lab results in the image provided. Summarize key findings, flag abnormal values, and suggest possible clinical interpretations. Prioritize urgent abnormalities. Think like a doctor.",
           },
           {
             type: "image",
-            image:
-              "https://files.edgestore.dev/7nkrwkt3m5fglcd3/publicFiles/_public/c032743a-f32c-4e12-a2dc-32c7ab38dcda.jpeg",
-          },
-        ],
-      },
-    ],
-  });
-
-  const result = streamText({
-    model: openai("gpt-4"),
-    system: "You are a helpful assistant.",
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "text",
-            text: `{Think like a doctor and analyze following report details. give a summary of the report with important diagnosis. here is the report ${text}}`,
+            image: reqObj.prompt,
           },
         ],
       },
