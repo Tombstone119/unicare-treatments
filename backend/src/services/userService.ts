@@ -3,6 +3,23 @@ import userModel from "../models/userModel.ts";
 import { resend } from "../util/resend.ts";
 import { IUser, UserDocument } from "../util/user-schema.ts";
 
+async function userWithIdentifier({
+  email,
+  username,
+}: {
+  email: string;
+  username: string;
+}) {
+  const user = await userModel.findOne({
+    $or: [{ email: email }, { username: username }],
+  });
+  return user;
+}
+
+async function getVerifiedCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 async function createNewUser(data: Partial<IUser>) {
   const user = new userModel({
     username: data.username,
@@ -14,29 +31,6 @@ async function createNewUser(data: Partial<IUser>) {
   });
   const newUser = await user.save();
   return newUser;
-}
-
-async function findUserByUsername(username: string): Promise<UserDocument[]> {
-  const user = await userModel.find({
-    username: username,
-  });
-  return user;
-}
-
-async function getAll() {
-  const users = await userModel.find();
-  return users;
-}
-
-async function getVerifiedCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-async function isUniqueUser(username: string) {
-  const user = await userModel.findOne({
-    username,
-  });
-  return user;
 }
 
 async function sendVerificationEmail({
@@ -62,25 +56,44 @@ async function sendVerificationEmail({
   }
 }
 
+async function findUserByUsername(username: string): Promise<UserDocument[]> {
+  const user = await userModel.find({
+    username: username,
+  });
+  return user;
+}
+
 async function updateVerifiedStatus({ user }: { user: UserDocument }) {
   user.isVerified = true;
   await user.save();
 }
 
-async function userWithIdentifier({
-  email,
-  username,
-}: {
-  email: string;
-  username: string;
-}) {
+async function isUniqueUser(username: string) {
   const user = await userModel.findOne({
-    $or: [{ email: email }, { username: username }],
+    username,
   });
   return user;
 }
 
-async function getPartialData(id: string) {
+async function getAllPartially() {
+  const user = await userModel.find().select({
+    username: 1,
+    email: 1,
+    isVerified: 1,
+    role: 1,
+    reports: 1,
+    firstName: 1,
+    lastName: 1,
+    dateOfBirth: 1,
+    phoneNumber: 1,
+    address: 1,
+    maritalState: 1,
+    gender: 1,
+  });
+  return user;
+}
+
+async function getPartially(id: string) {
   const user = await userModel.findById(id).select({
     username: 1,
     email: 1,
@@ -125,14 +138,14 @@ async function updatePartially(
 }
 
 export default {
-  createNewUser,
-  findUserByUsername,
-  getAll,
-  getVerifiedCode,
-  isUniqueUser,
-  sendVerificationEmail,
   userWithIdentifier,
+  getVerifiedCode,
+  createNewUser,
+  sendVerificationEmail,
+  findUserByUsername,
   updateVerifiedStatus,
-  getPartialData,
+  isUniqueUser,
+  getAllPartially,
+  getPartially,
   updatePartially,
 };

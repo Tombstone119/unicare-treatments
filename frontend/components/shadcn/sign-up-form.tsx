@@ -79,7 +79,7 @@ export function SignUpForm({
         setUsernameMessage(""); // Reset message
         try {
           const response = await apiService.get<UserApiResponse>(
-            `/user/profile/check-username-unique/${username}`
+            `/user/profile/check-unique/${username}`
           );
           setUsernameMessage(response.message);
         } catch {

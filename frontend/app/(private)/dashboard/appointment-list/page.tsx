@@ -1,7 +1,7 @@
 "use client";
 
 import { getColumns } from "@/channeling/elements/table-elements/admin-column";
-import { DataTable } from "@/channeling/ui/my-appointments";
+import { DataTable } from "@/channeling/ui/appointment-table";
 import { apiService } from "@/libs/api";
 import { AppointmentResponse, IAppointment } from "@/types/appointment";
 import { Stethoscope } from "lucide-react";
@@ -65,7 +65,7 @@ export default function Page() {
   }, []);
 
   return (
-    <div className=" bg-white py-5 px-10 min-h-svh max-w-[calc(100vw-260px)] mx-auto">
+    <div className=" bg-white py-5 px-5 w-full min-h-svh md:w-[calc(100vw-260px)] mx-auto">
       <div className="flex flex-col gap-1 justify-center items-center">
         <h1 className="text-2xl font-bold text-gray-800 text-center flex items-center gap-2 mb-4">
           All Appointments <Stethoscope className="h-8 w-8 text-black" />

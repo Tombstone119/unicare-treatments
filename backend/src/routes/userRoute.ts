@@ -1,23 +1,23 @@
 import { Router } from "express";
 
 import {
-  checkUniqueUserName,
-  getPartialUser,
-  signInUser,
-  signUpUser,
-  updatePartialUser,
+  signUp,
+  signIn,
   verifyUser,
+  checkUniqueUserName,
+  getAllPartially,
+  getPartially,
+  updatePartially,
 } from "../controllers/userController.ts";
 
 const router = Router();
 
-router
-  .route("/profile/check-username-unique/:username")
-  .get(checkUniqueUserName);
-router.route("/profile/sign-up").post(signUpUser);
-router.route("/profile/verify-code").post(verifyUser);
-router.route("/profile/sign-in").post(signInUser);
+router.route("/profile/sign-up").post(signUp);
+router.route("/profile/sign-in").post(signIn);
+router.route("/profile/verify-user").post(verifyUser);
+router.route("/profile/check-unique/:username").get(checkUniqueUserName);
 
-router.route("/:id").get(getPartialUser).put(updatePartialUser);
+router.route("/").get(getAllPartially);
+router.route("/:id").get(getPartially).put(updatePartially);
 
 export default router;

@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/channeling/ui/my-appointments";
+import { DataTable } from "@/channeling/ui/appointment-table";
 import { getColumns } from "@/channeling/elements/table-elements/patient-column";
 import { useEffect, useState } from "react";
 import { Stethoscope } from "lucide-react";
