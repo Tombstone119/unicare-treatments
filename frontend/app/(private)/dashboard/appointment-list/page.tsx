@@ -1,7 +1,7 @@
 "use client";
 
-import { getColumns } from "@/channeling/elements/table-elements/admin-column";
-import { DataTable } from "@/channeling/ui/appointment-table";
+import { getColumns } from "@/channeling/ui/columns/admin-column";
+import { DataTable } from "@/channeling/ui/tables/appointment-table";
 import { apiService } from "@/libs/api";
 import { AppointmentResponse, IAppointment } from "@/types/appointment";
 import { Stethoscope } from "lucide-react";

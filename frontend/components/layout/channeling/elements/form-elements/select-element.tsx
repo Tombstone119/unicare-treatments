@@ -1,4 +1,4 @@
-import { channel, channelKey } from "@/helpers/validation/channel-schema";
+import { TChannel, TChannelKey } from "@/helpers/validation/channel-schema";
 import {
   FormControl,
   FormField,
@@ -21,9 +21,9 @@ export default function SelectElement({
   label,
   icon,
 }: {
-  form: channel;
+  form: TChannel;
   children: React.ReactNode;
-  fieldName: channelKey;
+  fieldName: TChannelKey;
   label: string;
   icon?: JSX.Element;
 }) {

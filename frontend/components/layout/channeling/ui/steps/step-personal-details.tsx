@@ -5,7 +5,7 @@ import { Form } from "@/shadcn/ui/form";
 import InputElement from "@/channeling/elements/form-elements/input-element";
 import SelectElement from "@/channeling/elements/form-elements/select-element";
 
-import { channelSchema } from "@/helpers/validation/channel-schema";
+import { TChannelSchema } from "@/helpers/validation/channel-schema";
 import { SelectItem } from "@/shadcn/ui/select";
 import {
   Calendar,
@@ -23,8 +23,8 @@ export default function StepPersonalDetails({
   updateUser,
   form,
 }: {
-  updateUser: (values: channelSchema) => void;
-  form: UseFormReturn<channelSchema>;
+  updateUser: (values: TChannelSchema) => void;
+  form: UseFormReturn<TChannelSchema>;
 }) {
   return (
     <>

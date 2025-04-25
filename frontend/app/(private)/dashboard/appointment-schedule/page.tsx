@@ -124,7 +124,7 @@ export default function Page() {
         currentDate: format(new Date(), "yyyy-MM-dd"),
       });
 
-      const convertedDates = newData.dates.map((dateStr) =>
+      const convertedDates = (newData?.dates || []).map((dateStr) =>
         parse(dateStr, "yyyy-MM-dd", new Date())
       );
       setCompleted(convertedDates);

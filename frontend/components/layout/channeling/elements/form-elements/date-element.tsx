@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shadcn/ui/popover";
 import { Button } from "@/shadcn/ui/button";
 import { Calendar } from "@/shadcn/ui/calendar";
 
-export default function OnlyDateElement({
+export default function DateElement({
   date,
   onDateChange,
 }: {

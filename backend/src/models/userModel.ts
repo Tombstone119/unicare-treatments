@@ -1,4 +1,4 @@
-import { IUser } from "../util/user-schema.ts";
+import { IUser } from "../validation/user-schema.ts";
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema<IUser>(

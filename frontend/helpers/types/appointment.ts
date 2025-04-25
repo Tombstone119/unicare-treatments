@@ -1,5 +1,14 @@
 import { TApiResponse } from "./common";
 
+export type TAppointmentStatus =
+  | "waiting"
+  | "attending"
+  | "completed"
+  | "canceled"
+  | "no-show";
+
+export type TPaymentStatus = "pending" | "completed" | "cancelled";
+
 export interface IAppointment {
   _id: string;
   patientId: string;
@@ -8,14 +17,9 @@ export interface IAppointment {
   startingTime: string;
   endingTime: string;
   paymentId: string;
-  paymentStatus: "pending" | "completed" | "cancelled";
+  paymentStatus: TPaymentStatus;
   doctorName: string;
-  appointmentStatus:
-    | "waiting"
-    | "attending"
-    | "completed"
-    | "canceled"
-    | "no-show";
+  appointmentStatus: TAppointmentStatus;
   paymentAmount: number;
   firstName: string;
   lastName: string;

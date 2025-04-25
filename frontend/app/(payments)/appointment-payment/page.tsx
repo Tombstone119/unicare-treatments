@@ -39,7 +39,9 @@ export default function Page(props: {
   useEffect(() => {
     const fetchUserAppointments = async () => {
       if (!userId) return;
-      const response = await apiService.get<UserApiResponse>(`/user/${userId}`);
+      const response = await apiService.get<UserApiResponse>(
+        `/users/${userId}`
+      );
       setUserDetails(response.user);
     };
     fetchUserAppointments();

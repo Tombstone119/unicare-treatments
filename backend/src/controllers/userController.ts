@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import userService from "../services/userService.ts";
 import { handleError } from "../util/errorHandler.ts";
 import HttpStatusCodes from "../util/statusCodes.ts";
-import { UsernameQuerySchema } from "../util/user-schema.ts";
+import { UsernameQuerySchema } from "../validation/user-schema.ts";
 import { Response, Request } from "express";
 import { userErrorCodes } from "../util/errorCodes.ts";
 

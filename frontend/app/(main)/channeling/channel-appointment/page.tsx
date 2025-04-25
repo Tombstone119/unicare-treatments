@@ -1,11 +1,11 @@
 "use client";
 
-import ChannelDateStep from "@/channeling/ui/step-calendar";
+import ChannelDateStep from "@/channeling/ui/steps/step-calendar";
 
-import StepPayment from "@/channeling/ui/step-payment";
-import Steps from "@/channeling/widgets/steps";
-import StepFinalState from "@/channeling/ui/step-final-state";
-import StepPersonalDetails from "@/channeling/ui/step-personal-details";
+import StepPayment from "@/channeling/ui/steps/step-payment";
+import StepsHeader from "@/channeling/widgets/steps-header";
+import StepFinalState from "@/channeling/ui/steps/step-final-state";
+import StepPersonalDetails from "@/channeling/ui/steps/step-personal-details";
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -47,7 +47,7 @@ export default function ChannelAppointment(props: {
           Appointment Center
         </Link>
       </div>
-      <Steps numSteps={numSteps} stepsComplete={stepsComplete} />
+      <StepsHeader numSteps={numSteps} stepsComplete={stepsComplete} />
       <div className="py-8 pb-10 px-4 my-4 bg-gray-400/10 border-2 border-dashed border-black rounded-lg">
         <div className="flex flex-col gap-4 justify-center items-center">
           {stepsComplete === 0 && (

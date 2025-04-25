@@ -75,7 +75,7 @@ router.put("/inventory-item/:id", updateItem); // Update this line
 
 // --------------------------------------------------------
 router.use("/appointments", appointmentRoute);
-router.use("/user", userRoute);
+router.use("/users", userRoute);
 router.use("/channeling", channelingRoute);
 
 router

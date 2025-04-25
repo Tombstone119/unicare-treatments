@@ -1,8 +1,8 @@
-import { Sessions } from "@/types/channeling";
-import { format } from "date-fns";
 import { Dispatch, SetStateAction } from "react";
+import { format } from "date-fns";
 import { IoTime } from "react-icons/io5";
-import SessionDetails from "../ui/session-details";
+import type { Sessions } from "@/types/channeling";
+import SessionDetails from "@/channeling/widgets/session-details";
 
 type SessionType = "first" | "second" | "third" | undefined;
 type SetSessionActions = Dispatch<SetStateAction<SessionType>>;

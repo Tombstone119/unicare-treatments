@@ -1,35 +1,27 @@
 "use client";
 
-import { getColumns } from "@/channeling/elements/table-elements/patient-column";
+import { getColumns } from "@/channeling/ui/columns/user-column";
 import { useEffect, useState } from "react";
 import { UserIcon } from "lucide-react";
-import { AppointmentResponse, IAppointment } from "@/types/appointment";
 import { apiService } from "@/libs/api";
-import { useSession } from "next-auth/react";
-import { DataTable } from "@/channeling/ui/user-table";
+import { DataTable } from "@/channeling/ui/tables/user-table";
+import { IUser, UserApiResponse } from "@/types/users";
 
 export default function Users() {
-  const [data, setData] = useState<IAppointment[]>([]);
-  const { data: session } = useSession();
-  const user = session?.user;
+  const [allUsers, setAllUsers] = useState<IUser[]>([]);
 
   const getData = async () => {
-    const response = await apiService.get<AppointmentResponse>(
-      `/appointments/patient/${user?.id}`
-    );
+    const response = await apiService.get<UserApiResponse>(`/users`);
     if (response.success) {
-      setData(response?.appointments || []);
+      setAllUsers(response?.users || []);
     }
   };
 
-  const columns = getColumns(user?.id || "");
+  const columns = getColumns();
 
   useEffect(() => {
-    if (user?.id) {
-      getData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+    getData();
+  }, []);
 
   return (
     <div className=" bg-white py-5 px-5 w-full min-h-svh md:w-[calc(100vw-260px)] mx-auto">
@@ -37,7 +29,7 @@ export default function Users() {
         <h1 className="text-2xl font-bold text-gray-800 text-center flex items-center gap-2 mb-4">
           System Users <UserIcon className="h-8 w-8 text-black" />
         </h1>
-        <DataTable columns={columns} data={data}></DataTable>
+        <DataTable columns={columns} data={allUsers}></DataTable>
       </div>
     </div>
   );

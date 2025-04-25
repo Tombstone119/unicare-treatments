@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/shadcn/ui/form";
 import { Input } from "@/shadcn/ui/input";
-import { channel, channelKey } from "@/helpers/validation/channel-schema";
+import { TChannel, TChannelKey } from "@/helpers/validation/channel-schema";
 import { HTMLInputTypeAttribute, JSX } from "react";
 
 export default function InputElement({
@@ -20,8 +20,8 @@ export default function InputElement({
   icon,
   disabled = false,
 }: {
-  form: channel;
-  fieldName: channelKey;
+  form: TChannel;
+  fieldName: TChannelKey;
   fieldType: HTMLInputTypeAttribute;
   label: string;
   placeholder: string;

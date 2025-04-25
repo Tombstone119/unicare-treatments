@@ -11,6 +11,7 @@ export type ItemMenu = {
   title: string;
   url: string;
 };
+
 export type NavMenu = {
   title: string;
   url?: string;

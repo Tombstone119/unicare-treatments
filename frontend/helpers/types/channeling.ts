@@ -21,15 +21,8 @@ export interface ChannelingResponse extends TApiResponse {
     channelingDate: string;
     channelingSlots: TimeSlot[][];
   };
-  dates: string[];
-}
-
-export interface NewChannelingResponse extends TApiResponse {
-  channeling: {
-    channelingDate: string;
-    channelingSlots: TimeSlot[][];
-  };
-  appointment: IAppointment;
+  dates?: string[];
+  appointment?: IAppointment;
 }
 
 export interface ChannelingWithDates extends TApiResponse {

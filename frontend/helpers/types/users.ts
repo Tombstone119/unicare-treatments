@@ -1,6 +1,7 @@
 import { TApiResponse } from "./common";
 
 export interface IUser {
+  _id?: string;
   username: string;
   email: string;
   password: string;
@@ -22,6 +23,7 @@ export type userTypes = "doctor" | "admin" | "supplier" | "user";
 
 export interface UserApiResponse extends TApiResponse {
   user?: IUser;
+  users?: IUser[];
 }
 
 export interface SessionUser {

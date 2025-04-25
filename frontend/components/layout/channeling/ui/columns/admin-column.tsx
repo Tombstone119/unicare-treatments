@@ -8,19 +8,19 @@ import { Dialog, DialogContent, DialogTrigger } from "@/shadcn/ui/dialog";
 import { Button } from "@/shadcn/ui/button";
 import { Loader2, Pencil, UserIcon } from "lucide-react";
 import CopyToClipboard from "@/channeling/widgets/copy-to-clipboard";
-import { EditPass } from "@/channeling/ui/edit-pass";
+import { EditDialog } from "@/channeling/ui/dialogs/edit-dialog";
 import { IAppointment } from "@/types/appointment";
 import { cn } from "@/libs/utils";
 import Image from "next/image";
 import { format } from "date-fns";
 import { BsCash } from "react-icons/bs";
-import DeleteDialog from "@/channeling/ui/delete-dialog";
-import StatusDialog from "@/channeling/ui/status-dialog";
+import DeleteDialog from "@/channeling/ui/dialogs/delete-dialog";
+import StatusDialog from "@/channeling/ui/dialogs/status-dialog";
 import { FaClock } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
 import { IoIosCloseCircle } from "react-icons/io";
 import { SiCashapp } from "react-icons/si";
-import PaymentDialog from "@/channeling/ui/payment-dialog";
+import PaymentDialog from "@/channeling/ui/dialogs/payment-dialog";
 import Link from "next/link";
 
 const paymentStatusObj = {
@@ -105,41 +105,6 @@ export const getColumns = (
   }
 ): ColumnDef<IAppointment>[] => {
   const columns: ColumnDef<IAppointment>[] = [
-    {
-      id: "actions",
-      accessorKey: "actions",
-      header: () => <div className="text-white">ACTIONS</div>,
-      cell: ({ row }) => {
-        const rowData = row.original;
-        return (
-          <div className="flex align-items justify-center gap-2">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-800">
-                  <Pencil className="w-4 h-4" />
-                  Session
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[800px]">
-                <EditPass rowData={rowData} refreshFn={refreshPage} />
-              </DialogContent>
-            </Dialog>
-            <DeleteDialog rowData={rowData} refreshFn={refreshPage} />
-            <StatusDialog rowData={rowData} refreshFn={refreshPage} />
-            <PaymentDialog rowData={rowData} refreshFn={refreshPage} />
-            <Link
-              href={`/dashboard/appointment-user?patientId=${rowData.patientId}`}
-              className=" rounded-md overflow-hidden"
-            >
-              <Button className="bg-orange-600 hover:bg-orange-800 ">
-                <UserIcon className="w-4 h-4" />
-                Patient
-              </Button>
-            </Link>
-          </div>
-        );
-      },
-    },
     {
       accessorKey: "referenceNumber",
       header: ({ column }: { column: Column<IAppointment, unknown> }) => (
@@ -414,6 +379,42 @@ export const getColumns = (
                   ? "Cash"
                   : "N/A"}
             </div>
+          </div>
+        );
+      },
+    },
+
+    {
+      id: "actions",
+      accessorKey: "actions",
+      header: () => <div className="text-white">ACTIONS</div>,
+      cell: ({ row }) => {
+        const rowData = row.original;
+        return (
+          <div className="flex align-items justify-center gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-blue-600 hover:bg-blue-800">
+                  <Pencil className="w-4 h-4" />
+                  Session
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[800px]">
+                <EditDialog rowData={rowData} refreshFn={refreshPage} />
+              </DialogContent>
+            </Dialog>
+            <DeleteDialog rowData={rowData} refreshFn={refreshPage} />
+            <StatusDialog rowData={rowData} refreshFn={refreshPage} />
+            <PaymentDialog rowData={rowData} refreshFn={refreshPage} />
+            <Link
+              href={`/dashboard/appointment-user?patientId=${rowData.patientId}`}
+              className=" rounded-md overflow-hidden"
+            >
+              <Button className="bg-orange-600 hover:bg-orange-800 ">
+                <UserIcon className="w-4 h-4" />
+                Patient
+              </Button>
+            </Link>
           </div>
         );
       },

@@ -1,7 +1,7 @@
-import { IUserApiResponse, IVerification } from "../types/user.ts";
+import { IUserApiResponse, IVerification } from "../types/users.ts";
 import userModel from "../models/userModel.ts";
 import { resend } from "../util/resend.ts";
-import { IUser, UserDocument } from "../util/user-schema.ts";
+import { IUser, UserDocument } from "../validation/user-schema.ts";
 
 async function userWithIdentifier({
   email,
@@ -77,6 +77,7 @@ async function isUniqueUser(username: string) {
 
 async function getAllPartially() {
   const user = await userModel.find().select({
+    _id: 1,
     username: 1,
     email: 1,
     isVerified: 1,
@@ -121,6 +122,7 @@ async function updatePartially(
       runValidators: true, // Ensures the update operation runs validation defined in your schema
     })
     .select({
+      _id: 1,
       username: 1,
       email: 1,
       isVerified: 1,

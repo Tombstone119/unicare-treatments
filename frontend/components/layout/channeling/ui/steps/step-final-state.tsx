@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import AppointmentCard from "@/components/layout/channeling/ui/appointment-card";
+import AppointmentCard from "@/channeling/widgets/appointment-card";
 import { useEffect, useState } from "react";
 import { apiService } from "@/libs/api";
 import { AppointmentResponse } from "@/types/appointment";

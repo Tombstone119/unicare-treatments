@@ -13,33 +13,14 @@ export const channelAppointmentSchema = z
     phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
     email: z.string().email("Invalid email format"),
     address: z.string().min(5, "Address must be at least 5 characters"),
-    // channelingDate: z.preprocess(
-    //   (val) =>
-    //     typeof val === "string" && isValidDate(val) ? new Date(val) : val,
-    //   z.date()
-    // ),
   })
   .refine((data) => isValidDate(data.dateOfBirth), {
     message: "Invalid date format",
     path: ["dateOfBirth"],
   });
 
-export type channelSchema = z.infer<typeof channelAppointmentSchema>;
+export type TChannelSchema = z.infer<typeof channelAppointmentSchema>;
 
-export type channel = UseFormReturn<channelSchema>;
+export type TChannel = UseFormReturn<TChannelSchema>;
 
-export type channelKey = keyof channelSchema;
-
-export const onlyDateSchema = z.object({
-  _id: z.string(),
-  channelingDate: z.preprocess(
-    (val) =>
-      typeof val === "string" && isValidDate(val) ? new Date(val) : val,
-    z.date()
-  ),
-  referenceNumber: z.string(),
-});
-
-export type dateSchema = z.infer<typeof onlyDateSchema>;
-
-export type dateSchemaExtended = UseFormReturn<dateSchema>;
+export type TChannelKey = keyof TChannelSchema;

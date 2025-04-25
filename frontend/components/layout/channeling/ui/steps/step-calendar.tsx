@@ -1,41 +1,45 @@
-"use client";
-import { Button } from "@/shadcn/ui/button";
-import { DialogHeader, DialogTitle } from "@/shadcn/ui/dialog";
-
-import { apiService } from "@/libs/api";
-import { toast } from "sonner";
-import { IAppointment } from "@/types/appointment";
-
+import { ArrowLeft } from "lucide-react";
 import { FaCalendarAlt } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { format, parse } from "date-fns";
 import { Calendar } from "@/shadcn/ui/calendar";
+import { toast } from "sonner";
+import { apiService } from "@/libs/api";
 import {
+  AppointmentDetails,
   ChannelingResponse,
   ChannelingWithDates,
-  NewChannelingResponse,
   SelectedSession,
 } from "@/types/channeling";
 import PatientCalender from "@/channeling/widgets/patient-calendar";
 import { cn } from "@/libs/utils";
 import { Sessions } from "@/types/channeling";
 import { getDataFiltered } from "@/libs/channeling";
+import { centsToLKR } from "@/helpers/util/common";
+import { Button } from "@/shadcn/ui/button";
 
 const selectedData = {
   first: 0,
   second: 1,
   third: 2,
 };
-
-export function EditPass({
-  rowData,
-  refreshFn,
+export default function ChannelDateStep({
+  handleSetStep,
+  date,
+  setDate,
+  userId,
+  makePayment,
+  setAppointmentDetails,
+  amount,
 }: {
-  rowData: IAppointment;
-  refreshFn: () => void;
+  handleSetStep: (num: -1 | 1) => void;
+  date: Date | null;
+  setDate: Dispatch<SetStateAction<Date | null>>;
+  userId: string | undefined;
+  makePayment: (appointmentId: string) => void;
+  setAppointmentDetails: Dispatch<SetStateAction<AppointmentDetails>>;
+  amount: number;
 }) {
-  const [date, setDate] = useState<Date | null>(null);
-
   const [loading, setLoading] = useState(false);
   const [allowedDates, setAllowedDates] = useState<Date[]>([]);
   const [firstSession, setFirstSession] = useState<Sessions>();
@@ -82,25 +86,26 @@ export function EditPass({
       const formattedDate = format(date, "yyyy-MM-dd");
       const sessionArr = [firstSession, secondSession, thirdSession];
       const req = {
-        channelingDate: formattedDate,
         session: selectedData[selectedSession as keyof typeof selectedData] + 1,
+        channelingDate: formattedDate,
         start:
           sessionArr[selectedData[selectedSession as keyof typeof selectedData]]
             ?.start,
         end: sessionArr[
           selectedData[selectedSession as keyof typeof selectedData]
         ]?.end,
-        appointmentId: rowData._id || "",
-        email: rowData.email || "",
+        patientId: userId,
+        paymentAmount: centsToLKR(amount),
       };
-      await apiService.post<NewChannelingResponse>(
-        `/channeling/update-channeling`,
+      const newChannel = await apiService.post<ChannelingResponse>(
+        `/channeling/make-channeling`,
         req
       );
+      makePayment(newChannel?.appointment?._id || "");
+      handleSetStep(1);
+      setAppointmentDetails(req);
     } catch {
       toast.error("Something went wrong. Please try again.");
-    } finally {
-      refreshFn();
     }
   };
 
@@ -143,53 +148,56 @@ export function EditPass({
   };
 
   return (
-    <>
-      <DialogHeader>
-        <DialogTitle className="text-2xl font-bold text-gray-800 text-center">
-          Re-schedule The Appointment
-        </DialogTitle>
-        {/* <DialogDescription>Click save when you&apos;re done.</DialogDescription> */}
-      </DialogHeader>
-
-      <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
-        <div
-          className={cn(
-            "relative flex items-center text-indigo-950 gap-5",
-            loading && "opacity-50"
-          )}
-        >
-          <PatientCalender
-            date={date}
-            sessions={sessions}
-            selectedSession={selectedSession}
-            setSelectedSession={setSelectedSession}
-          />
-          <Calendar
-            holidays={allowedDates}
-            mode="single"
-            selected={date || undefined}
-            onSelect={(selectedDate: Date | undefined) => {
-              if (selectedDate && isDateAllowed(selectedDate)) {
-                handleSelectDate({ date: selectedDate });
-              }
-            }}
-            disabled={(day) => !isDateAllowed(day)}
-            className="w-[280px] rounded-md shadow-md p-2 border-black border-2 bg-white"
-          />
-        </div>
-        <div className="flex items-center gap-5">
-          <Button
-            className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
-            disabled={disableSubmission}
-            onClick={() => {
-              updateChanneling();
-            }}
-          >
-            <FaCalendarAlt />
-            Save
-          </Button>
-        </div>
+    <div className="flex flex-col min-h-[488px] items-center justify-center gap-10">
+      <h1 className="text-2xl font-bold text-gray-800 text-center">
+        Select a Date
+      </h1>
+      <div
+        className={cn(
+          "relative flex items-center text-indigo-950 gap-5",
+          loading && "opacity-50"
+        )}
+      >
+        <PatientCalender
+          date={date}
+          sessions={sessions}
+          selectedSession={selectedSession}
+          setSelectedSession={setSelectedSession}
+        />
+        <Calendar
+          holidays={allowedDates}
+          mode="single"
+          selected={date || undefined}
+          onSelect={(selectedDate: Date | undefined) => {
+            if (selectedDate && isDateAllowed(selectedDate)) {
+              handleSelectDate({ date: selectedDate });
+            }
+          }}
+          disabled={(day) => !isDateAllowed(day)}
+          className="w-[280px] rounded-md shadow-md p-2 border-black border-2 bg-white"
+        />
       </div>
-    </>
+      <div className="flex items-center gap-5">
+        <button
+          className="px-4 py-2 rounded border-2 border-black text-black flex items-center gap-2 justify-center min-w-[196px]"
+          onClick={() => {
+            handleSetStep(-1);
+          }}
+        >
+          <ArrowLeft className="h-5 w-5 text-black" />
+          Go Back
+        </button>
+        <Button
+          className="px-4 py-2 rounded bg-black text-white flex items-center gap-2 justify-center"
+          disabled={disableSubmission}
+          onClick={() => {
+            updateChanneling();
+          }}
+        >
+          <FaCalendarAlt />
+          Save and Continue
+        </Button>
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import { apiService } from "@/libs/api";
-import { channelSchema } from "@/schemas/channel-schema";
+import { TChannelSchema } from "@/schemas/channel-schema";
 import { AppointmentResponse } from "@/types/appointment";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -37,11 +37,11 @@ export const useStep = (
     setStepsComplete((pv) => pv + num);
   };
 
-  const updateUser = async (values: channelSchema) => {
+  const updateUser = async (values: TChannelSchema) => {
     try {
       if (userId) {
         const response = await apiService.put<AppointmentResponse>(
-          `/user/${userId}`,
+          `/users/${userId}`,
           { ...values }
         );
         if (response.success) {

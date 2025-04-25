@@ -37,7 +37,7 @@ export default function Page(props: {
       if (!isMounted.current) {
         isMounted.current = true;
         const response = await apiService.get<UserApiResponse>(
-          `/user/${patientId}`
+          `/users/${patientId}`
         );
         setUser(response.user);
       }

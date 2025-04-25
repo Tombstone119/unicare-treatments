@@ -2,7 +2,7 @@
 import { apiService } from "@/libs/api";
 import {
   channelAppointmentSchema,
-  channelSchema,
+  TChannelSchema,
 } from "@/schemas/channel-schema";
 import { IUser, SessionUser, UserApiResponse } from "@/types/users";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +14,7 @@ export const usePatient = () => {
   const { data: session } = useSession();
   const user = session?.user as unknown as SessionUser;
   const [userDetails, setUserDetails] = useState<IUser>();
-  const form = useForm<channelSchema>({
+  const form = useForm<TChannelSchema>({
     resolver: zodResolver(channelAppointmentSchema),
     defaultValues: {
       firstName: "",
@@ -33,7 +33,7 @@ export const usePatient = () => {
     const fetchUserAppointments = async () => {
       if (!user?.id) return;
       const response = await apiService.get<UserApiResponse>(
-        `/user/${user?.id}`
+        `/users/${user?.id}`
       );
 
       const formattedDate = response.user?.dateOfBirth
