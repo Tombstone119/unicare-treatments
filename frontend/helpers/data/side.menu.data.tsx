@@ -3,7 +3,6 @@ import { MdInventory } from "react-icons/md";
 import { FaShoppingCart, FaClock, FaClipboardList } from "react-icons/fa";
 import { MdQueue } from "react-icons/md";
 import { FaHistory } from "react-icons/fa";
-import { FiSettings } from "react-icons/fi";
 import { IoMdPhotos } from "react-icons/io";
 import { FaBlog } from "react-icons/fa";
 import { BiSolidDashboard } from "react-icons/bi";
@@ -121,10 +120,5 @@ export const doctorNavMenu: NavMenu[] = [
     title: "Treatment History",
     url: "/dashboard/treatment-history-management",
     icon: FaHistory,
-  },
-  {
-    title: "Settings",
-    url: "/dashboard/settings",
-    icon: FiSettings,
   },
 ];

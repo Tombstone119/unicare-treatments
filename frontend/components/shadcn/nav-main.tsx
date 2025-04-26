@@ -43,7 +43,13 @@ export function NavMain({ items }: { items: NavMenu[] }) {
                   }
                 >
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  <span
+                    className={cn(
+                      pathname === item?.url && "underline underline-offset-4"
+                    )}
+                  >
+                    {item.title}
+                  </span>
                   {item.items && item.items.length > 0 && (
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   )}
@@ -67,7 +73,14 @@ export function NavMain({ items }: { items: NavMenu[] }) {
                           }
                         >
                           {subItem?.icon && <subItem.icon />}
-                          <span>{subItem.title}</span>
+                          <span
+                            className={cn(
+                              pathname === subItem?.url &&
+                                "underline underline-offset-4"
+                            )}
+                          >
+                            {subItem.title}
+                          </span>
                         </span>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
