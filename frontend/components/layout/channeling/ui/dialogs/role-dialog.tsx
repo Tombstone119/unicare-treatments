@@ -94,7 +94,7 @@ const RoleDialog = ({
       <AlertDialogContent className="max-w-max">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-center">
-            Change Role
+            Change Role <span className="capitalize">({selected})</span>
           </AlertDialogTitle>
 
           <div className="flex gap-2 items-center border-2 border-dashed border-black p-2">

@@ -3,7 +3,6 @@ import { MdInventory } from "react-icons/md";
 import { FaShoppingCart, FaClock, FaClipboardList } from "react-icons/fa";
 import { MdQueue } from "react-icons/md";
 import { FaHistory } from "react-icons/fa";
-import { FaUsers } from "react-icons/fa";
 import { FiSettings } from "react-icons/fi";
 import { IoMdPhotos } from "react-icons/io";
 import { FaBlog } from "react-icons/fa";
@@ -23,7 +22,6 @@ export const adminNavMenu: NavMenu[] = [
   },
   {
     title: "Blog",
-    url: "/dashboard/blog",
     icon: FaBlog,
     isActive: true,
     items: [
@@ -79,7 +77,6 @@ export const adminNavMenu: NavMenu[] = [
   },
   {
     title: "Appointments",
-    url: "/dashboard/appointment-management",
     icon: MdQueue,
     isActive: true,
     items: [
@@ -100,22 +97,11 @@ export const adminNavMenu: NavMenu[] = [
     url: "/dashboard/treatment-history-management",
     icon: FaHistory,
   },
-  {
-    title: "Users",
-    url: "/dashboard/user-management",
-    icon: FaUsers,
-  },
-  {
-    title: "Settings",
-    url: "/dashboard/settings",
-    icon: FiSettings,
-  },
 ];
 
 export const doctorNavMenu: NavMenu[] = [
   {
     title: "Appointments",
-    url: "/dashboard/appointment-management",
     icon: MdQueue,
     isActive: true,
     items: [
