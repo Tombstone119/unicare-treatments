@@ -26,6 +26,11 @@ export interface UserApiResponse extends TApiResponse {
   users?: IUser[];
 }
 
+export interface GetTokenResponse extends TApiResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface SessionUser {
   email: string;
   id: string;

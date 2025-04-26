@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { UserApiResponse } from "@/types/users";
+import { GetTokenResponse, UserApiResponse } from "@/types/users";
 import { apiService } from "@/libs/api";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -52,8 +52,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.isVerified = user.isVerified;
         token.username = user.username;
         token.role = user.role;
+        token.accessToken = user.accessToken;
+        token.refreshToken = user.refreshToken;
+        token.accessTokenExpires = Date.now() + 3600 * 1000; // (1 hour)
       }
-      return token;
+      if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
+        return token;
+      }
+
+      // Access token has expired, try to refresh it
+      try {
+        const refreshed = await apiService.post<GetTokenResponse>(
+          `/users/refreshToken`,
+          {
+            refreshToken: token.refreshToken,
+          }
+        );
+        if (!refreshed.success) {
+          throw new Error("RefreshAccessTokenError");
+        }
+        return {
+          ...token,
+          accessToken: refreshed.accessToken,
+          refreshToken: refreshed.refreshToken || token.refreshToken, // Use new refresh token if provided
+          accessTokenExpires: Date.now() + 3600 * 1000, // Update expiry time
+        };
+      } catch (error) {
+        console.error("Error refreshing access token", error);
+        // The error property will be used to trigger a sign out in the client
+        return { ...token, error: "RefreshAccessTokenError" };
+      }
     },
     async session({ session, token }) {
       if (token) {
@@ -63,6 +91,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           isVerified: !!token.isVerified,
           username: token.username || "",
           role: token.role || "user",
+          accessToken: token.accessToken || "",
+          refreshToken: token.refreshToken || "",
+          exp: token.exp,
+          iat: token.iat,
+          jti: token.jti,
+          sub: token.sub,
+          ...(token.error && { error: token.error }),
         };
       }
       return session;

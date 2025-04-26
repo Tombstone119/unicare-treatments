@@ -8,7 +8,9 @@ import {
   getAllPartially,
   getPartially,
   updatePartially,
+  refreshToken,
 } from "../controllers/userController.ts";
+import { authenticateToken } from "../middleware/authenticate.ts";
 
 const router = Router();
 
@@ -17,7 +19,10 @@ router.route("/profile/sign-in").post(signIn);
 router.route("/profile/verify-user").post(verifyUser);
 router.route("/profile/check-unique/:username").get(checkUniqueUserName);
 
-router.route("/").get(getAllPartially);
+router.route("/refreshToken").post(refreshToken);
+router.route("/").get(authenticateToken, getAllPartially);
+// router.route("/").get(authenticateToken, authorizeRole(["admin"]), getAllPartially);
+
 router.route("/:id").get(getPartially).put(updatePartially);
 
 export default router;

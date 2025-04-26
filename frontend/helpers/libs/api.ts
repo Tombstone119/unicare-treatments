@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-
 // Create base API instance
 const api: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8081/api",
@@ -9,6 +8,20 @@ const api: AxiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Add a request interceptor to attach the token
+api.interceptors.request.use(
+  async (config) => {
+    // const session = await getSession();
+    // if (session?.user.accessToken) {
+    //   config.headers.Authorization = `Bearer ${session?.user.accessToken}s`;
+    // }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 type ApiResponse<T = any> = Promise<T>;
 

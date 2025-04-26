@@ -24,6 +24,10 @@ export default auth(async function middleware(request) {
   const session = request?.auth;
   const user = request?.auth?.user;
 
+  if (user?.error && user?.error === "RefreshAccessTokenError") {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+
   // Redirect root to home page
   if (path === "/") {
     return NextResponse.redirect(new URL("/home", request.url));

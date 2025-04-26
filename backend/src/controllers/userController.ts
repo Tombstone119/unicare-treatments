@@ -5,6 +5,8 @@ import HttpStatusCodes from "../util/statusCodes.ts";
 import { UsernameQuerySchema } from "../validation/user-schema.ts";
 import { Response, Request } from "express";
 import { userErrorCodes } from "../util/errorCodes.ts";
+import { generateTokens } from "../util/tokenUtil.ts";
+import jwt from "jsonwebtoken";
 
 export const signUp = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -92,6 +94,10 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (isPasswordCorrect) {
+      const { accessToken, refreshToken } = generateTokens(
+        user._id.toString(),
+        user.role
+      );
       res.status(HttpStatusCodes.OK).json({
         success: true,
         message: "Login successful",
@@ -101,6 +107,8 @@ export const signIn = async (req: Request, res: Response): Promise<void> => {
           email: user.email,
           role: user.role,
           isVerified: user.isVerified,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
         },
       });
     } else {
@@ -276,6 +284,55 @@ export const updatePartially = async (
       success: true,
       message: "User updated successfully",
       user: updatedUser,
+    });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+export const refreshToken = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      res.status(HttpStatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Refresh token is required",
+      });
+      return;
+    }
+
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET || ""
+    );
+    if (!decoded || typeof decoded !== "object" || !decoded._id) {
+      res.status(HttpStatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+      return;
+    }
+
+    const user = await userService.findUserById(decoded._id);
+    if (!user) {
+      res.status(HttpStatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    // Generate new tokens
+    const tokens = generateTokens(user._id.toString(), user.role);
+
+    res.status(HttpStatusCodes.OK).json({
+      success: true,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
     });
   } catch (error) {
     handleError(res, error);
