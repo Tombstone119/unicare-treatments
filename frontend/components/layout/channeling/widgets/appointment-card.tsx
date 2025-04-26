@@ -1,7 +1,7 @@
 import QRCode from "react-qr-code";
 import Image from "next/image";
 import { RefObject } from "react";
-import { centsToLKR } from "@/helpers/util/common";
+import { centsToLKR } from "@/utils/common";
 export default function AppointmentCard({
   reference,
   amount,

@@ -8,7 +8,7 @@ import { IUser, UserApiResponse } from "@/types/users";
 import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 import { Button } from "@/shadcn/ui/button";
-import { lkrToCents } from "@/helpers/util/common";
+import { lkrToCents } from "@/utils/common";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;

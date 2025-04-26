@@ -15,7 +15,7 @@ import PatientCalender from "@/channeling/widgets/patient-calendar";
 import { cn } from "@/libs/utils";
 import { Sessions } from "@/types/channeling";
 import { getDataFiltered } from "@/libs/channeling";
-import { centsToLKR } from "@/helpers/util/common";
+import { centsToLKR } from "@/utils/common";
 import { Button } from "@/shadcn/ui/button";
 
 const selectedData = {

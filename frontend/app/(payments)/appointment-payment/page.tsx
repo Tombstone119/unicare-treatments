@@ -10,7 +10,7 @@ import { IUser, UserApiResponse } from "@/types/users";
 import { use, useEffect, useState } from "react";
 import { apiService } from "@/libs/api";
 import { AppointmentResponse, IAppointment } from "@/types/appointment";
-import { lkrToCents } from "@/helpers/util/common";
+import { lkrToCents } from "@/utils/common";
 
 const sessionArr = ["Session 1", "Session 2", "Session 3"];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { centsToLKR } from "@/helpers/util/common";
+import { centsToLKR } from "@/utils/common";
 import { apiService } from "@/libs/api";
 import { Button } from "@/shadcn/ui/button";
 import { AppointmentResponse } from "@/types/appointment";

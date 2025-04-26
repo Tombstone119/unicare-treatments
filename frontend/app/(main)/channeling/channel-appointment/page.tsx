@@ -10,10 +10,10 @@ import StepPersonalDetails from "@/channeling/ui/steps/step-personal-details";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { use, useState } from "react";
-import { usePatient } from "@/helpers/util/get-user";
-import { useStep } from "@/helpers/util/set-step";
+import { usePatient } from "@/utils/get-user";
+import { useStep } from "@/utils/set-step";
 import { AppointmentDetails } from "@/types/channeling";
-import { lkrToCents } from "@/helpers/util/common";
+import { lkrToCents } from "@/utils/common";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;

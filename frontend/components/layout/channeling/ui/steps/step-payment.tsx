@@ -7,7 +7,7 @@ import CheckoutPage from "@/channeling/widgets/checkout";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { IUser } from "@/types/users";
-import { centsToLKR } from "@/helpers/util/common";
+import { centsToLKR } from "@/utils/common";
 import { AppointmentDetails } from "@/types/channeling";
 
 const session = ["Session 1", "Session 2", "Session 3"];

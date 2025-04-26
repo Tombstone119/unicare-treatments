@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
-export { default } from "next-auth/middleware";
+import { auth } from "@/utils/auth";
+
+import { NextResponse } from "next/server";
 
 const roleBaseAccess = {
   user: ["/channeling"],
@@ -14,13 +14,15 @@ const roleBaseAccess = {
   supplier: ["/channeling", "/dashboard"],
 };
 
-export async function middleware(request: NextRequest) {
+export default auth(async function middleware(request) {
   const url = request.nextUrl;
   const path = url.pathname;
-  const token = await getToken({ req: request });
   const newRoutes = Object.values(roleBaseAccess).flat();
   const newSet = new Set([...newRoutes]);
   const protectedRoutes = Array.from(newSet);
+
+  const session = request?.auth;
+  const user = request?.auth?.user;
 
   // Redirect root to home page
   if (path === "/") {
@@ -29,15 +31,15 @@ export async function middleware(request: NextRequest) {
 
   // If user is already logged-in and trying to access auth pages, redirect based on role
   if (
-    token &&
+    session &&
     (path.startsWith("/sign-in") ||
       path.startsWith("/sign-up") ||
       path.startsWith("/verify"))
   ) {
-    if (token.role === "user") {
+    if (user?.role === "user") {
       return NextResponse.redirect(new URL("/home", request.url));
     }
-    if (token.role === "doctor") {
+    if (user?.role === "doctor") {
       return NextResponse.redirect(
         new URL("/dashboard/appointment-list", request.url)
       );
@@ -48,11 +50,11 @@ export async function middleware(request: NextRequest) {
   // If a user tries to access a protected route
   if (protectedRoutes.some((route) => path.startsWith(route))) {
     // If user is not logged-in then go to sign-in
-    if (!token) {
+    if (!session) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
-    const role = token.role as string;
+    const role = user?.role as string;
 
     const allowedRoutes =
       roleBaseAccess[role as keyof typeof roleBaseAccess] || [];
@@ -66,7 +68,7 @@ export async function middleware(request: NextRequest) {
     }
   }
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
