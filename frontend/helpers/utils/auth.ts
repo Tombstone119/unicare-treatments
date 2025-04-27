@@ -1,7 +1,9 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { GetTokenResponse, UserApiResponse } from "@/types/users";
-import { apiService } from "@/libs/api";
+import { jwtDecode } from "jwt-decode";
+import getAuthorized from "./get-authorized";
+import { getRefreshToken } from "./get-refresh-token";
+import { format } from "date-fns";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -13,40 +15,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        try {
-          const response = await apiService.post<UserApiResponse>(
-            `/users/profile/sign-in`,
-            {
-              identifier: credentials.identifier,
-              password: credentials.password,
-            }
-          );
-
-          if (response.success === false) {
-            throw new Error(response.message);
-          }
-
-          const user = response.user;
-
-          if (!user) {
-            throw new Error("No user found with this email");
-          }
-          if (!user.isVerified) {
-            throw new Error("Please verify your account before logging in");
-          }
-          return user;
-        } catch (err) {
-          if (err instanceof Error) {
-            throw new Error(err.message);
-          } else {
-            throw new Error(String(err));
-          }
-        }
+        return getAuthorized(credentials);
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
+      // If user is logged in then user object is available
       if (user) {
         token.id = user.id;
         token.isVerified = user.isVerified;
@@ -54,34 +29,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = user.role;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
-        token.accessTokenExpires = Date.now() + 3600 * 1000; // (1 hour)
-      }
-      if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
-        return token;
+        if (user.accessToken) {
+          const decodedAccessToken = jwtDecode(user.accessToken);
+          token.accessTokenExpires = decodedAccessToken?.exp
+            ? decodedAccessToken.exp * 1000 // Convert seconds to milliseconds
+            : Date.now() + 15 * 60 * 1000; // Fallback: expire in 15 mins
+        }
+        if (user.refreshToken) {
+          const decodedRefreshToken = jwtDecode(user.refreshToken);
+          token.refreshTokenExpires = decodedRefreshToken?.exp
+            ? decodedRefreshToken.exp * 1000
+            : Date.now() + 60 * 60 * 1000 * 24 * 7;
+        }
       }
 
-      // Access token has expired, try to refresh it
-      try {
-        const refreshed = await apiService.post<GetTokenResponse>(
-          `/users/refreshToken`,
-          {
-            refreshToken: token.refreshToken,
-          }
-        );
-        if (!refreshed.success) {
-          throw new Error("RefreshAccessTokenError");
-        }
-        return {
-          ...token,
-          accessToken: refreshed.accessToken,
-          refreshToken: refreshed.refreshToken || token.refreshToken, // Use new refresh token if provided
-          accessTokenExpires: Date.now() + 3600 * 1000, // Update expiry time
-        };
-      } catch (error) {
-        console.error("Error refreshing access token", error);
-        // The error property will be used to trigger a sign out in the client
-        return { ...token, error: "RefreshAccessTokenError" };
+      if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
+        return token; // Return previous token if not expired
       }
+      // return token;
+      const newToken = getRefreshToken(token); // Access token has expired, try to refresh it
+      return newToken;
     },
     async session({ session, token }) {
       if (token) {
@@ -89,14 +56,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           ...session.user,
           id: token.id || "",
           isVerified: !!token.isVerified,
-          username: token.username || "",
+          username: token.username,
           role: token.role || "user",
-          accessToken: token.accessToken || "",
-          refreshToken: token.refreshToken || "",
-          exp: token.exp,
-          iat: token.iat,
-          jti: token.jti,
-          sub: token.sub,
+          accessToken: token.accessToken,
+          refreshToken: token.refreshToken,
+          accessExpires: token.accessTokenExpires
+            ? format(
+                new Date(token.accessTokenExpires),
+                "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"
+              )
+            : null,
+          refreshExpires: token.refreshTokenExpires
+            ? format(
+                new Date(token.refreshTokenExpires),
+                "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"
+              )
+            : null,
           ...(token.error && { error: token.error }),
         };
       }

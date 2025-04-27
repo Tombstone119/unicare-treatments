@@ -9,12 +9,14 @@ const REFRESH_TOKEN_SECRET =
 export const generateTokens = (userId: string, role: string) => {
   // Access token - short lived (e.g., 15 minutes)
   const accessToken = jwt.sign({ _id: userId, role }, ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
+    // expiresIn: "15m",
+    expiresIn: "1m",
   });
 
   // Refresh token - longer lived (e.g., 7 days)
   const refreshToken = jwt.sign({ _id: userId, role }, REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
+    // expiresIn: "4m",
   });
 
   return { accessToken, refreshToken };

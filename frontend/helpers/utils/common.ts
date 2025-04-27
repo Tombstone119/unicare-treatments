@@ -12,3 +12,6 @@ export const centsToLKR = (cents: number) => {
 export const lkrToCents = (lkr: number) => {
   return Math.round(lkr * 100);
 };
+
+export const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8081/api";

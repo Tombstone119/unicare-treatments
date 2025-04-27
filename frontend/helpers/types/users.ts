@@ -30,11 +30,3 @@ export interface GetTokenResponse extends TApiResponse {
   accessToken: string;
   refreshToken: string;
 }
-
-export interface SessionUser {
-  email: string;
-  id: string;
-  isVerified: boolean;
-  role: "doctor" | "admin" | "supplier" | "user";
-  username: string;
-}

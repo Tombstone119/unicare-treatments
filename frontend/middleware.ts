@@ -11,7 +11,14 @@ const roleBaseAccess = {
     "/dashboard/appointment-schedule",
     "/dashboard/treatment-history-management",
   ],
-  supplier: ["/channeling", "/dashboard"],
+  supplier: [
+    "/channeling",
+    "/dashboard/Inventory-management",
+    "/dashboard/product-management",
+    "/dashboard/product-management/product-add",
+    "/dashboard/product-management/product-see",
+    "/dashboard/order-management",
+  ],
 };
 
 export default auth(async function middleware(request) {
@@ -24,9 +31,13 @@ export default auth(async function middleware(request) {
   const session = request?.auth;
   const user = request?.auth?.user;
 
-  if (user?.error && user?.error === "RefreshAccessTokenError") {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
-  }
+  // if (
+  //   user?.error &&
+  //   user?.error === "RefreshAccessTokenError" &&
+  //   !path.startsWith("/sign-in")
+  // ) {
+  //   return NextResponse.redirect(new URL("/sign-in", request.url));
+  // }
 
   // Redirect root to home page
   if (path === "/") {
@@ -38,7 +49,8 @@ export default auth(async function middleware(request) {
     session &&
     (path.startsWith("/sign-in") ||
       path.startsWith("/sign-up") ||
-      path.startsWith("/verify"))
+      path.startsWith("/verify")) &&
+    !session?.user.error
   ) {
     if (user?.role === "user") {
       return NextResponse.redirect(new URL("/home", request.url));
@@ -47,6 +59,9 @@ export default auth(async function middleware(request) {
       return NextResponse.redirect(
         new URL("/dashboard/appointment-list", request.url)
       );
+    }
+    if (user?.role === "admin") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     return NextResponse.redirect(new URL("/home", request.url));
   }
