@@ -46,7 +46,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
         return token; // Return previous token if not expired
       }
-      // return token;
+
       const newToken = getRefreshToken(token); // Access token has expired, try to refresh it
       return newToken;
     },

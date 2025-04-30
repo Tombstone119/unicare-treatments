@@ -32,9 +32,11 @@ export default function DashboardPage() {
   const columns = getColumns(refreshPage);
 
   useEffect(() => {
-    if (!user) return;
-    getData();
-  }, [user]);
+    if (user) {
+      getData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className=" bg-white py-5 px-5 w-full min-h-svh md:w-[calc(100vw-260px)] mx-auto">
