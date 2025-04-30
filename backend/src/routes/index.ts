@@ -33,12 +33,6 @@ import {
   getAllAdviceRequests,
 } from "../controllers/product-inquiry.ts";
 
-import {
-  checkUniqueUserName,
-  signInUser,
-  signUpUser,
-  verifyUser,
-} from "../controllers/userController.ts";
 import appointmentRoute from "./appointmentRoute.ts";
 import blogRoutes from "./blogRoutes.ts";
 import commentRoutes from "./commentRoutes.ts";
@@ -48,6 +42,8 @@ import {
   getAllReports,
   removeReport,
 } from "../controllers/reportController.ts";
+import userRoute from "./userRoute.ts";
+import channelingRoute from "./channelingRoute.ts";
 
 // Middleware to parse JSON request bodies
 router.use(express.json());
@@ -79,10 +75,9 @@ router.put("/inventory-item/:id", updateItem); // Update this line
 
 // --------------------------------------------------------
 router.use("/appointments", appointmentRoute);
-router.get("/user/check-username-unique/:username", checkUniqueUserName);
-router.post("/user/sign-up", signUpUser);
-router.post("/user/verify-code", verifyUser);
-router.post("/user/sign-in", signInUser);
+router.use("/users", userRoute);
+router.use("/channeling", channelingRoute);
+
 router
   .route("/reports/:patientId")
   .post(createReport)
