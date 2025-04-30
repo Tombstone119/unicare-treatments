@@ -8,14 +8,12 @@ declare global {
       user?: {
         _id: string;
         role: string;
-        iat?: number;
-        exp?: number;
       };
     }
   }
 }
 
-type JwtPayload = { _id: string; role: string; iat: number; exp: number };
+type JwtPayload = { _id: string; role: string };
 
 export const authenticateToken = async (
   req: Request,

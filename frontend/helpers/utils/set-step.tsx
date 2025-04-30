@@ -12,7 +12,7 @@ type SearchParams = {
 export const useStep = (
   searchParams: SearchParams,
   numSteps: number,
-  userId: string
+  userId?: string | null
 ) => {
   const [stepsComplete, setStepsComplete] = useState(0);
 

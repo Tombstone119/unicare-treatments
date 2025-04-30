@@ -35,7 +35,7 @@ export default function ChannelDateStep({
   handleSetStep: (num: -1 | 1) => void;
   date: Date | null;
   setDate: Dispatch<SetStateAction<Date | null>>;
-  userId: string | undefined;
+  userId?: string | null;
   makePayment: (appointmentId: string) => void;
   setAppointmentDetails: Dispatch<SetStateAction<AppointmentDetails>>;
   amount: number;

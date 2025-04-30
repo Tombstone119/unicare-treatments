@@ -34,5 +34,5 @@ export type AppointmentDetails = {
   channelingDate: string;
   start?: string;
   end?: string;
-  patientId?: string;
+  patientId?: string | null;
 };
